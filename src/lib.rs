@@ -3,6 +3,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 mod desktop;
 mod dock;
+mod finder;
 mod menu_bar;
 mod window_manager;
 

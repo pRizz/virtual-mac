@@ -4,6 +4,8 @@ use leptos::ev::MouseEvent;
 #[allow(unused_imports)]
 use wasm_bindgen::prelude::*;
 
+use crate::finder::Finder;
+
 /// Unique identifier for windows
 type WindowId = usize;
 
@@ -353,7 +355,11 @@ pub fn WindowManager() -> impl IntoView {
 
                             // Window content
                             <div class="window-content">
-                                <p>"Window: " {title_for_content}</p>
+                                {if title_for_content == "Finder" {
+                                    view! { <Finder /> }.into_any()
+                                } else {
+                                    view! { <p>"Window: " {title_for_content}</p> }.into_any()
+                                }}
                             </div>
 
                             // Resize handles
