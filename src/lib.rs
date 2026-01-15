@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::wasm_bindgen;
 
+mod calculator;
 mod desktop;
 mod dock;
 mod finder;

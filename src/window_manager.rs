@@ -5,9 +5,17 @@ use leptos::ev::MouseEvent;
 use wasm_bindgen::prelude::*;
 
 use crate::finder::Finder;
+use crate::calculator::Calculator;
 
 /// Unique identifier for windows
 type WindowId = usize;
+
+/// Type of application in a window
+#[derive(Clone, Debug, PartialEq)]
+pub enum AppType {
+    Generic,
+    Calculator,
+}
 
 /// Represents the state of a single window
 #[derive(Clone, Debug, PartialEq)]
@@ -23,6 +31,8 @@ pub struct WindowState {
     pub is_maximized: bool,
     /// Stored position/size before maximizing
     pub pre_maximize: Option<(f64, f64, f64, f64)>,
+    /// Type of application in this window
+    pub app_type: AppType,
 }
 
 impl WindowState {
@@ -38,6 +48,23 @@ impl WindowState {
             is_minimized: false,
             is_maximized: false,
             pre_maximize: None,
+            app_type: AppType::Generic,
+        }
+    }
+
+    pub fn new_with_app(id: WindowId, title: &str, x: f64, y: f64, width: f64, height: f64, app_type: AppType) -> Self {
+        Self {
+            id,
+            title: title.to_string(),
+            x,
+            y,
+            width,
+            height,
+            z_index: id as i32,
+            is_minimized: false,
+            is_maximized: false,
+            pre_maximize: None,
+            app_type,
         }
     }
 }
@@ -70,7 +97,7 @@ pub fn WindowManager() -> impl IntoView {
     // Global state for all windows
     let (windows, set_windows) = signal(vec![
         WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
-        WindowState::new(2, "Terminal", 200.0, 150.0, 500.0, 350.0),
+        WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
         WindowState::new(3, "Notes", 350.0, 200.0, 400.0, 300.0),
     ]);
 
@@ -317,6 +344,14 @@ pub fn WindowManager() -> impl IntoView {
 
                     let title = window.title.clone();
                     let title_for_content = title.clone();
+                    let app_type = window.app_type.clone();
+                    let is_calculator = app_type == AppType::Calculator;
+
+                    let content_class = if is_calculator {
+                        "window-content calculator-content"
+                    } else {
+                        "window-content"
+                    };
 
                     view! {
                         <div
@@ -354,8 +389,10 @@ pub fn WindowManager() -> impl IntoView {
                             </div>
 
                             // Window content
-                            <div class="window-content">
-                                {if title_for_content == "Finder" {
+                            <div class=content_class>
+                                {if is_calculator {
+                                    view! { <Calculator /> }.into_any()
+                                } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {
                                     view! { <p>"Window: " {title_for_content}</p> }.into_any()
