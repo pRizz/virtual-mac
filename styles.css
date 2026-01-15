@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.desktop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* macOS Sonoma-style gradient wallpaper */
+    background: linear-gradient(
+        135deg,
+        #1a1a2e 0%,
+        #16213e 15%,
+        #0f3460 30%,
+        #1a1a4e 45%,
+        #2d1b4e 55%,
+        #4a1942 70%,
+        #6b2d5c 85%,
+        #8b4367 100%
+    );
+    background-size: 400% 400%;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.selection-rect {
+    position: fixed;
+    background-color: rgba(0, 122, 255, 0.2);
+    border: 1px solid rgba(0, 122, 255, 0.6);
+    border-radius: 2px;
+    pointer-events: none;
+}
