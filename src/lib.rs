@@ -1,11 +1,14 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::wasm_bindgen;
 
+mod menu_bar;
+use menu_bar::MenuBar;
+
 #[component]
 fn App() -> impl IntoView {
     view! {
-        <main>
-            <h1>"VirtualMac"</h1>
+        <MenuBar />
+        <main class="main-content">
         </main>
     }
 }
