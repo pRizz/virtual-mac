@@ -19,6 +19,7 @@ pub fn Terminal() -> impl IntoView {
     let (input, set_input) = signal(String::new());
     let (cwd, set_cwd) = signal(String::from("/Users/guest"));
     let (fs, _set_fs) = signal(create_filesystem());
+    let input_ref: NodeRef<leptos::html::Input> = NodeRef::new();
 
     let prompt = move || format!("guest@virtualmac {} % ", get_display_path(&cwd.get()));
 
@@ -127,8 +128,14 @@ pub fn Terminal() -> impl IntoView {
         history.get().into_iter().enumerate().collect::<Vec<_>>()
     };
 
+    let on_terminal_click = move |_| {
+        if let Some(input_el) = input_ref.get() {
+            let _ = input_el.focus();
+        }
+    };
+
     view! {
-        <div class="terminal">
+        <div class="terminal" on:click=on_terminal_click>
             <div class="terminal-output">
                 <For
                     each=history_items
@@ -146,6 +153,7 @@ pub fn Terminal() -> impl IntoView {
                         on:input=on_input
                         on:keydown=on_keydown
                         autofocus=true
+                        node_ref=input_ref
                     />
                 </div>
             </div>
