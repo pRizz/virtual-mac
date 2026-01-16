@@ -1628,3 +1628,30 @@ html, body {
 [data-theme="light"] .wallpaper-name {
     color: #333;
 }
+
+/* Build Info - Version and build time display at bottom right of desktop */
+.build-info {
+    position: fixed;
+    bottom: 8px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Menlo', monospace;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+}
+
+.build-version {
+    font-weight: 500;
+}
+
+.build-time {
+    font-size: 10px;
+    opacity: 0.8;
+}
