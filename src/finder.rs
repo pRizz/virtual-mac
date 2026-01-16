@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 
-use crate::file_system::{use_file_system, FileEntry, EntryType};
+use crate::file_system::{use_file_system, FileEntry};
 
 /// Represents a file or folder item for display
 #[derive(Clone, Debug, PartialEq)]
@@ -128,20 +128,52 @@ pub fn Finder() -> impl IntoView {
         });
     };
 
+    // Get display title for toolbar
+    let toolbar_title = move || {
+        let sidebar = selected_sidebar.get();
+        if sidebar == "Recents" || sidebar == "AirDrop" || sidebar == "Network" {
+            sidebar.to_string()
+        } else {
+            // Show current folder name
+            let path = current_path.get();
+            if path == "/" {
+                "Macintosh HD".to_string()
+            } else {
+                path.rsplit('/').next().unwrap_or(&path).to_string()
+            }
+        }
+    };
+
+    // Check if back/forward are available
+    let can_go_back = move || history_index.get() > 0;
+    let can_go_forward = move || {
+        let idx = history_index.get();
+        let len = path_history.get().len();
+        idx + 1 < len
+    };
+
     view! {
         <div class="finder">
             // Toolbar
             <div class="finder-toolbar">
                 <div class="finder-toolbar-left">
-                    <button class="finder-nav-btn" title="Back">
+                    <button
+                        class=move || if can_go_back() { "finder-nav-btn" } else { "finder-nav-btn disabled" }
+                        title="Back"
+                        on:click=go_back
+                    >
                         <span class="nav-icon">"◀"</span>
                     </button>
-                    <button class="finder-nav-btn" title="Forward">
+                    <button
+                        class=move || if can_go_forward() { "finder-nav-btn" } else { "finder-nav-btn disabled" }
+                        title="Forward"
+                        on:click=go_forward
+                    >
                         <span class="nav-icon">"▶"</span>
                     </button>
                 </div>
                 <div class="finder-toolbar-title">
-                    {move || selected_sidebar.get()}
+                    {toolbar_title}
                 </div>
                 <div class="finder-toolbar-right">
                     <div class="finder-view-btns">
@@ -173,11 +205,17 @@ pub fn Finder() -> impl IntoView {
                         {sidebar_favorites.into_iter().map(|item| {
                             let name = item.name;
                             let icon = item.icon;
+                            let path = item.path;
                             let is_selected = move || selected_sidebar.get() == name;
                             view! {
                                 <div
                                     class=move || if is_selected() { "sidebar-item selected" } else { "sidebar-item" }
-                                    on:click=move |_| set_selected_sidebar.set(name)
+                                    on:click=move |_| {
+                                        set_selected_sidebar.set(name);
+                                        if let Some(p) = path {
+                                            set_current_path.set(p.to_string());
+                                        }
+                                    }
                                 >
                                     <span class="sidebar-icon">{icon}</span>
                                     <span class="sidebar-name">{name}</span>
@@ -191,11 +229,17 @@ pub fn Finder() -> impl IntoView {
                         {sidebar_locations.into_iter().map(|item| {
                             let name = item.name;
                             let icon = item.icon;
+                            let path = item.path;
                             let is_selected = move || selected_sidebar.get() == name;
                             view! {
                                 <div
                                     class=move || if is_selected() { "sidebar-item selected" } else { "sidebar-item" }
-                                    on:click=move |_| set_selected_sidebar.set(name)
+                                    on:click=move |_| {
+                                        set_selected_sidebar.set(name);
+                                        if let Some(p) = path {
+                                            set_current_path.set(p.to_string());
+                                        }
+                                    }
                                 >
                                     <span class="sidebar-icon">{icon}</span>
                                     <span class="sidebar-name">{name}</span>
@@ -210,18 +254,28 @@ pub fn Finder() -> impl IntoView {
                     <div class="finder-grid">
                         <For
                             each=files
-                            key=|item| item.name.clone()
+                            key=|item| item.path.clone()
                             children=move |item| {
                                 let name = item.name.clone();
+                                let path = item.path.clone();
+                                let path_for_dblclick = path.clone();
                                 let name_for_click = name.clone();
                                 let name_for_check = name.clone();
+                                let is_folder = item.is_folder;
+                                let icon = item.icon.clone();
                                 let is_selected = move || selected_items.get().contains(&name_for_check);
+
                                 view! {
                                     <div
                                         class=move || if is_selected() { "finder-item selected" } else { "finder-item" }
                                         on:click=move |_| toggle_selection(name_for_click.clone())
+                                        on:dblclick=move |_| {
+                                            if is_folder {
+                                                navigate_to(path_for_dblclick.clone());
+                                            }
+                                        }
                                     >
-                                        <div class="finder-item-icon">{item.icon}</div>
+                                        <div class="finder-item-icon">{icon}</div>
                                         <div class="finder-item-name">{name}</div>
                                     </div>
                                 }
