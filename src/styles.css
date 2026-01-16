@@ -9,7 +9,6 @@
 :root {
     --menubar-height: 25px;
     --menubar-bg: rgba(236, 236, 236, 0.8);
-    --menubar-bg-dark: rgba(40, 40, 40, 0.8);
     --menubar-text: #000;
     --menubar-text-secondary: rgba(0, 0, 0, 0.5);
     --menu-hover-bg: #0058d0;
@@ -17,7 +16,23 @@
     --menu-dropdown-bg: rgba(255, 255, 255, 0.95);
     --menu-dropdown-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     --menu-separator: rgba(0, 0, 0, 0.1);
+    --status-icon-hover: rgba(0, 0, 0, 0.1);
+    --menubar-border: rgba(0, 0, 0, 0.1);
     --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+    --menubar-bg: rgba(40, 40, 40, 0.8);
+    --menubar-text: #fff;
+    --menubar-text-secondary: rgba(255, 255, 255, 0.5);
+    --menu-hover-bg: #0058d0;
+    --menu-hover-text: #fff;
+    --menu-dropdown-bg: rgba(45, 45, 45, 0.95);
+    --menu-dropdown-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    --menu-separator: rgba(255, 255, 255, 0.1);
+    --status-icon-hover: rgba(255, 255, 255, 0.1);
+    --menubar-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -182,7 +197,7 @@ body {
 }
 
 .status-icon:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--status-icon-hover);
 }
 
 .status-icon svg {
@@ -334,6 +349,41 @@ body {
     height: 14px;
     background: linear-gradient(135deg, #ff6b9d 0%, #c44ef5 50%, #5eb5ff 100%);
     border-radius: 50%;
+}
+
+/* Dark Mode Toggle Icon */
+.dark-mode-toggle {
+    cursor: pointer;
+}
+
+.dark-mode-icon {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-mode-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    background: currentColor;
+    border-radius: 0 50% 50% 0;
+}
+
+.dark-mode-toggle.active .dark-mode-icon {
+    background: currentColor;
+}
+
+.dark-mode-toggle.active .dark-mode-icon::before {
+    background: var(--menubar-bg);
+    left: 0;
+    border-radius: 50% 0 0 50%;
 }
 
 /* Main Content Area (below menu bar) */
@@ -1046,4 +1096,238 @@ body {
     font-size: 14px;
     text-align: center;
     padding: 40px;
+}
+
+/* Terminal Styles */
+.terminal-content {
+    padding: 0;
+    background: #1e1e1e;
+}
+
+.terminal {
+    width: 100%;
+    height: 100%;
+    background: #1e1e1e;
+    color: #f0f0f0;
+    font-family: "SF Mono", "Monaco", "Menlo", "Consolas", monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+}
+
+.terminal-line {
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-height: 1.4em;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.terminal-prompt {
+    color: #4ec9b0;
+    flex-shrink: 0;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f0f0f0;
+    font-family: inherit;
+    font-size: inherit;
+    caret-color: #f0f0f0;
+}
+
+.terminal-input:focus {
+    outline: none;
+}
+
+/* Terminal scrollbar */
+.terminal-output::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-output::-webkit-scrollbar-track {
+    background: #2d2d2d;
+}
+
+.terminal-output::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.terminal-output::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Control Center Panel */
+.control-center-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 320px;
+    background: rgba(40, 40, 40, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10000;
+}
+
+.control-center-panel.open {
+    display: flex;
+}
+
+.cc-section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.cc-toggles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.cc-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.cc-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.cc-toggle.active {
+    background: #0a84ff;
+}
+
+.cc-toggle-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.cc-toggle-label {
+    font-size: 10px;
+    color: #fff;
+    text-align: center;
+}
+
+.cc-focus-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.cc-focus-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.cc-focus-toggle.active {
+    background: #5e5ce6;
+}
+
+.cc-focus-icon {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.cc-focus-toggle.active .cc-focus-icon {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.cc-focus-info {
+    flex: 1;
+}
+
+.cc-focus-label {
+    font-size: 13px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.cc-focus-status {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.cc-slider-section {
+    padding: 10px 12px;
+}
+
+.cc-slider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cc-slider-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.cc-range {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    outline: none;
+}
+
+.cc-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.cc-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }

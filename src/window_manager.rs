@@ -10,6 +10,24 @@ use crate::finder::Finder;
 use crate::calculator::Calculator;
 use crate::system_settings::SystemSettings;
 use crate::system_state::SystemState;
+use crate::terminal::Terminal;
+use crate::textedit::TextEdit;
+
+/// Actions that can be triggered via keyboard shortcuts
+#[derive(Clone, Copy, Debug, PartialEq, Default)]
+pub enum WindowAction {
+    #[default]
+    None,
+    CloseActive,
+    HideActive,
+    QuitAll,
+}
+
+/// Context for triggering window manager actions from outside the component
+#[derive(Clone, Copy)]
+pub struct WindowManagerContext {
+    pub action_trigger: WriteSignal<WindowAction>,
+}
 
 /// Unique identifier for windows
 pub type WindowId = usize;
@@ -20,6 +38,8 @@ pub enum AppType {
     Generic,
     Calculator,
     SystemSettings,
+    Terminal,
+    TextEdit,
 }
 
 /// Animation state for window minimize/restore
@@ -118,12 +138,13 @@ pub fn WindowManager() -> impl IntoView {
     let (windows, set_windows) = signal(vec![
         WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
         WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
-        WindowState::new(3, "Notes", 350.0, 200.0, 400.0, 300.0),
+        WindowState::new_with_app(3, "Terminal", 300.0, 120.0, 600.0, 400.0, AppType::Terminal),
+        WindowState::new_with_app(4, "TextEdit", 350.0, 200.0, 500.0, 400.0, AppType::TextEdit),
     ]);
 
-    let (next_id, set_next_id) = signal(4usize);
+    let (next_id, set_next_id) = signal(5usize);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
-    let (top_z_index, set_top_z_index) = signal(3i32);
+    let (top_z_index, set_top_z_index) = signal(4i32);
 
     // Watch for System Settings open request
     Effect::new(move |_| {
@@ -168,6 +189,51 @@ pub fn WindowManager() -> impl IntoView {
             }
         }
     });
+
+    // Action trigger for keyboard shortcuts
+    let (action_trigger, set_action_trigger) = signal(WindowAction::None);
+
+    // Provide context for keyboard shortcut handler
+    provide_context(WindowManagerContext {
+        action_trigger: set_action_trigger,
+    });
+
+    // Set up keyboard shortcut listener
+    #[cfg(target_arch = "wasm32")]
+    {
+        use wasm_bindgen::closure::Closure;
+        use wasm_bindgen::JsCast;
+
+        let cb = Closure::wrap(Box::new(move |e: web_sys::KeyboardEvent| {
+            // Check for Cmd (Meta) key on Mac or Ctrl on other platforms
+            if e.meta_key() || e.ctrl_key() {
+                match e.key().as_str() {
+                    "q" | "Q" => {
+                        e.prevent_default();
+                        set_action_trigger.set(WindowAction::QuitAll);
+                    }
+                    "w" | "W" => {
+                        e.prevent_default();
+                        set_action_trigger.set(WindowAction::CloseActive);
+                    }
+                    "h" | "H" => {
+                        // Only handle Cmd+H, not Ctrl+H (which might be browser history)
+                        if e.meta_key() {
+                            e.prevent_default();
+                            set_action_trigger.set(WindowAction::HideActive);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }) as Box<dyn Fn(web_sys::KeyboardEvent)>);
+
+        let window = web_sys::window().unwrap();
+        window
+            .add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref())
+            .unwrap();
+        cb.forget();
+    }
 
     // Bring window to front
     let bring_to_front = move |window_id: WindowId| {
@@ -433,6 +499,38 @@ pub fn WindowManager() -> impl IntoView {
             .map(|w| w.id)
     };
 
+    // Handle keyboard shortcut actions
+    Effect::new(move |_| {
+        let action = action_trigger.get();
+        match action {
+            WindowAction::None => {}
+            WindowAction::CloseActive => {
+                if let Some(window_id) = active_window_id() {
+                    set_windows.update(|windows| {
+                        windows.retain(|w| w.id != window_id);
+                    });
+                }
+                set_action_trigger.set(WindowAction::None);
+            }
+            WindowAction::HideActive => {
+                if let Some(window_id) = active_window_id() {
+                    set_windows.update(|windows| {
+                        if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                            win.is_minimized = true;
+                        }
+                    });
+                }
+                set_action_trigger.set(WindowAction::None);
+            }
+            WindowAction::QuitAll => {
+                set_windows.update(|windows| {
+                    windows.clear();
+                });
+                set_action_trigger.set(WindowAction::None);
+            }
+        }
+    });
+
     view! {
         <div
             class="desktop"
@@ -479,11 +577,17 @@ pub fn WindowManager() -> impl IntoView {
                     let app_type = window.app_type.clone();
                     let is_calculator = app_type == AppType::Calculator;
                     let is_system_settings = app_type == AppType::SystemSettings;
+                    let is_terminal = app_type == AppType::Terminal;
+                    let is_textedit = app_type == AppType::TextEdit;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
                     } else if is_system_settings {
                         "window-content settings-content"
+                    } else if is_terminal {
+                        "window-content terminal-content"
+                    } else if is_textedit {
+                        "window-content textedit-content"
                     } else {
                         "window-content"
                     };
@@ -529,6 +633,10 @@ pub fn WindowManager() -> impl IntoView {
                                     view! { <Calculator /> }.into_any()
                                 } else if is_system_settings {
                                     view! { <SystemSettings /> }.into_any()
+                                } else if is_terminal {
+                                    view! { <Terminal /> }.into_any()
+                                } else if is_textedit {
+                                    view! { <TextEdit /> }.into_any()
                                 } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {

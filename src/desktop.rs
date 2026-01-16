@@ -82,6 +82,28 @@ pub fn Desktop(
             on:mouseup=on_mouseup
             on:contextmenu=on_contextmenu
         >
+            <div class="feature-tour">
+                <h1 class="feature-tour-title">"Welcome to VirtualMac"</h1>
+                <p class="feature-tour-subtitle">"A macOS-style desktop experience in your browser"</p>
+                <div class="feature-tour-items">
+                    <div class="feature-tour-item">
+                        <span class="feature-tour-icon">"🖱️"</span>
+                        <span class="feature-tour-text">"Click and drag to select"</span>
+                    </div>
+                    <div class="feature-tour-item">
+                        <span class="feature-tour-icon">"📁"</span>
+                        <span class="feature-tour-text">"Open Finder to browse files"</span>
+                    </div>
+                    <div class="feature-tour-item">
+                        <span class="feature-tour-icon">"🧮"</span>
+                        <span class="feature-tour-text">"Launch Calculator from the dock"</span>
+                    </div>
+                    <div class="feature-tour-item">
+                        <span class="feature-tour-icon">"🪟"</span>
+                        <span class="feature-tour-text">"Drag windows to move, resize from edges"</span>
+                    </div>
+                </div>
+            </div>
             <Show when=move || selection.get().active>
                 <div
                     class="selection-rect"
