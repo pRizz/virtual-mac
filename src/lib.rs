@@ -7,6 +7,7 @@ mod dock;
 mod finder;
 mod menu_bar;
 mod spotlight;
+mod textedit;
 mod window_manager;
 
 use desktop::Desktop;

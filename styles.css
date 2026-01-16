@@ -1081,3 +1081,113 @@ html, body {
 .spotlight-results::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.3);
 }
+
+/* ============================================
+   TextEdit App Styles - macOS-style text editor
+   ============================================ */
+
+.textedit {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+.textedit-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: linear-gradient(180deg, #f6f6f6 0%, #e8e8e8 100%);
+    border-bottom: 1px solid #c8c8c8;
+    gap: 8px;
+}
+
+.textedit-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.textedit-toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background: #c8c8c8;
+    margin: 0 4px;
+}
+
+.textedit-btn {
+    min-width: 28px;
+    height: 24px;
+    padding: 0 8px;
+    border: 1px solid #c8c8c8;
+    background: linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s;
+}
+
+.textedit-btn:hover {
+    background: linear-gradient(180deg, #f8f8f8 0%, #e8e8e8 100%);
+    border-color: #b0b0b0;
+}
+
+.textedit-btn:active {
+    background: linear-gradient(180deg, #e0e0e0 0%, #d0d0d0 100%);
+}
+
+.textedit-btn.active {
+    background: linear-gradient(180deg, #d0d0d0 0%, #c0c0c0 100%);
+    border-color: #a0a0a0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.textedit-font-size {
+    font-size: 12px;
+    color: #666;
+    min-width: 40px;
+    text-align: center;
+}
+
+.textedit-content {
+    flex: 1;
+    padding: 16px 20px;
+    overflow-y: auto;
+    outline: none;
+    line-height: 1.6;
+    color: #1a1a1a;
+}
+
+.textedit-content:focus {
+    outline: none;
+}
+
+.textedit-statusbar {
+    height: 22px;
+    background: #f6f6f6;
+    border-top: 1px solid #d8d8d8;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 12px;
+    font-size: 11px;
+    color: #888;
+}
+
+/* TextEdit window content override */
+.window-content.textedit-content {
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Dock TextEdit icon */
+.dock-icon.textedit {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    color: #333;
+}

@@ -6,6 +6,7 @@ use wasm_bindgen::prelude::*;
 
 use crate::finder::Finder;
 use crate::calculator::Calculator;
+use crate::textedit::TextEdit;
 
 /// Unique identifier for windows
 type WindowId = usize;
@@ -15,6 +16,7 @@ type WindowId = usize;
 pub enum AppType {
     Generic,
     Calculator,
+    TextEdit,
 }
 
 /// Represents the state of a single window
@@ -98,7 +100,7 @@ pub fn WindowManager() -> impl IntoView {
     let (windows, set_windows) = signal(vec![
         WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
         WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
-        WindowState::new(3, "Notes", 350.0, 200.0, 400.0, 300.0),
+        WindowState::new_with_app(3, "TextEdit", 350.0, 200.0, 500.0, 400.0, AppType::TextEdit),
     ]);
 
     let (_next_id, _set_next_id) = signal(4usize);
@@ -346,9 +348,12 @@ pub fn WindowManager() -> impl IntoView {
                     let title_for_content = title.clone();
                     let app_type = window.app_type.clone();
                     let is_calculator = app_type == AppType::Calculator;
+                    let is_textedit = app_type == AppType::TextEdit;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
+                    } else if is_textedit {
+                        "window-content textedit-content"
                     } else {
                         "window-content"
                     };
@@ -392,6 +397,8 @@ pub fn WindowManager() -> impl IntoView {
                             <div class=content_class>
                                 {if is_calculator {
                                     view! { <Calculator /> }.into_any()
+                                } else if is_textedit {
+                                    view! { <TextEdit /> }.into_any()
                                 } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {
