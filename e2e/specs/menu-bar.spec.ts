@@ -24,31 +24,13 @@ test.describe('Menu Bar', () => {
   });
 
   test.describe('Dropdown Menus', () => {
-    test('should display Apple menu', async () => {
+    test('should display all menus', async () => {
       await expect(menuBar.appleMenu).toBeVisible();
-    });
-
-    test('should display VirtualMac app menu', async () => {
       await expect(menuBar.appMenu).toBeVisible();
-    });
-
-    test('should display File menu', async () => {
       await expect(menuBar.fileMenu).toBeVisible();
-    });
-
-    test('should display Edit menu', async () => {
       await expect(menuBar.editMenu).toBeVisible();
-    });
-
-    test('should display View menu', async () => {
       await expect(menuBar.viewMenu).toBeVisible();
-    });
-
-    test('should display Window menu', async () => {
       await expect(menuBar.windowMenu).toBeVisible();
-    });
-
-    test('should display Help menu', async () => {
       await expect(menuBar.helpMenu).toBeVisible();
     });
 

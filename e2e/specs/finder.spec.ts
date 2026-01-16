@@ -14,64 +14,24 @@ test.describe('Finder', () => {
   });
 
   test.describe('Sidebar Navigation', () => {
-    test('should display Favorites section', async () => {
+    test('should display sidebar sections', async () => {
       await expect(finder.sidebar.locator('.sidebar-header', { hasText: 'Favorites' })).toBeVisible();
-    });
-
-    test('should display Locations section', async () => {
       await expect(finder.sidebar.locator('.sidebar-header', { hasText: 'Locations' })).toBeVisible();
     });
 
-    test('should show AirDrop in sidebar', async () => {
-      await expect(finder.getSidebarItem('AirDrop')).toBeVisible();
+    test('should show all sidebar items', async () => {
+      const items = ['AirDrop', 'Recents', 'Applications', 'Desktop', 'Documents', 'Downloads', 'Macintosh HD'];
+      for (const item of items) {
+        await expect(finder.getSidebarItem(item)).toBeVisible();
+      }
     });
 
-    test('should show Recents in sidebar', async () => {
-      await expect(finder.getSidebarItem('Recents')).toBeVisible();
-    });
-
-    test('should show Applications in sidebar', async () => {
-      await expect(finder.getSidebarItem('Applications')).toBeVisible();
-    });
-
-    test('should show Desktop in sidebar', async () => {
-      await expect(finder.getSidebarItem('Desktop')).toBeVisible();
-    });
-
-    test('should show Documents in sidebar', async () => {
-      await expect(finder.getSidebarItem('Documents')).toBeVisible();
-    });
-
-    test('should show Downloads in sidebar', async () => {
-      await expect(finder.getSidebarItem('Downloads')).toBeVisible();
-    });
-
-    test('should show Macintosh HD in sidebar', async () => {
-      await expect(finder.getSidebarItem('Macintosh HD')).toBeVisible();
-    });
-
-    test('should navigate to Applications on click', async () => {
-      await finder.navigateToSidebarItem('Applications');
-
-      await expect(finder.getSidebarItem('Applications')).toHaveClass(/selected/);
-    });
-
-    test('should navigate to Desktop on click', async () => {
-      await finder.navigateToSidebarItem('Desktop');
-
-      await expect(finder.getSidebarItem('Desktop')).toHaveClass(/selected/);
-    });
-
-    test('should navigate to Documents on click', async () => {
-      await finder.navigateToSidebarItem('Documents');
-
-      await expect(finder.getSidebarItem('Documents')).toHaveClass(/selected/);
-    });
-
-    test('should navigate to Downloads on click', async () => {
-      await finder.navigateToSidebarItem('Downloads');
-
-      await expect(finder.getSidebarItem('Downloads')).toHaveClass(/selected/);
+    test('should navigate to sidebar items on click', async () => {
+      const items = ['Applications', 'Desktop', 'Documents', 'Downloads'];
+      for (const item of items) {
+        await finder.navigateToSidebarItem(item);
+        await expect(finder.getSidebarItem(item)).toHaveClass(/selected/);
+      }
     });
   });
 

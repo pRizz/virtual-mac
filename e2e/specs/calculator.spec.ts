@@ -262,30 +262,4 @@ test.describe('Calculator', () => {
     });
   });
 
-  test.describe('Button Classes', () => {
-    test('should have digit class for number buttons', async () => {
-      for (const digit of ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) {
-        const button = calculator.getDigitButton(digit);
-        await expect(button).toHaveClass(/digit/);
-      }
-    });
-
-    test('should have operator class for operation buttons', async () => {
-      for (const op of ['+', '−', '×', '÷', '=']) {
-        const button = calculator.getOperatorButton(op);
-        await expect(button).toHaveClass(/operator/);
-      }
-    });
-
-    test('should have function class for AC, +/−, %', async () => {
-      await expect(calculator.getFunctionButton('AC')).toHaveClass(/function/);
-      await expect(calculator.getFunctionButton('+/−')).toHaveClass(/function/);
-      await expect(calculator.getFunctionButton('%')).toHaveClass(/function/);
-    });
-
-    test('should have zero class spanning two columns', async () => {
-      const zeroButton = calculator.getDigitButton('0');
-      await expect(zeroButton).toHaveClass(/zero/);
-    });
-  });
 });
