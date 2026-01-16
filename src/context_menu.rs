@@ -2,6 +2,7 @@ use leptos::prelude::*;
 
 /// Represents the type of context for the menu
 #[derive(Clone, Debug, PartialEq)]
+#[allow(dead_code)]
 pub enum ContextMenuType {
     Desktop,
     DesktopIcon { name: String },
@@ -54,6 +55,7 @@ impl ContextMenuItem {
         self
     }
 
+    #[allow(dead_code)]
     pub fn disabled(mut self) -> Self {
         self.disabled = true;
         self

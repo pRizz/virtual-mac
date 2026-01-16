@@ -40,6 +40,7 @@ impl ThemeContext {
 }
 
 /// Apply theme to the document root element
+#[allow(unused_variables)]
 fn apply_theme_to_document(theme: Theme) {
     #[cfg(target_arch = "wasm32")]
     {
@@ -72,6 +73,7 @@ fn load_saved_theme() -> Theme {
 }
 
 /// Save theme preference to localStorage
+#[allow(unused_variables)]
 fn save_theme(theme: Theme) {
     #[cfg(target_arch = "wasm32")]
     {

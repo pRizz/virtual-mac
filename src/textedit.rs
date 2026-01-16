@@ -30,7 +30,7 @@ pub fn TextEdit() -> impl IntoView {
                 *s += 2;
             }
         });
-        let size = font_size.get();
+        let _size = font_size.get();
         execCommand("fontSize", false, "7");
     };
 

@@ -1,13 +1,6 @@
 use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use wasm_bindgen::prelude::*;
-use wasm_bindgen_futures::JsFuture;
-use web_sys::{IdbDatabase, IdbObjectStore, IdbRequest, IdbTransaction, IdbTransactionMode};
-
-const DB_NAME: &str = "virtualmac_fs";
-const DB_VERSION: u32 = 1;
-const STORE_NAME: &str = "files";
 
 /// File system entry type
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]

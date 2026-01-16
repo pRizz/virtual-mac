@@ -1,9 +1,9 @@
 use leptos::prelude::*;
 use leptos::ev::MouseEvent;
 
-#[allow(unused_imports)]
-use wasm_bindgen::prelude::*;
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::closure::Closure;
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::JsCast;
 
 use crate::finder::Finder;
@@ -15,6 +15,7 @@ use crate::textedit::TextEdit;
 
 /// Actions that can be triggered via keyboard shortcuts
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
+#[allow(dead_code)]
 pub enum WindowAction {
     #[default]
     None,
@@ -25,6 +26,7 @@ pub enum WindowAction {
 
 /// Context for triggering window manager actions from outside the component
 #[derive(Clone, Copy)]
+#[allow(dead_code)]
 pub struct WindowManagerContext {
     pub action_trigger: WriteSignal<WindowAction>,
 }
@@ -202,9 +204,6 @@ pub fn WindowManager() -> impl IntoView {
     // Set up keyboard shortcut listener
     #[cfg(target_arch = "wasm32")]
     {
-        use wasm_bindgen::closure::Closure;
-        use wasm_bindgen::JsCast;
-
         let cb = Closure::wrap(Box::new(move |e: web_sys::KeyboardEvent| {
             // Check for Cmd (Meta) key on Mac or Ctrl on other platforms
             if e.meta_key() || e.ctrl_key() {

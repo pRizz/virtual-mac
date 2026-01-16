@@ -75,6 +75,7 @@ impl SystemState {
         self.active_modal.set(None);
     }
 
+    #[allow(dead_code)]
     pub fn toggle_system_settings(&self) {
         self.open_system_settings.update(|v| *v = !*v);
     }
