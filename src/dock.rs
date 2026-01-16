@@ -1,6 +1,5 @@
 use leptos::prelude::*;
 use leptos::ev::MouseEvent;
-use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 
 /// Represents a dock item (app icon)

@@ -1,13 +1,6 @@
 use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use wasm_bindgen::prelude::*;
-use wasm_bindgen_futures::JsFuture;
-use web_sys::{IdbDatabase, IdbObjectStore, IdbRequest, IdbTransaction, IdbTransactionMode};
-
-const DB_NAME: &str = "virtualmac_fs";
-const DB_VERSION: u32 = 1;
-const STORE_NAME: &str = "files";
 
 /// File system entry type
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -382,7 +375,7 @@ impl VirtualFileSystem {
             if let Some(window) = web_sys::window() {
                 if let Ok(Some(storage)) = window.local_storage() {
                     let entries = self.entries.get();
-                    if let Ok(json) = serde_json::to_string(&*entries) {
+                    if let Ok(json) = serde_json::to_string(&entries) {
                         let _ = storage.set_item("virtualmac_fs", &json);
                     }
                 }
