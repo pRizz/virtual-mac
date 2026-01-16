@@ -1,7 +1,14 @@
 use leptos::prelude::*;
+use wasm_bindgen::prelude::*;
 
 use crate::system_state::{ModalType, SystemState};
 use crate::theme::use_theme;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = document)]
+    fn execCommand(command: &str, show_ui: bool, value: &str) -> bool;
+}
 
 #[component]
 pub fn MenuBar() -> impl IntoView {
@@ -66,6 +73,32 @@ pub fn MenuBar() -> impl IntoView {
     let on_log_out = Callback::new(move |_| {
         set_active_menu.set(None);
         system_state.show_modal(ModalType::LogOutConfirm);
+    });
+
+    // Edit menu action handlers
+    let on_undo = Callback::new(move |_| {
+        set_active_menu.set(None);
+        execCommand("undo", false, "");
+    });
+    let on_redo = Callback::new(move |_| {
+        set_active_menu.set(None);
+        execCommand("redo", false, "");
+    });
+    let on_cut = Callback::new(move |_| {
+        set_active_menu.set(None);
+        execCommand("cut", false, "");
+    });
+    let on_copy = Callback::new(move |_| {
+        set_active_menu.set(None);
+        execCommand("copy", false, "");
+    });
+    let on_paste = Callback::new(move |_| {
+        set_active_menu.set(None);
+        execCommand("paste", false, "");
+    });
+    let on_select_all = Callback::new(move |_| {
+        set_active_menu.set(None);
+        execCommand("selectAll", false, "");
     });
 
     view! {
@@ -140,15 +173,15 @@ pub fn MenuBar() -> impl IntoView {
                     active_menu=active_menu
                     set_active_menu=set_active_menu
                 >
-                    <DropdownItem label="Undo" shortcut="⌘Z" disabled=true />
-                    <DropdownItem label="Redo" shortcut="⇧⌘Z" disabled=true />
+                    <DropdownItem label="Undo" shortcut="⌘Z" on_click=on_undo />
+                    <DropdownItem label="Redo" shortcut="⇧⌘Z" on_click=on_redo />
                     <DropdownSeparator />
-                    <DropdownItem label="Cut" shortcut="⌘X" disabled=true />
-                    <DropdownItem label="Copy" shortcut="⌘C" disabled=true />
-                    <DropdownItem label="Paste" shortcut="⌘V" disabled=true />
+                    <DropdownItem label="Cut" shortcut="⌘X" on_click=on_cut />
+                    <DropdownItem label="Copy" shortcut="⌘C" on_click=on_copy />
+                    <DropdownItem label="Paste" shortcut="⌘V" on_click=on_paste />
                     <DropdownItem label="Paste and Match Style" shortcut="⌥⇧⌘V" disabled=true />
                     <DropdownItem label="Delete" disabled=true />
-                    <DropdownItem label="Select All" shortcut="⌘A" />
+                    <DropdownItem label="Select All" shortcut="⌘A" on_click=on_select_all />
                     <DropdownSeparator />
                     <DropdownItem label="Find" />
                     <DropdownItem label="Spelling and Grammar" />
@@ -332,7 +365,7 @@ fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
             <span></span>
             <ControlCenter
                 is_open=control_center_open
-                on_close=close_control_center
+                _on_close=close_control_center
             />
         </div>
         <div class="status-icon spotlight-icon"></div>

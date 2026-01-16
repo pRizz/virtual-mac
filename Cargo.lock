@@ -1584,7 +1584,10 @@ dependencies = [
  "console_error_panic_hook",
  "js-sys",
  "leptos",
+ "serde",
+ "serde_json",
  "wasm-bindgen",
+ "wasm-bindgen-futures",
  "web-sys",
 ]
 

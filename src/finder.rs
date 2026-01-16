@@ -253,7 +253,7 @@ pub fn Finder() -> impl IntoView {
                 <div class="finder-content">
                     <div class="finder-grid">
                         <For
-                            each=files
+                            each=files.clone()
                             key=|item| item.path.clone()
                             children=move |item| {
                                 let name = item.name.clone();
