@@ -49,8 +49,8 @@ fn DockIcon(
         let hovering = is_hovering.get();
 
         if hovering && mx > 0.0 {
-            // Approximate item center based on index (48px icon + 8px gap)
-            let item_center = 56.0 * (index as f64) + 24.0;
+            // Approximate item center based on index (56px item width + 6px gap)
+            let item_center = 62.0 * (index as f64) + 24.0;
             let new_scale = calculate_scale(item_center, mx, 1.8, 120.0);
             set_scale.set(new_scale);
         } else {
@@ -98,7 +98,7 @@ fn TrashIcon(
         let hovering = is_hovering.get();
 
         if hovering && mx > 0.0 {
-            let item_center = 56.0 * (index as f64) + 24.0;
+            let item_center = 62.0 * (index as f64) + 24.0;
             let new_scale = calculate_scale(item_center, mx, 1.8, 120.0);
             set_scale.set(new_scale);
         } else {
@@ -187,7 +187,7 @@ pub fn Dock() -> impl IntoView {
                         let hovering = is_hovering.get();
                         let idx = num_apps;
                         if hovering && mx > 0.0 {
-                            let item_center = 56.0 * (idx as f64) + 44.0; // +44 for separator
+                            let item_center = 62.0 * (idx as f64) + 44.0; // +44 for separator
                             let scale = calculate_scale(item_center, mx, 1.8, 120.0);
                             format!("scale({}) translateY({}px)", scale, (scale - 1.0) * -24.0)
                         } else {
