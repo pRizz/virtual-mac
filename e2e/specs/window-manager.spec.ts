@@ -197,4 +197,67 @@ test.describe('Window Manager', () => {
       await expect(calculator).not.toHaveClass(/active/);
     });
   });
+
+  test.describe('Keyboard Shortcuts', () => {
+    test('Cmd+W should close the active window', async ({ page }) => {
+      const notes = windowManager.getWindow('Notes');
+      // Click Notes to make it active
+      await notes.click();
+      await expect(notes).toHaveClass(/active/);
+
+      // Press Cmd+W (Meta+W)
+      await page.keyboard.press('Meta+w');
+
+      // Notes window should be closed
+      await expect(notes).not.toBeVisible();
+    });
+
+    test('Cmd+H should hide (minimize) the active window', async ({ page }) => {
+      const calculator = windowManager.getWindow('Calculator');
+      // Click Calculator to make it active
+      await calculator.click();
+      await expect(calculator).toHaveClass(/active/);
+
+      // Press Cmd+H (Meta+H)
+      await page.keyboard.press('Meta+h');
+
+      // Calculator window should be minimized
+      await expect(calculator).toHaveClass(/minimized/);
+    });
+
+    test('Cmd+Q should close all windows', async ({ page }) => {
+      const finder = windowManager.getWindow('Finder');
+      const calculator = windowManager.getWindow('Calculator');
+      const notes = windowManager.getWindow('Notes');
+
+      // Verify windows exist
+      await expect(finder).toBeVisible();
+      await expect(calculator).toBeVisible();
+      await expect(notes).toBeVisible();
+
+      // Press Cmd+Q (Meta+Q)
+      await page.keyboard.press('Meta+q');
+
+      // All windows should be closed
+      await expect(finder).not.toBeVisible();
+      await expect(calculator).not.toBeVisible();
+      await expect(notes).not.toBeVisible();
+    });
+
+    test('Cmd+W should close the correct active window', async ({ page }) => {
+      const finder = windowManager.getWindow('Finder');
+      const calculator = windowManager.getWindow('Calculator');
+
+      // Click Finder to make it active
+      await finder.click();
+      await expect(finder).toHaveClass(/active/);
+
+      // Press Cmd+W
+      await page.keyboard.press('Meta+w');
+
+      // Finder should be closed, Calculator should still exist
+      await expect(finder).not.toBeVisible();
+      await expect(calculator).toBeVisible();
+    });
+  });
 });

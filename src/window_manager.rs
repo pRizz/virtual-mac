@@ -7,6 +7,22 @@ use wasm_bindgen::prelude::*;
 use crate::finder::Finder;
 use crate::calculator::Calculator;
 
+/// Actions that can be triggered via keyboard shortcuts
+#[derive(Clone, Copy, Debug, PartialEq, Default)]
+pub enum WindowAction {
+    #[default]
+    None,
+    CloseActive,
+    HideActive,
+    QuitAll,
+}
+
+/// Context for triggering window manager actions from outside the component
+#[derive(Clone, Copy)]
+pub struct WindowManagerContext {
+    pub action_trigger: WriteSignal<WindowAction>,
+}
+
 /// Unique identifier for windows
 type WindowId = usize;
 
@@ -104,6 +120,51 @@ pub fn WindowManager() -> impl IntoView {
     let (_next_id, _set_next_id) = signal(4usize);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
     let (top_z_index, set_top_z_index) = signal(3i32);
+
+    // Action trigger for keyboard shortcuts
+    let (action_trigger, set_action_trigger) = signal(WindowAction::None);
+
+    // Provide context for keyboard shortcut handler
+    provide_context(WindowManagerContext {
+        action_trigger: set_action_trigger,
+    });
+
+    // Set up keyboard shortcut listener
+    #[cfg(target_arch = "wasm32")]
+    {
+        use wasm_bindgen::closure::Closure;
+        use wasm_bindgen::JsCast;
+
+        let cb = Closure::wrap(Box::new(move |e: web_sys::KeyboardEvent| {
+            // Check for Cmd (Meta) key on Mac or Ctrl on other platforms
+            if e.meta_key() || e.ctrl_key() {
+                match e.key().as_str() {
+                    "q" | "Q" => {
+                        e.prevent_default();
+                        set_action_trigger.set(WindowAction::QuitAll);
+                    }
+                    "w" | "W" => {
+                        e.prevent_default();
+                        set_action_trigger.set(WindowAction::CloseActive);
+                    }
+                    "h" | "H" => {
+                        // Only handle Cmd+H, not Ctrl+H (which might be browser history)
+                        if e.meta_key() {
+                            e.prevent_default();
+                            set_action_trigger.set(WindowAction::HideActive);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }) as Box<dyn Fn(web_sys::KeyboardEvent)>);
+
+        let window = web_sys::window().unwrap();
+        window
+            .add_event_listener_with_callback("keydown", cb.as_ref().unchecked_ref())
+            .unwrap();
+        cb.forget();
+    }
 
     // Bring window to front
     let bring_to_front = move |window_id: WindowId| {
@@ -305,6 +366,38 @@ pub fn WindowManager() -> impl IntoView {
             .max_by_key(|w| w.z_index)
             .map(|w| w.id)
     };
+
+    // Handle keyboard shortcut actions
+    Effect::new(move |_| {
+        let action = action_trigger.get();
+        match action {
+            WindowAction::None => {}
+            WindowAction::CloseActive => {
+                if let Some(window_id) = active_window_id() {
+                    set_windows.update(|windows| {
+                        windows.retain(|w| w.id != window_id);
+                    });
+                }
+                set_action_trigger.set(WindowAction::None);
+            }
+            WindowAction::HideActive => {
+                if let Some(window_id) = active_window_id() {
+                    set_windows.update(|windows| {
+                        if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                            win.is_minimized = true;
+                        }
+                    });
+                }
+                set_action_trigger.set(WindowAction::None);
+            }
+            WindowAction::QuitAll => {
+                set_windows.update(|windows| {
+                    windows.clear();
+                });
+                set_action_trigger.set(WindowAction::None);
+            }
+        }
+    });
 
     view! {
         <div
