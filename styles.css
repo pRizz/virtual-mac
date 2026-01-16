@@ -367,9 +367,10 @@ html, body {
 }
 
 /* Dock/Taskbar for minimized windows */
-.dock {
+/* Minimized windows dock - positioned above the main app dock */
+.minimized-windows-dock {
     position: fixed;
-    bottom: 10px;
+    bottom: 90px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(255, 255, 255, 0.2);
@@ -380,13 +381,14 @@ html, body {
     display: flex;
     gap: 8px;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+    z-index: 999;
 }
 
-.dock:empty {
+.minimized-windows-dock:empty {
     display: none;
 }
 
-.dock-item {
+.minimized-windows-dock .dock-item {
     width: 48px;
     height: 48px;
     background: rgba(255, 255, 255, 0.9);
@@ -402,7 +404,7 @@ html, body {
     transition: transform 0.1s;
 }
 
-.dock-item:hover {
+.minimized-windows-dock .dock-item:hover {
     transform: scale(1.1);
 }
 /* VirtualMac Dock Styles - macOS-style dock */
