@@ -16,6 +16,7 @@ mod system_state;
 mod terminal;
 mod textedit;
 pub mod theme;
+mod wallpaper;
 mod window_manager;
 
 use app_switcher::AppSwitcher;
@@ -28,6 +29,7 @@ use modals::{LockScreen, ModalOverlay, PowerOverlay};
 use spotlight::Spotlight;
 use system_state::SystemState;
 use theme::ThemeProvider;
+use wallpaper::provide_wallpaper_context;
 use window_manager::WindowManager;
 
 #[component]
@@ -38,6 +40,9 @@ fn App() -> impl IntoView {
     // Provide system state context for all child components
     let system_state = SystemState::new();
     provide_context(system_state);
+
+    // Provide wallpaper context
+    provide_wallpaper_context();
 
     view! {
         <ThemeProvider>

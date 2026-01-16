@@ -95,8 +95,8 @@ pub fn Finder() -> impl IntoView {
         }
     };
 
-    // Get files for current view
-    let files = move || {
+    // Get files for current view (using Memo so it can be used in multiple places)
+    let files = Memo::new(move |_| {
         // Subscribe to FS version for reactivity
         let _ = fs.version.get();
 
@@ -116,7 +116,7 @@ pub fn Finder() -> impl IntoView {
                     .collect()
             }
         }
-    };
+    });
 
     let toggle_selection = move |name: String| {
         set_selected_items.update(|items| {
@@ -253,7 +253,7 @@ pub fn Finder() -> impl IntoView {
                 <div class="finder-content">
                     <div class="finder-grid">
                         <For
-                            each=files
+                            each=move || files.get()
                             key=|item| item.path.clone()
                             children=move |item| {
                                 let name = item.name.clone();
@@ -286,7 +286,7 @@ pub fn Finder() -> impl IntoView {
                     // Status bar
                     <div class="finder-statusbar">
                         {move || {
-                            let count = files().len();
+                            let count = files.get().len();
                             format!("{} items", count)
                         }}
                     </div>

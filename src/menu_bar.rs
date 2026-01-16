@@ -310,10 +310,6 @@ fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
         set_control_center_open.update(|v| *v = !*v);
     };
 
-    let close_control_center = move |_| {
-        set_control_center_open.set(false);
-    };
-
     view! {
         <div class="status-icon">
             <WifiIcon />
@@ -332,7 +328,6 @@ fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
             <span></span>
             <ControlCenter
                 is_open=control_center_open
-                on_close=close_control_center
             />
         </div>
         <div class="status-icon spotlight-icon"></div>
@@ -353,7 +348,6 @@ fn DarkModeIcon() -> impl IntoView {
 #[component]
 fn ControlCenter(
     is_open: ReadSignal<bool>,
-    _on_close: impl Fn(leptos::ev::MouseEvent) + 'static,
 ) -> impl IntoView {
     let (wifi_on, set_wifi_on) = signal(true);
     let (bluetooth_on, set_bluetooth_on) = signal(true);

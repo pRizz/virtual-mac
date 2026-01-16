@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use crate::context_menu::{ContextMenuState, ContextMenuType, show_context_menu};
+use crate::wallpaper::{use_wallpaper_context, get_wallpaper_gradient};
 
 #[derive(Clone, Copy, Default)]
 struct SelectionRect {
@@ -32,7 +33,13 @@ impl SelectionRect {
 pub fn Desktop(
     context_menu_state: WriteSignal<ContextMenuState>,
 ) -> impl IntoView {
+    let wallpaper_ctx = use_wallpaper_context();
     let (selection, set_selection) = signal(SelectionRect::default());
+
+    let background_style = move || {
+        let gradient = get_wallpaper_gradient(wallpaper_ctx.current.get());
+        format!("background: {}", gradient)
+    };
 
     let on_mousedown = move |ev: web_sys::MouseEvent| {
         // Only start selection on left click
@@ -77,6 +84,7 @@ pub fn Desktop(
     view! {
         <div
             class="desktop"
+            style=background_style
             on:mousedown=on_mousedown
             on:mousemove=on_mousemove
             on:mouseup=on_mouseup

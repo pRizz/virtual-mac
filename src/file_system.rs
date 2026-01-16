@@ -382,7 +382,7 @@ impl VirtualFileSystem {
             if let Some(window) = web_sys::window() {
                 if let Ok(Some(storage)) = window.local_storage() {
                     let entries = self.entries.get();
-                    if let Ok(json) = serde_json::to_string(&*entries) {
+                    if let Ok(json) = serde_json::to_string(&entries) {
                         let _ = storage.set_item("virtualmac_fs", &json);
                     }
                 }

@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use crate::wallpaper::{use_wallpaper_context, WALLPAPERS};
 
 /// System Settings app content
 #[component]
@@ -91,6 +92,7 @@ pub fn SystemSettings() -> impl IntoView {
                     "general" => view! { <GeneralPane /> }.into_any(),
                     "appearance" => view! { <AppearancePane /> }.into_any(),
                     "desktop" => view! { <DesktopDockPane /> }.into_any(),
+                    "wallpaper" => view! { <WallpaperPane /> }.into_any(),
                     _ => view! { <PlaceholderPane name=selected_pane.get() /> }.into_any(),
                 }}
             </div>
@@ -226,6 +228,35 @@ fn DesktopDockPane() -> impl IntoView {
 }
 
 #[component]
+fn WallpaperPane() -> impl IntoView {
+    let wallpaper_ctx = use_wallpaper_context();
+
+    view! {
+        <div class="settings-pane">
+            <h1 class="settings-pane-title">"Wallpaper"</h1>
+            <p class="settings-pane-description">"Choose a wallpaper for your desktop"</p>
+            <div class="wallpaper-grid">
+                {WALLPAPERS.iter().map(|wallpaper| {
+                    let id = wallpaper.id;
+                    let gradient = wallpaper.gradient;
+                    let name = wallpaper.name;
+                    let is_selected = move || wallpaper_ctx.current.get() == id;
+                    view! {
+                        <div
+                            class=move || if is_selected() { "wallpaper-item selected" } else { "wallpaper-item" }
+                            on:click=move |_| wallpaper_ctx.set_current.set(id)
+                        >
+                            <div class="wallpaper-thumbnail" style=format!("background: {}", gradient) />
+                            <span class="wallpaper-name">{name}</span>
+                        </div>
+                    }
+                }).collect::<Vec<_>>()}
+            </div>
+        </div>
+    }
+}
+
+#[component]
 fn PlaceholderPane(name: &'static str) -> impl IntoView {
     let title = match name {
         "wifi" => "Wi-Fi",
@@ -234,7 +265,6 @@ fn PlaceholderPane(name: &'static str) -> impl IntoView {
         "notifications" => "Notifications",
         "sound" => "Sound",
         "displays" => "Displays",
-        "wallpaper" => "Wallpaper",
         _ => name,
     };
 

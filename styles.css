@@ -1563,3 +1563,65 @@ html, body {
     background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
     color: #333;
 }
+
+/* Wallpaper Picker Styles */
+.settings-pane-description {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.wallpaper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.wallpaper-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.15s;
+}
+
+.wallpaper-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.wallpaper-item.selected {
+    background: rgba(0, 122, 255, 0.2);
+}
+
+.wallpaper-item.selected .wallpaper-thumbnail {
+    box-shadow: 0 0 0 3px #007aff;
+}
+
+.wallpaper-thumbnail {
+    width: 120px;
+    height: 75px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.15s;
+}
+
+.wallpaper-name {
+    font-size: 12px;
+    color: #fff;
+    margin-top: 8px;
+    text-align: center;
+}
+
+[data-theme="light"] .wallpaper-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .wallpaper-item.selected {
+    background: rgba(0, 122, 255, 0.15);
+}
+
+[data-theme="light"] .wallpaper-name {
+    color: #333;
+}
