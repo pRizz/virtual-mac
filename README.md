@@ -53,6 +53,56 @@ src/
 └── dock.rs          # Bottom dock component
 ```
 
+## Testing
+
+End-to-end tests are written using [Playwright](https://playwright.dev/).
+
+### Install Test Dependencies
+
+```bash
+npm install
+npx playwright install
+```
+
+### Run Tests
+
+```bash
+# Run all tests (headless)
+npm test
+
+# Watch tests run in a real browser
+npm run test:headed
+
+# Interactive UI mode (step through tests visually)
+npm run test:ui
+
+# Debug mode with Playwright Inspector
+npm run test:debug
+
+# View HTML test report
+npm run test:report
+```
+
+### Test Structure
+
+```
+e2e/
+├── page-objects/    # Page object classes for each component
+│   ├── desktop.page.ts
+│   ├── menu-bar.page.ts
+│   ├── window-manager.page.ts
+│   ├── dock.page.ts
+│   ├── finder.page.ts
+│   └── calculator.page.ts
+└── specs/           # Test specifications
+    ├── desktop.spec.ts
+    ├── menu-bar.spec.ts
+    ├── window-manager.spec.ts
+    ├── dock.spec.ts
+    ├── finder.spec.ts
+    └── calculator.spec.ts
+```
+
 ## License
 
 MIT
