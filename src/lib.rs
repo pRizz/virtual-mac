@@ -4,6 +4,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 mod calculator;
 mod desktop;
 mod dock;
+pub mod file_system;
 mod finder;
 mod menu_bar;
 mod spotlight;
@@ -11,6 +12,7 @@ mod window_manager;
 
 use desktop::Desktop;
 use dock::Dock;
+use file_system::FileSystemProvider;
 use menu_bar::MenuBar;
 use spotlight::Spotlight;
 use window_manager::WindowManager;
@@ -18,11 +20,13 @@ use window_manager::WindowManager;
 #[component]
 fn App() -> impl IntoView {
     view! {
-        <MenuBar />
-        <Desktop />
-        <WindowManager />
-        <Dock />
-        <Spotlight />
+        <FileSystemProvider>
+            <MenuBar />
+            <Desktop />
+            <WindowManager />
+            <Dock />
+            <Spotlight />
+        </FileSystemProvider>
     }
 }
 

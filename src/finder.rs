@@ -1,27 +1,23 @@
 use leptos::prelude::*;
 
-/// Represents a file or folder item
+use crate::file_system::{use_file_system, FileEntry, EntryType};
+
+/// Represents a file or folder item for display
 #[derive(Clone, Debug, PartialEq)]
 pub struct FileItem {
     pub name: String,
+    pub path: String,
     pub is_folder: bool,
-    pub icon: &'static str,
+    pub icon: String,
 }
 
 impl FileItem {
-    fn folder(name: &str) -> Self {
+    pub fn from_entry(entry: &FileEntry) -> Self {
         Self {
-            name: name.to_string(),
-            is_folder: true,
-            icon: "📁",
-        }
-    }
-
-    fn file(name: &str, icon: &'static str) -> Self {
-        Self {
-            name: name.to_string(),
-            is_folder: false,
-            icon,
+            name: entry.metadata.name.clone(),
+            path: entry.metadata.path.clone(),
+            is_folder: entry.is_directory(),
+            icon: entry.metadata.icon.clone(),
         }
     }
 }
@@ -31,73 +27,94 @@ impl FileItem {
 struct SidebarItem {
     name: &'static str,
     icon: &'static str,
+    path: Option<&'static str>,
 }
 
 /// The Finder application component
 #[component]
 pub fn Finder() -> impl IntoView {
+    let fs = use_file_system();
     let (selected_sidebar, set_selected_sidebar) = signal("Recents");
+    let (current_path, set_current_path) = signal("/".to_string());
     let (selected_items, set_selected_items) = signal(Vec::<String>::new());
+    let (path_history, set_path_history) = signal(vec!["/".to_string()]);
+    let (history_index, set_history_index) = signal(0usize);
 
-    // Sidebar favorites
+    // Sidebar favorites with their corresponding paths
     let sidebar_favorites = vec![
-        SidebarItem { name: "AirDrop", icon: "📡" },
-        SidebarItem { name: "Recents", icon: "🕐" },
-        SidebarItem { name: "Applications", icon: "📲" },
-        SidebarItem { name: "Desktop", icon: "🖥" },
-        SidebarItem { name: "Documents", icon: "📄" },
-        SidebarItem { name: "Downloads", icon: "📥" },
+        SidebarItem { name: "AirDrop", icon: "📡", path: None },
+        SidebarItem { name: "Recents", icon: "🕐", path: None },
+        SidebarItem { name: "Applications", icon: "📲", path: Some("/Applications") },
+        SidebarItem { name: "Desktop", icon: "🖥", path: Some("/Desktop") },
+        SidebarItem { name: "Documents", icon: "📄", path: Some("/Documents") },
+        SidebarItem { name: "Downloads", icon: "📥", path: Some("/Downloads") },
     ];
 
     // Sidebar locations
     let sidebar_locations = vec![
-        SidebarItem { name: "Macintosh HD", icon: "💾" },
-        SidebarItem { name: "Network", icon: "🌐" },
+        SidebarItem { name: "Macintosh HD", icon: "💾", path: Some("/") },
+        SidebarItem { name: "Network", icon: "🌐", path: None },
     ];
 
-    // Mock files for the current view
+    // Navigate to a path
+    let navigate_to = move |path: String| {
+        set_current_path.set(path.clone());
+        set_path_history.update(|history| {
+            let idx = history_index.get();
+            // Truncate forward history
+            history.truncate(idx + 1);
+            history.push(path);
+        });
+        set_history_index.update(|idx| *idx += 1);
+        set_selected_items.set(Vec::new());
+    };
+
+    // Go back in history
+    let go_back = move |_| {
+        let idx = history_index.get();
+        if idx > 0 {
+            set_history_index.set(idx - 1);
+            let history = path_history.get();
+            if let Some(path) = history.get(idx - 1) {
+                set_current_path.set(path.clone());
+                set_selected_items.set(Vec::new());
+            }
+        }
+    };
+
+    // Go forward in history
+    let go_forward = move |_| {
+        let idx = history_index.get();
+        let history = path_history.get();
+        if idx + 1 < history.len() {
+            set_history_index.set(idx + 1);
+            if let Some(path) = history.get(idx + 1) {
+                set_current_path.set(path.clone());
+                set_selected_items.set(Vec::new());
+            }
+        }
+    };
+
+    // Get files for current view
     let files = move || {
+        // Subscribe to FS version for reactivity
+        let _ = fs.version.get();
+
         match selected_sidebar.get() {
-            "Applications" => vec![
-                FileItem::file("Safari", "🧭"),
-                FileItem::file("Mail", "✉️"),
-                FileItem::file("Calendar", "📅"),
-                FileItem::file("Notes", "📝"),
-                FileItem::file("Reminders", "☑️"),
-                FileItem::file("Music", "🎵"),
-                FileItem::file("Photos", "🖼"),
-                FileItem::file("Messages", "💬"),
-                FileItem::file("FaceTime", "📹"),
-                FileItem::file("Maps", "🗺"),
-                FileItem::file("Terminal", "⌨"),
-                FileItem::file("System Settings", "⚙️"),
-            ],
-            "Desktop" => vec![
-                FileItem::folder("Projects"),
-                FileItem::file("Screenshot.png", "🖼"),
-                FileItem::file("Notes.txt", "📄"),
-            ],
-            "Documents" => vec![
-                FileItem::folder("Work"),
-                FileItem::folder("Personal"),
-                FileItem::file("Resume.pdf", "📕"),
-                FileItem::file("Budget.xlsx", "📊"),
-                FileItem::file("Notes.txt", "📄"),
-            ],
-            "Downloads" => vec![
-                FileItem::file("installer.dmg", "💿"),
-                FileItem::file("photo.jpg", "🖼"),
-                FileItem::file("document.pdf", "📕"),
-                FileItem::file("archive.zip", "📦"),
-            ],
-            "Recents" => vec![
-                FileItem::file("document.pdf", "📕"),
-                FileItem::file("photo.jpg", "🖼"),
-                FileItem::folder("Projects"),
-                FileItem::file("notes.txt", "📄"),
-                FileItem::file("spreadsheet.xlsx", "📊"),
-            ],
-            _ => vec![],
+            "Recents" => {
+                fs.get_recents(10)
+                    .into_iter()
+                    .map(|e| FileItem::from_entry(&e))
+                    .collect()
+            }
+            "AirDrop" | "Network" => Vec::new(),
+            _ => {
+                let path = current_path.get();
+                fs.list_dir(&path)
+                    .into_iter()
+                    .map(|e| FileItem::from_entry(&e))
+                    .collect()
+            }
         }
     };
 
