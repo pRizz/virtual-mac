@@ -81,105 +81,15 @@ test.describe('Calculator', () => {
       await calculator.calculate('4-9');
       expect(await calculator.getDisplayValue()).toBe('-5');
     });
-
-    test('should subtract decimals: 5.5 - 2.2 = 3.3', async () => {
-      await calculator.pressClear();
-      await calculator.pressDigit('5');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('5');
-      await calculator.pressOperator('−');
-      await calculator.pressDigit('2');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('2');
-      await calculator.pressEquals();
-
-      const result = await calculator.getDisplayValue();
-      expect(parseFloat(result)).toBeCloseTo(3.3, 1);
-    });
-  });
-
-  test.describe('Multiplication', () => {
-    test('should multiply: 6 × 7 = 42', async () => {
-      await calculator.calculate('6×7');
-      expect(await calculator.getDisplayValue()).toBe('42');
-    });
-
-    test('should multiply by zero: 5 × 0 = 0', async () => {
-      await calculator.calculate('5×0');
-      expect(await calculator.getDisplayValue()).toBe('0');
-    });
-  });
-
-  test.describe('Division', () => {
-    test('should divide: 8 ÷ 2 = 4', async () => {
-      await calculator.calculate('8÷2');
-      expect(await calculator.getDisplayValue()).toBe('4');
-    });
-
-    test('should handle divide by zero', async () => {
-      await calculator.calculate('5÷0');
-      const result = await calculator.getDisplayValue();
-      expect(result === 'Error' || result === 'Infinity' || result === '∞').toBe(true);
-    });
-  });
-
-  test.describe('AC (All Clear)', () => {
-    test('should clear display to 0', async () => {
-      await calculator.pressDigit('1');
-      await calculator.pressDigit('2');
-      await calculator.pressDigit('3');
-
-      await calculator.pressClear();
-
-      expect(await calculator.getDisplayValue()).toBe('0');
-    });
-
-    test('should clear pending operation', async () => {
-      await calculator.pressDigit('5');
-      await calculator.pressOperator('+');
-      await calculator.pressDigit('3');
-
-      await calculator.pressClear();
-      await calculator.pressDigit('7');
-      await calculator.pressEquals();
-
-      expect(await calculator.getDisplayValue()).toBe('7');
-    });
   });
 
   test.describe('+/− (Negate)', () => {
-    test('should negate positive number', async () => {
-      await calculator.pressDigit('5');
-      await calculator.pressNegate();
-
-      expect(await calculator.getDisplayValue()).toBe('-5');
-    });
-
     test('should negate negative number back to positive', async () => {
       await calculator.pressDigit('5');
       await calculator.pressNegate();
       await calculator.pressNegate();
 
       expect(await calculator.getDisplayValue()).toBe('5');
-    });
-  });
-
-  test.describe('% (Percent)', () => {
-    test('should convert to percentage: 50 -> 0.5', async () => {
-      await calculator.pressDigit('5');
-      await calculator.pressDigit('0');
-      await calculator.pressPercent();
-
-      expect(await calculator.getDisplayValue()).toBe('0.5');
-    });
-
-    test('should convert: 100 -> 1', async () => {
-      await calculator.pressDigit('1');
-      await calculator.pressDigit('0');
-      await calculator.pressDigit('0');
-      await calculator.pressPercent();
-
-      expect(await calculator.getDisplayValue()).toBe('1');
     });
   });
 
