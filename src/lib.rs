@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::wasm_bindgen;
 
+mod app_switcher;
 mod calculator;
 mod context_menu;
 mod desktop;
@@ -16,6 +17,7 @@ mod terminal;
 pub mod theme;
 mod window_manager;
 
+use app_switcher::AppSwitcher;
 use context_menu::{ContextMenu, ContextMenuState};
 use desktop::Desktop;
 use dock::Dock;
@@ -44,6 +46,7 @@ fn App() -> impl IntoView {
                 <WindowManager />
                 <Dock context_menu_state=set_context_menu_state />
                 <Spotlight />
+                <AppSwitcher />
                 <ContextMenu state=context_menu_state set_state=set_context_menu_state />
                 <ModalOverlay />
                 <LockScreen />
