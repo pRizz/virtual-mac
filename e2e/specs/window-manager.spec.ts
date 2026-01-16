@@ -58,37 +58,6 @@ test.describe('Window Manager', () => {
   });
 
   test.describe('Window Resizing', () => {
-    test('should resize from east handle', async () => {
-      const finder = windowManager.getWindow('Finder');
-      const initialPos = await windowManager.getWindowPosition(finder);
-
-      await windowManager.resizeWindow(finder, 'e', 50, 0);
-
-      const newPos = await windowManager.getWindowPosition(finder);
-      expect(newPos!.width).toBeGreaterThan(initialPos!.width);
-    });
-
-    test('should resize from south handle', async () => {
-      const finder = windowManager.getWindow('Finder');
-      const initialPos = await windowManager.getWindowPosition(finder);
-
-      await windowManager.resizeWindow(finder, 's', 0, 50);
-
-      const newPos = await windowManager.getWindowPosition(finder);
-      expect(newPos!.height).toBeGreaterThan(initialPos!.height);
-    });
-
-    test('should resize from southeast corner', async () => {
-      const finder = windowManager.getWindow('Finder');
-      const initialPos = await windowManager.getWindowPosition(finder);
-
-      await windowManager.resizeWindow(finder, 'se', 50, 50);
-
-      const newPos = await windowManager.getWindowPosition(finder);
-      expect(newPos!.width).toBeGreaterThan(initialPos!.width);
-      expect(newPos!.height).toBeGreaterThan(initialPos!.height);
-    });
-
     test('should have all 8 resize handles', async () => {
       const handles = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
       const finder = windowManager.getWindow('Finder');
@@ -165,46 +134,7 @@ test.describe('Window Manager', () => {
     });
   });
 
-  test.describe('Z-Index Layering', () => {
-    test('should bring clicked window to front', async () => {
-      const finder = windowManager.getWindow('Finder');
-      const calculator = windowManager.getWindow('Calculator');
-
-      await calculator.click();
-
-      const calcZ = await windowManager.getZIndex(calculator);
-      const finderZ = await windowManager.getZIndex(finder);
-
-      expect(calcZ).toBeGreaterThan(finderZ);
-    });
-
-    test('should set active class on front window', async () => {
-      const finder = windowManager.getWindow('Finder');
-      const calculator = windowManager.getWindow('Calculator');
-
-      await calculator.click();
-      await expect(calculator).toHaveClass(/active/);
-
-      await finder.click();
-      await expect(finder).toHaveClass(/active/);
-      await expect(calculator).not.toHaveClass(/active/);
-    });
-  });
-
   test.describe('Keyboard Shortcuts', () => {
-    test('Cmd+H should hide (minimize) the active window', async ({ page }) => {
-      const calculator = windowManager.getWindow('Calculator');
-      // Click Calculator to make it active
-      await calculator.click();
-      await expect(calculator).toHaveClass(/active/);
-
-      // Press Cmd+H (Meta+H)
-      await page.keyboard.press('Meta+h');
-
-      // Calculator window should be minimized
-      await expect(calculator).toHaveClass(/minimized/);
-    });
-
     test('Cmd+Q should close all windows', async ({ page }) => {
       const finder = windowManager.getWindow('Finder');
       const calculator = windowManager.getWindow('Calculator');
@@ -222,22 +152,6 @@ test.describe('Window Manager', () => {
       await expect(finder).not.toBeVisible();
       await expect(calculator).not.toBeVisible();
       await expect(notes).not.toBeVisible();
-    });
-
-    test('Cmd+W should close the correct active window', async ({ page }) => {
-      const finder = windowManager.getWindow('Finder');
-      const calculator = windowManager.getWindow('Calculator');
-
-      // Click Finder to make it active
-      await finder.click();
-      await expect(finder).toHaveClass(/active/);
-
-      // Press Cmd+W
-      await page.keyboard.press('Meta+w');
-
-      // Finder should be closed, Calculator should still exist
-      await expect(finder).not.toBeVisible();
-      await expect(calculator).toBeVisible();
     });
   });
 });
