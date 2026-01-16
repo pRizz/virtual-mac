@@ -763,7 +763,7 @@ pub fn WindowManager() -> impl IntoView {
             />
 
             // Dock for minimized windows
-            <div class="dock">
+            <div class="minimized-windows-dock">
                 <For
                     each=minimized_windows
                     key=|window| window.id
