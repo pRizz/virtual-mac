@@ -1174,3 +1174,153 @@ html, body {
     text-overflow: ellipsis;
     max-width: 70px;
 }
+
+/* Mission Control (F3) */
+.mission-control-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 30, 35, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10002;
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    animation: mission-control-appear 0.25s ease-out;
+}
+
+@keyframes mission-control-appear {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.mission-control-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.mission-control-header {
+    text-align: center;
+}
+
+.mission-control-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.mission-control-windows {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px;
+}
+
+.mission-control-window {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.mission-control-window:hover {
+    transform: scale(1.08);
+}
+
+.mission-control-window:hover .mission-control-thumbnail {
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.7), 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.mission-control-window.minimized {
+    opacity: 0.6;
+}
+
+.mission-control-window.minimized .mission-control-thumbnail {
+    filter: grayscale(30%);
+}
+
+.mission-control-thumbnail {
+    background: rgba(40, 40, 45, 0.95);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 10px 30px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.15s ease;
+}
+
+.mission-control-thumb-titlebar {
+    height: 20px;
+    background: linear-gradient(180deg, rgba(60, 60, 65, 1) 0%, rgba(50, 50, 55, 1) 100%);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.mission-control-thumb-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.mission-control-thumb-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.mission-control-thumb-dots .dot.red {
+    background: #ff5f57;
+}
+
+.mission-control-thumb-dots .dot.yellow {
+    background: #ffbd2e;
+}
+
+.mission-control-thumb-dots .dot.green {
+    background: #28c940;
+}
+
+.mission-control-thumb-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(35, 35, 40, 1) 0%, rgba(25, 25, 30, 1) 100%);
+}
+
+.mission-control-thumb-icon {
+    font-size: 36px;
+    opacity: 0.8;
+}
+
+.mission-control-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}

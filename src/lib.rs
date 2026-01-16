@@ -7,18 +7,25 @@ mod desktop;
 mod dock;
 mod finder;
 mod menu_bar;
+mod mission_control;
 mod spotlight;
+mod window_context;
 mod window_manager;
 
 use app_switcher::AppSwitcher;
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
+use mission_control::MissionControl;
 use spotlight::Spotlight;
+use window_context::provide_window_context;
 use window_manager::WindowManager;
 
 #[component]
 fn App() -> impl IntoView {
+    // Provide shared window context for all components
+    provide_window_context();
+
     view! {
         <MenuBar />
         <Desktop />
@@ -26,6 +33,7 @@ fn App() -> impl IntoView {
         <Dock />
         <Spotlight />
         <AppSwitcher />
+        <MissionControl />
     }
 }
 
