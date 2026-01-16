@@ -6,12 +6,14 @@ mod desktop;
 mod dock;
 mod finder;
 mod menu_bar;
+pub mod quicklook;
 pub mod theme;
 mod window_manager;
 
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
+use quicklook::{QuickLookModal, QuickLookProvider};
 use theme::ThemeProvider;
 use window_manager::WindowManager;
 
@@ -19,10 +21,13 @@ use window_manager::WindowManager;
 fn App() -> impl IntoView {
     view! {
         <ThemeProvider>
-            <MenuBar />
-            <Desktop />
-            <WindowManager />
-            <Dock />
+            <QuickLookProvider>
+                <MenuBar />
+                <Desktop />
+                <WindowManager />
+                <Dock />
+                <QuickLookModal />
+            </QuickLookProvider>
         </ThemeProvider>
     }
 }

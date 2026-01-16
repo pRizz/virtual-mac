@@ -1,11 +1,24 @@
 use leptos::prelude::*;
 
+use crate::quicklook::{use_quicklook, FileType, QuickLookFile};
+
 /// Represents a file or folder item
 #[derive(Clone, Debug, PartialEq)]
 pub struct FileItem {
     pub name: String,
     pub is_folder: bool,
     pub icon: &'static str,
+}
+
+impl FileItem {
+    /// Convert to QuickLookFile for preview
+    pub fn to_quicklook_file(&self) -> QuickLookFile {
+        QuickLookFile {
+            name: self.name.clone(),
+            icon: self.icon.to_string(),
+            file_type: FileType::from_name(&self.name, self.is_folder),
+        }
+    }
 }
 
 impl FileItem {
@@ -36,8 +49,10 @@ struct SidebarItem {
 /// The Finder application component
 #[component]
 pub fn Finder() -> impl IntoView {
+    let quicklook = use_quicklook();
     let (selected_sidebar, set_selected_sidebar) = signal("Recents");
     let (selected_items, set_selected_items) = signal(Vec::<String>::new());
+    let (selected_file, set_selected_file) = signal(None::<FileItem>);
 
     // Sidebar favorites
     let sidebar_favorites = vec![
@@ -101,18 +116,29 @@ pub fn Finder() -> impl IntoView {
         }
     };
 
-    let toggle_selection = move |name: String| {
+    let select_file = move |file: FileItem| {
+        let name = file.name.clone();
         set_selected_items.update(|items| {
-            if items.contains(&name) {
-                items.retain(|n| n != &name);
-            } else {
-                items.push(name);
-            }
+            items.clear();
+            items.push(name);
         });
+        set_selected_file.set(Some(file));
+    };
+
+    // Handle keyboard events for Quick Look
+    let on_keydown = move |e: web_sys::KeyboardEvent| {
+        if e.key() == " " {
+            e.prevent_default();
+            if let Some(file) = selected_file.get() {
+                quicklook.toggle(Some(file.to_quicklook_file()));
+            }
+        } else if e.key() == "Escape" {
+            quicklook.hide();
+        }
     };
 
     view! {
-        <div class="finder">
+        <div class="finder" tabindex="0" on:keydown=on_keydown>
             // Toolbar
             <div class="finder-toolbar">
                 <div class="finder-toolbar-left">
@@ -196,13 +222,13 @@ pub fn Finder() -> impl IntoView {
                             key=|item| item.name.clone()
                             children=move |item| {
                                 let name = item.name.clone();
-                                let name_for_click = name.clone();
+                                let item_for_click = item.clone();
                                 let name_for_check = name.clone();
                                 let is_selected = move || selected_items.get().contains(&name_for_check);
                                 view! {
                                     <div
                                         class=move || if is_selected() { "finder-item selected" } else { "finder-item" }
-                                        on:click=move |_| toggle_selection(name_for_click.clone())
+                                        on:click=move |_| select_file(item_for_click.clone())
                                     >
                                         <div class="finder-item-icon">{item.icon}</div>
                                         <div class="finder-item-name">{name}</div>

@@ -920,6 +920,13 @@ html, body {
     justify-content: center;
     font-size: 11px;
     color: var(--finder-text-secondary);
+}
+
+/* Finder focus styles */
+.finder:focus {
+    outline: none;
+}
+
 /* Calculator App Styles - macOS Calculator clone */
 .calculator {
     width: 100%;
@@ -1022,4 +1029,144 @@ html, body {
 /* Dock calculator icon */
 .dock-icon.calculator {
     background: linear-gradient(135deg, #1c1c1c 0%, #3a3a3a 100%);
+}
+
+/* ============================================
+   Quick Look Styles - File preview modal
+   ============================================ */
+
+.quicklook-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.quicklook-modal {
+    background: var(--window-bg, #f5f5f5);
+    border-radius: 12px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+    min-width: 400px;
+    max-width: 80vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: quicklook-appear 0.2s ease-out;
+}
+
+@keyframes quicklook-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.quicklook-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, var(--window-titlebar-start, #e8e8e8) 0%, var(--window-titlebar-end, #d0d0d0) 100%);
+    border-bottom: 1px solid var(--window-titlebar-border, #b8b8b8);
+    border-radius: 12px 12px 0 0;
+}
+
+.quicklook-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--window-title-active, #1a1a1a);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    text-align: center;
+}
+
+.quicklook-close {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--window-title-color, #4a4a4a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.1s;
+}
+
+.quicklook-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.quicklook-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: var(--window-content-bg, #ffffff);
+    min-height: 300px;
+}
+
+.quicklook-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.quicklook-icon {
+    font-size: 128px;
+    line-height: 1;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.quicklook-info {
+    text-align: center;
+}
+
+.quicklook-filename {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--finder-text, #333);
+    margin-bottom: 4px;
+}
+
+.quicklook-filetype {
+    font-size: 12px;
+    color: var(--finder-text-secondary, #666);
+}
+
+.quicklook-footer {
+    padding: 12px 16px;
+    background: var(--finder-statusbar-bg, #f6f6f6);
+    border-top: 1px solid var(--finder-statusbar-border, #d8d8d8);
+    text-align: center;
+}
+
+.quicklook-hint {
+    font-size: 11px;
+    color: var(--finder-text-muted, #888);
+}
+
+/* Dark mode adjustments for Quick Look */
+[data-theme="dark"] .quicklook-close:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
