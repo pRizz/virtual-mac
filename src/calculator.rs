@@ -98,19 +98,19 @@ pub fn Calculator() -> impl IntoView {
             </div>
             <div class="calc-buttons">
                 <button class="calc-btn function" on:click=move |_| clear()>"AC"</button>
-                <button class="calc-btn function" on:click=move |_| negate()>"+/-"</button>
+                <button class="calc-btn function" on:click=move |_| negate()>"+/−"</button>
                 <button class="calc-btn function" on:click=move |_| percent()>"%"</button>
-                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Divide)>"/"</button>
+                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Divide)>"÷"</button>
 
                 <button class="calc-btn digit" on:click=move |_| append_digit("7")>"7"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("8")>"8"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("9")>"9"</button>
-                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Multiply)>"x"</button>
+                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Multiply)>"×"</button>
 
                 <button class="calc-btn digit" on:click=move |_| append_digit("4")>"4"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("5")>"5"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("6")>"6"</button>
-                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Subtract)>"-"</button>
+                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Subtract)>"−"</button>
 
                 <button class="calc-btn digit" on:click=move |_| append_digit("1")>"1"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("2")>"2"</button>

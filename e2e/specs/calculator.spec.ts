@@ -219,6 +219,7 @@ test.describe('Calculator', () => {
 
   test.describe('Decimal Point', () => {
     test('should add decimal point', async () => {
+      await calculator.pressClear();
       await calculator.pressDigit('3');
       await calculator.pressDecimal();
       await calculator.pressDigit('1');
@@ -228,6 +229,7 @@ test.describe('Calculator', () => {
     });
 
     test('should not add multiple decimal points', async () => {
+      await calculator.pressClear();
       await calculator.pressDigit('3');
       await calculator.pressDecimal();
       await calculator.pressDigit('1');
@@ -238,6 +240,7 @@ test.describe('Calculator', () => {
     });
 
     test('should allow decimal starting with 0', async () => {
+      await calculator.pressClear();
       await calculator.pressDecimal();
       await calculator.pressDigit('5');
 

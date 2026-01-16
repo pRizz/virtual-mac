@@ -20,7 +20,8 @@ export class CalculatorPage {
   }
 
   getDigitButton(digit: string): Locator {
-    return this.buttons.locator('.calc-btn.digit', { hasText: new RegExp(`^${digit}$`) }).first();
+    const escapedDigit = digit.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return this.buttons.locator('.calc-btn.digit', { hasText: new RegExp(`^${escapedDigit}$`) }).first();
   }
 
   getOperatorButton(op: string): Locator {
