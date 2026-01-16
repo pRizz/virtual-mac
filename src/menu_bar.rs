@@ -292,6 +292,7 @@ fn DropdownSeparator() -> impl IntoView {
 #[component]
 fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
     let theme_ctx = use_theme();
+    let (control_center_open, set_control_center_open) = signal(false);
 
     let toggle_theme = move |_| {
         theme_ctx.toggle();
@@ -305,6 +306,14 @@ fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
         }
     };
 
+    let toggle_control_center = move |_| {
+        set_control_center_open.update(|v| *v = !*v);
+    };
+
+    let close_control_center = move |_| {
+        set_control_center_open.set(false);
+    };
+
     view! {
         <div class="status-icon">
             <WifiIcon />
@@ -315,9 +324,16 @@ fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
         <div class=theme_icon_class on:click=toggle_theme title="Toggle Dark Mode">
             <DarkModeIcon />
         </div>
-        <div class="status-icon control-center-icon">
+        <div
+            class="status-icon control-center-icon"
+            on:click=toggle_control_center
+        >
             <span></span>
             <span></span>
+            <ControlCenter
+                is_open=control_center_open
+                on_close=close_control_center
+            />
         </div>
         <div class="status-icon spotlight-icon"></div>
         <div class="status-icon siri-icon"></div>
@@ -331,6 +347,118 @@ fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
 fn DarkModeIcon() -> impl IntoView {
     view! {
         <div class="dark-mode-icon"></div>
+    }
+}
+
+#[component]
+fn ControlCenter(
+    is_open: ReadSignal<bool>,
+    _on_close: impl Fn(leptos::ev::MouseEvent) + 'static,
+) -> impl IntoView {
+    let (wifi_on, set_wifi_on) = signal(true);
+    let (bluetooth_on, set_bluetooth_on) = signal(true);
+    let (airdrop_on, set_airdrop_on) = signal(false);
+    let (dnd_on, set_dnd_on) = signal(false);
+    let (brightness, set_brightness) = signal(75i32);
+    let (volume, set_volume) = signal(50i32);
+
+    let toggle_wifi = move |_| set_wifi_on.update(|v| *v = !*v);
+    let toggle_bluetooth = move |_| set_bluetooth_on.update(|v| *v = !*v);
+    let toggle_airdrop = move |_| set_airdrop_on.update(|v| *v = !*v);
+    let toggle_dnd = move |_| set_dnd_on.update(|v| *v = !*v);
+
+    let on_brightness_change = move |e: leptos::ev::Event| {
+        let value = event_target_value(&e).parse().unwrap_or(75);
+        set_brightness.set(value);
+    };
+
+    let on_volume_change = move |e: leptos::ev::Event| {
+        let value = event_target_value(&e).parse().unwrap_or(50);
+        set_volume.set(value);
+    };
+
+    let panel_class = move || {
+        if is_open.get() {
+            "control-center-panel open"
+        } else {
+            "control-center-panel"
+        }
+    };
+
+    // Prevent clicks inside panel from closing it
+    let stop_propagation = move |e: leptos::ev::MouseEvent| {
+        e.stop_propagation();
+    };
+
+    view! {
+        <div class=panel_class on:click=stop_propagation>
+            <div class="cc-section cc-toggles">
+                <div
+                    class=move || if wifi_on.get() { "cc-toggle active" } else { "cc-toggle" }
+                    on:click=toggle_wifi
+                >
+                    <div class="cc-toggle-icon">"📶"</div>
+                    <div class="cc-toggle-label">"Wi-Fi"</div>
+                </div>
+                <div
+                    class=move || if bluetooth_on.get() { "cc-toggle active" } else { "cc-toggle" }
+                    on:click=toggle_bluetooth
+                >
+                    <div class="cc-toggle-icon">"ᛒ"</div>
+                    <div class="cc-toggle-label">"Bluetooth"</div>
+                </div>
+                <div
+                    class=move || if airdrop_on.get() { "cc-toggle active" } else { "cc-toggle" }
+                    on:click=toggle_airdrop
+                >
+                    <div class="cc-toggle-icon">"📡"</div>
+                    <div class="cc-toggle-label">"AirDrop"</div>
+                </div>
+            </div>
+
+            <div class="cc-section cc-focus">
+                <div
+                    class=move || if dnd_on.get() { "cc-focus-toggle active" } else { "cc-focus-toggle" }
+                    on:click=toggle_dnd
+                >
+                    <div class="cc-focus-icon">"🌙"</div>
+                    <div class="cc-focus-info">
+                        <div class="cc-focus-label">"Do Not Disturb"</div>
+                        <div class="cc-focus-status">
+                            {move || if dnd_on.get() { "On" } else { "Off" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cc-section cc-slider-section">
+                <div class="cc-slider">
+                    <span class="cc-slider-icon">"🔆"</span>
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        prop:value=move || brightness.get()
+                        on:input=on_brightness_change
+                        class="cc-range"
+                    />
+                </div>
+            </div>
+
+            <div class="cc-section cc-slider-section">
+                <div class="cc-slider">
+                    <span class="cc-slider-icon">"🔊"</span>
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        prop:value=move || volume.get()
+                        on:input=on_volume_change
+                        class="cc-range"
+                    />
+                </div>
+            </div>
+        </div>
     }
 }
 
