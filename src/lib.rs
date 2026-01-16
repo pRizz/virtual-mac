@@ -2,6 +2,7 @@ use leptos::prelude::*;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 mod calculator;
+mod context_menu;
 mod desktop;
 mod dock;
 mod finder;
@@ -9,6 +10,7 @@ mod menu_bar;
 mod spotlight;
 mod window_manager;
 
+use context_menu::{ContextMenu, ContextMenuState};
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
@@ -17,12 +19,16 @@ use window_manager::WindowManager;
 
 #[component]
 fn App() -> impl IntoView {
+    // Global context menu state
+    let (context_menu_state, set_context_menu_state) = signal(ContextMenuState::default());
+
     view! {
         <MenuBar />
-        <Desktop />
+        <Desktop context_menu_state=set_context_menu_state />
         <WindowManager />
-        <Dock />
+        <Dock context_menu_state=set_context_menu_state />
         <Spotlight />
+        <ContextMenu state=context_menu_state set_state=set_context_menu_state />
     }
 }
 

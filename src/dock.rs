@@ -1,7 +1,9 @@
 use leptos::prelude::*;
 use leptos::ev::MouseEvent;
+#[allow(unused_imports)]
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
+use crate::context_menu::{ContextMenuState, ContextMenuType, show_context_menu};
 
 /// Represents a dock item (app icon)
 #[derive(Clone, Debug)]
@@ -36,6 +38,7 @@ fn DockIcon(
     mouse_x: ReadSignal<f64>,
     is_hovering: ReadSignal<bool>,
     index: usize,
+    context_menu_state: WriteSignal<ContextMenuState>,
 ) -> impl IntoView {
     let (scale, set_scale) = signal(1.0);
     let item_name = item.name;
@@ -58,6 +61,19 @@ fn DockIcon(
         }
     });
 
+    let on_contextmenu = move |ev: MouseEvent| {
+        ev.prevent_default();
+        ev.stop_propagation();
+        let x = ev.client_x() as f64;
+        let y = ev.client_y() as f64;
+        show_context_menu(
+            context_menu_state,
+            x,
+            y,
+            ContextMenuType::DockItem { name: item_name.to_string() },
+        );
+    };
+
     view! {
         <div
             class="dock-item"
@@ -67,6 +83,7 @@ fn DockIcon(
                 scale.get(),
                 (scale.get() - 1.0) * -24.0
             )
+            on:contextmenu=on_contextmenu
         >
             <div class="dock-icon-wrapper">
                 <div class=format!("dock-icon {}", item_icon_class)>
@@ -90,6 +107,7 @@ fn TrashIcon(
     mouse_x: ReadSignal<f64>,
     is_hovering: ReadSignal<bool>,
     index: usize,
+    context_menu_state: WriteSignal<ContextMenuState>,
 ) -> impl IntoView {
     let (scale, set_scale) = signal(1.0);
 
@@ -106,6 +124,14 @@ fn TrashIcon(
         }
     });
 
+    let on_contextmenu = move |ev: MouseEvent| {
+        ev.prevent_default();
+        ev.stop_propagation();
+        let x = ev.client_x() as f64;
+        let y = ev.client_y() as f64;
+        show_context_menu(context_menu_state, x, y, ContextMenuType::Trash);
+    };
+
     view! {
         <div
             class="dock-item"
@@ -115,6 +141,7 @@ fn TrashIcon(
                 scale.get(),
                 (scale.get() - 1.0) * -24.0
             )
+            on:contextmenu=on_contextmenu
         >
             <div class="dock-icon-wrapper">
                 <div class="dock-icon trash">
@@ -128,7 +155,9 @@ fn TrashIcon(
 
 /// Main dock component
 #[component]
-pub fn Dock() -> impl IntoView {
+pub fn Dock(
+    context_menu_state: WriteSignal<ContextMenuState>,
+) -> impl IntoView {
     let (mouse_x, set_mouse_x) = signal(0.0);
     let (is_hovering, set_is_hovering) = signal(false);
 
@@ -147,6 +176,19 @@ pub fn Dock() -> impl IntoView {
     ];
 
     let num_apps = apps.len();
+
+    let downloads_contextmenu = move |ev: MouseEvent| {
+        ev.prevent_default();
+        ev.stop_propagation();
+        let x = ev.client_x() as f64;
+        let y = ev.client_y() as f64;
+        show_context_menu(
+            context_menu_state,
+            x,
+            y,
+            ContextMenuType::DockItem { name: "Downloads".to_string() },
+        );
+    };
 
     view! {
         <div class="dock-container">
@@ -171,6 +213,7 @@ pub fn Dock() -> impl IntoView {
                             mouse_x=mouse_x
                             is_hovering=is_hovering
                             index=idx
+                            context_menu_state=context_menu_state
                         />
                     }
                 }).collect::<Vec<_>>()}
@@ -194,6 +237,7 @@ pub fn Dock() -> impl IntoView {
                             "scale(1) translateY(0px)".to_string()
                         }
                     }
+                    on:contextmenu=downloads_contextmenu
                 >
                     <div class="dock-icon-wrapper">
                         <div class="dock-icon downloads">"📥"</div>
@@ -206,6 +250,7 @@ pub fn Dock() -> impl IntoView {
                     mouse_x=mouse_x
                     is_hovering=is_hovering
                     index=num_apps + 1
+                    context_menu_state=context_menu_state
                 />
             </div>
         </div>

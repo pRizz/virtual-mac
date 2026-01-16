@@ -1081,3 +1081,89 @@ html, body {
 .spotlight-results::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.3);
 }
+
+/* ============================================
+   Context Menu - macOS-style right-click menu
+   ============================================ */
+
+.context-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998;
+}
+
+.context-menu {
+    position: fixed;
+    min-width: 200px;
+    max-width: 280px;
+    background: rgba(40, 40, 40, 0.95);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border-radius: 8px;
+    padding: 5px 0;
+    box-shadow:
+        0 0 0 0.5px rgba(255, 255, 255, 0.15),
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 1px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    animation: context-menu-appear 0.1s ease-out;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+}
+
+@keyframes context-menu-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.context-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.1s;
+}
+
+.context-menu-item:hover {
+    background: rgba(0, 122, 255, 0.8);
+}
+
+.context-menu-item.disabled {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.context-menu-item.disabled:hover {
+    background: transparent;
+}
+
+.context-menu-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.context-menu-shortcut {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 24px;
+}
+
+.context-menu-separator {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 5px 12px;
+}

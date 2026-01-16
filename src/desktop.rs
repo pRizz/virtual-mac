@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use crate::context_menu::{ContextMenuState, ContextMenuType, show_context_menu};
 
 #[derive(Clone, Copy, Default)]
 struct SelectionRect {
@@ -28,10 +29,16 @@ impl SelectionRect {
 }
 
 #[component]
-pub fn Desktop() -> impl IntoView {
+pub fn Desktop(
+    context_menu_state: WriteSignal<ContextMenuState>,
+) -> impl IntoView {
     let (selection, set_selection) = signal(SelectionRect::default());
 
     let on_mousedown = move |ev: web_sys::MouseEvent| {
+        // Only start selection on left click
+        if ev.button() != 0 {
+            return;
+        }
         let x = ev.client_x() as f64;
         let y = ev.client_y() as f64;
         set_selection.set(SelectionRect {
@@ -60,12 +67,20 @@ pub fn Desktop() -> impl IntoView {
         });
     };
 
+    let on_contextmenu = move |ev: web_sys::MouseEvent| {
+        ev.prevent_default();
+        let x = ev.client_x() as f64;
+        let y = ev.client_y() as f64;
+        show_context_menu(context_menu_state, x, y, ContextMenuType::Desktop);
+    };
+
     view! {
         <div
             class="desktop"
             on:mousedown=on_mousedown
             on:mousemove=on_mousemove
             on:mouseup=on_mouseup
+            on:contextmenu=on_contextmenu
         >
             <Show when=move || selection.get().active>
                 <div
