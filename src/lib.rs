@@ -6,6 +6,7 @@ mod desktop;
 mod dock;
 mod finder;
 mod menu_bar;
+mod terminal;
 mod window_manager;
 
 use desktop::Desktop;
