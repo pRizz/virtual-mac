@@ -40,7 +40,7 @@ impl ThemeContext {
 }
 
 /// Apply theme to the document root element
-fn apply_theme_to_document(theme: Theme) {
+fn apply_theme_to_document(_theme: Theme) {
     #[cfg(target_arch = "wasm32")]
     {
         if let Some(window) = web_sys::window() {
@@ -72,7 +72,7 @@ fn load_saved_theme() -> Theme {
 }
 
 /// Save theme preference to localStorage
-fn save_theme(theme: Theme) {
+fn save_theme(_theme: Theme) {
     #[cfg(target_arch = "wasm32")]
     {
         if let Some(window) = web_sys::window() {

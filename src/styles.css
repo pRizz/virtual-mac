@@ -197,7 +197,7 @@ body {
 }
 
 .status-icon:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--status-icon-hover);
 }
 
 .status-icon svg {
@@ -349,6 +349,41 @@ body {
     height: 14px;
     background: linear-gradient(135deg, #ff6b9d 0%, #c44ef5 50%, #5eb5ff 100%);
     border-radius: 50%;
+}
+
+/* Dark Mode Toggle Icon */
+.dark-mode-toggle {
+    cursor: pointer;
+}
+
+.dark-mode-icon {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-mode-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    background: currentColor;
+    border-radius: 0 50% 50% 0;
+}
+
+.dark-mode-toggle.active .dark-mode-icon {
+    background: currentColor;
+}
+
+.dark-mode-toggle.active .dark-mode-icon::before {
+    background: var(--menubar-bg);
+    left: 0;
+    border-radius: 50% 0 0 50%;
 }
 
 /* Main Content Area (below menu bar) */

@@ -6,20 +6,24 @@ mod desktop;
 mod dock;
 mod finder;
 mod menu_bar;
+pub mod theme;
 mod window_manager;
 
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
+use theme::ThemeProvider;
 use window_manager::WindowManager;
 
 #[component]
 fn App() -> impl IntoView {
     view! {
-        <MenuBar />
-        <Desktop />
-        <WindowManager />
-        <Dock />
+        <ThemeProvider>
+            <MenuBar />
+            <Desktop />
+            <WindowManager />
+            <Dock />
+        </ThemeProvider>
     }
 }
 

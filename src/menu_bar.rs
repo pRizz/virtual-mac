@@ -1,5 +1,7 @@
 use leptos::prelude::*;
 
+use crate::theme::use_theme;
+
 #[component]
 pub fn MenuBar() -> impl IntoView {
     let (active_menu, set_active_menu) = signal::<Option<&'static str>>(None);
@@ -246,12 +248,29 @@ fn DropdownSeparator() -> impl IntoView {
 
 #[component]
 fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
+    let theme_ctx = use_theme();
+
+    let toggle_theme = move |_| {
+        theme_ctx.toggle();
+    };
+
+    let theme_icon_class = move || {
+        if theme_ctx.is_dark() {
+            "status-icon dark-mode-toggle active"
+        } else {
+            "status-icon dark-mode-toggle"
+        }
+    };
+
     view! {
         <div class="status-icon">
             <WifiIcon />
         </div>
         <div class="status-icon">
             <BatteryIcon />
+        </div>
+        <div class=theme_icon_class on:click=toggle_theme title="Toggle Dark Mode">
+            <DarkModeIcon />
         </div>
         <div class="status-icon control-center-icon">
             <span></span>
@@ -262,6 +281,13 @@ fn StatusIcons(current_time: ReadSignal<String>) -> impl IntoView {
         <div class="status-icon status-clock">
             {move || current_time.get()}
         </div>
+    }
+}
+
+#[component]
+fn DarkModeIcon() -> impl IntoView {
+    view! {
+        <div class="dark-mode-icon"></div>
     }
 }
 
