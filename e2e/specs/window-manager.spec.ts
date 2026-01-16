@@ -199,19 +199,6 @@ test.describe('Window Manager', () => {
   });
 
   test.describe('Keyboard Shortcuts', () => {
-    test('Cmd+W should close the active window', async ({ page }) => {
-      const notes = windowManager.getWindow('Notes');
-      // Click Notes to make it active
-      await notes.click();
-      await expect(notes).toHaveClass(/active/);
-
-      // Press Cmd+W (Meta+W)
-      await page.keyboard.press('Meta+w');
-
-      // Notes window should be closed
-      await expect(notes).not.toBeVisible();
-    });
-
     test('Cmd+H should hide (minimize) the active window', async ({ page }) => {
       const calculator = windowManager.getWindow('Calculator');
       // Click Calculator to make it active

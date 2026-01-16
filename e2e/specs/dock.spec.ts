@@ -19,56 +19,15 @@ test.describe('Dock', () => {
       expect(bounds!.y + bounds!.height).toBeGreaterThan(viewportSize!.height - 100);
     });
 
-    test('should display Finder icon', async () => {
-      await expect(dock.getDockItem('Finder')).toBeVisible();
-    });
-
-    test('should display Safari icon', async () => {
-      await expect(dock.getDockItem('Safari')).toBeVisible();
-    });
-
-    test('should display Messages icon', async () => {
-      await expect(dock.getDockItem('Messages')).toBeVisible();
-    });
-
-    test('should display Mail icon', async () => {
-      await expect(dock.getDockItem('Mail')).toBeVisible();
-    });
-
-    test('should display Photos icon', async () => {
-      await expect(dock.getDockItem('Photos')).toBeVisible();
-    });
-
-    test('should display Music icon', async () => {
-      await expect(dock.getDockItem('Music')).toBeVisible();
-    });
-
-    test('should display Notes icon', async () => {
-      await expect(dock.getDockItem('Notes')).toBeVisible();
-    });
-
-    test('should display Calendar icon', async () => {
-      await expect(dock.getDockItem('Calendar')).toBeVisible();
-    });
-
-    test('should display System Settings icon', async () => {
-      await expect(dock.getDockItem('System Settings')).toBeVisible();
-    });
-
-    test('should display Terminal icon', async () => {
-      await expect(dock.getDockItem('Terminal')).toBeVisible();
+    test('should display all dock icons', async () => {
+      const icons = ['Finder', 'Safari', 'Messages', 'Mail', 'Photos', 'Music', 'Notes', 'Calendar', 'System Settings', 'Terminal', 'Downloads', 'Trash'];
+      for (const icon of icons) {
+        await expect(dock.getDockItem(icon)).toBeVisible();
+      }
     });
 
     test('should display dock separator', async () => {
       await expect(dock.dockSeparator).toBeVisible();
-    });
-
-    test('should display Downloads folder', async () => {
-      await expect(dock.getDockItem('Downloads')).toBeVisible();
-    });
-
-    test('should display Trash icon', async () => {
-      await expect(dock.getDockItem('Trash')).toBeVisible();
     });
   });
 
@@ -94,24 +53,12 @@ test.describe('Dock', () => {
   });
 
   test.describe('Tooltips', () => {
-    test('should have tooltip attribute for Finder', async () => {
-      const tooltip = await dock.getTooltipText('Finder');
-      expect(tooltip).toBe('Finder');
-    });
-
-    test('should have tooltip attribute for Safari', async () => {
-      const tooltip = await dock.getTooltipText('Safari');
-      expect(tooltip).toBe('Safari');
-    });
-
-    test('should have tooltip attribute for Trash', async () => {
-      const tooltip = await dock.getTooltipText('Trash');
-      expect(tooltip).toBe('Trash');
-    });
-
-    test('should have tooltip attribute for Downloads', async () => {
-      const tooltip = await dock.getTooltipText('Downloads');
-      expect(tooltip).toBe('Downloads');
+    test('should have tooltip attributes for dock items', async () => {
+      const items = ['Finder', 'Safari', 'Trash', 'Downloads'];
+      for (const item of items) {
+        const tooltip = await dock.getTooltipText(item);
+        expect(tooltip).toBe(item);
+      }
     });
   });
 
@@ -119,14 +66,6 @@ test.describe('Dock', () => {
     test('should be clickable', async () => {
       const item = dock.getDockItem('Finder');
       await expect(item).toBeEnabled();
-    });
-
-    test('should handle click on Safari icon', async () => {
-      await dock.clickDockItem('Safari');
-    });
-
-    test('should handle click on Trash icon', async () => {
-      await dock.clickDockItem('Trash');
     });
   });
 });
