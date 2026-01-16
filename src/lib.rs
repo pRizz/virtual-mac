@@ -6,11 +6,13 @@ mod desktop;
 mod dock;
 mod finder;
 mod menu_bar;
+mod spotlight;
 mod window_manager;
 
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
+use spotlight::Spotlight;
 use window_manager::WindowManager;
 
 #[component]
@@ -20,6 +22,7 @@ fn App() -> impl IntoView {
         <Desktop />
         <WindowManager />
         <Dock />
+        <Spotlight />
     }
 }
 

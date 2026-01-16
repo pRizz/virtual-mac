@@ -941,3 +941,143 @@ html, body {
 .dock-icon.calculator {
     background: linear-gradient(135deg, #1c1c1c 0%, #3a3a3a 100%);
 }
+
+/* ============================================
+   Spotlight Search - macOS-style search overlay
+   ============================================ */
+
+.spotlight-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    padding-top: 15vh;
+    z-index: 10000;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+.spotlight-container {
+    width: 680px;
+    max-width: 90vw;
+    background: rgba(30, 30, 30, 0.95);
+    border-radius: 12px;
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    overflow: hidden;
+    animation: spotlight-appear 0.15s ease-out;
+}
+
+@keyframes spotlight-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.spotlight-search-bar {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.spotlight-icon {
+    font-size: 22px;
+    opacity: 0.7;
+    filter: grayscale(100%);
+}
+
+.spotlight-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 22px;
+    font-weight: 300;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+}
+
+.spotlight-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.spotlight-results {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.spotlight-result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 14px;
+    cursor: pointer;
+    transition: background-color 0.1s;
+}
+
+.spotlight-result-item:hover,
+.spotlight-result-item.selected {
+    background: rgba(0, 122, 255, 0.4);
+}
+
+.spotlight-result-icon {
+    font-size: 32px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.spotlight-result-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.spotlight-result-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.spotlight-result-kind {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Scrollbar styling for Spotlight results */
+.spotlight-results::-webkit-scrollbar {
+    width: 8px;
+}
+
+.spotlight-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.spotlight-results::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.spotlight-results::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
