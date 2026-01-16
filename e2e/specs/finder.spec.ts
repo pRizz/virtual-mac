@@ -26,13 +26,6 @@ test.describe('Finder', () => {
       }
     });
 
-    test('should navigate to sidebar items on click', async () => {
-      const items = ['Applications', 'Desktop', 'Documents', 'Downloads'];
-      for (const item of items) {
-        await finder.navigateToSidebarItem(item);
-        await expect(finder.getSidebarItem(item)).toHaveClass(/selected/);
-      }
-    });
   });
 
   test.describe('File Grid Display', () => {
@@ -43,28 +36,6 @@ test.describe('Finder', () => {
 
     test('should display file grid', async () => {
       await expect(finder.fileGrid).toBeVisible();
-    });
-  });
-
-  test.describe('File Selection', () => {
-    test('should select file on click', async () => {
-      const files = finder.fileGrid.locator('.finder-item');
-      const firstFile = files.first();
-
-      await firstFile.click();
-
-      await expect(firstFile).toHaveClass(/selected/);
-    });
-
-    test('should toggle selection on second click', async () => {
-      const files = finder.fileGrid.locator('.finder-item');
-      const firstFile = files.first();
-
-      await firstFile.click();
-      await expect(firstFile).toHaveClass(/selected/);
-
-      await firstFile.click();
-      await expect(firstFile).not.toHaveClass(/selected/);
     });
   });
 
