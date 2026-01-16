@@ -1,10 +1,19 @@
 use leptos::prelude::*;
+use crate::window_manager::ActiveAppContext;
 
 #[component]
 pub fn MenuBar() -> impl IntoView {
     let (active_menu, set_active_menu) = signal::<Option<&'static str>>(None);
     let (current_time, set_current_time) = signal(get_current_time());
     let _ = &set_current_time; // Used in wasm32 block below
+
+    // Get active app from context (provided by WindowManager)
+    let active_app_ctx = use_context::<ActiveAppContext>();
+    let active_app = move || {
+        active_app_ctx
+            .map(|ctx| ctx.active_app.get())
+            .unwrap_or_else(|| "Finder".to_string())
+    };
 
     // Update clock every second (only in WASM)
     #[cfg(target_arch = "wasm32")]
@@ -57,23 +66,11 @@ pub fn MenuBar() -> impl IntoView {
                     <DropdownItem label="Log Out..." shortcut="⇧⌘Q" />
                 </MenuItem>
 
-                <MenuItem
-                    id="app"
-                    label="VirtualMac"
-                    class_name="app-name"
+                <DynamicAppMenu
+                    active_app=active_app
                     active_menu=active_menu
                     set_active_menu=set_active_menu
-                >
-                    <DropdownItem label="About VirtualMac" />
-                    <DropdownSeparator />
-                    <DropdownItem label="Settings..." shortcut="⌘," />
-                    <DropdownSeparator />
-                    <DropdownItem label="Hide VirtualMac" shortcut="⌘H" />
-                    <DropdownItem label="Hide Others" shortcut="⌥⌘H" />
-                    <DropdownItem label="Show All" />
-                    <DropdownSeparator />
-                    <DropdownItem label="Quit VirtualMac" shortcut="⌘Q" />
-                </MenuItem>
+                />
 
                 <MenuItem
                     id="file"
@@ -161,6 +158,125 @@ pub fn MenuBar() -> impl IntoView {
             <div class="menu-bar-right">
                 <StatusIcons current_time=current_time />
             </div>
+        </div>
+    }
+}
+
+/// Dynamic app menu that changes based on the active application
+#[component]
+fn DynamicAppMenu<F>(
+    active_app: F,
+    active_menu: ReadSignal<Option<&'static str>>,
+    set_active_menu: WriteSignal<Option<&'static str>>,
+) -> impl IntoView
+where
+    F: Fn() -> String + Copy + Send + 'static,
+{
+    let is_active = move || active_menu.get() == Some("app");
+
+    let on_click = move |_| {
+        if is_active() {
+            set_active_menu.set(None);
+        } else {
+            set_active_menu.set(Some("app"));
+        }
+    };
+
+    let on_mouse_enter = move |_| {
+        if active_menu.get().is_some() {
+            set_active_menu.set(Some("app"));
+        }
+    };
+
+    let class = move || {
+        let mut classes = vec!["menu-item", "app-name"];
+        if is_active() {
+            classes.push("active");
+        }
+        classes.join(" ")
+    };
+
+    view! {
+        <div class=class on:click=on_click on:mouseenter=on_mouse_enter>
+            <span>{move || active_app()}</span>
+            <div class="menu-dropdown">
+                {move || {
+                    let app = active_app();
+                    match app.as_str() {
+                        "Finder" => view! {
+                            <DynamicDropdownItem label=format!("About {}", app) />
+                            <DropdownSeparator />
+                            <DropdownItem label="Settings..." shortcut="⌘," />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Hide {}", app) shortcut="⌘H" />
+                            <DropdownItem label="Hide Others" shortcut="⌥⌘H" />
+                            <DropdownItem label="Show All" />
+                            <DropdownSeparator />
+                            <DropdownItem label="Empty Trash..." />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Quit {}", app) shortcut="⌘Q" />
+                        }.into_any(),
+                        "Calculator" => view! {
+                            <DynamicDropdownItem label=format!("About {}", app) />
+                            <DropdownSeparator />
+                            <DropdownItem label="Settings..." shortcut="⌘," />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Hide {}", app) shortcut="⌘H" />
+                            <DropdownItem label="Hide Others" shortcut="⌥⌘H" />
+                            <DropdownItem label="Show All" />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Quit {}", app) shortcut="⌘Q" />
+                        }.into_any(),
+                        "Notes" => view! {
+                            <DynamicDropdownItem label=format!("About {}", app) />
+                            <DropdownSeparator />
+                            <DropdownItem label="Settings..." shortcut="⌘," />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Hide {}", app) shortcut="⌘H" />
+                            <DropdownItem label="Hide Others" shortcut="⌥⌘H" />
+                            <DropdownItem label="Show All" />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Quit {}", app) shortcut="⌘Q" />
+                        }.into_any(),
+                        _ => view! {
+                            <DynamicDropdownItem label=format!("About {}", app) />
+                            <DropdownSeparator />
+                            <DropdownItem label="Settings..." shortcut="⌘," />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Hide {}", app) shortcut="⌘H" />
+                            <DropdownItem label="Hide Others" shortcut="⌥⌘H" />
+                            <DropdownItem label="Show All" />
+                            <DropdownSeparator />
+                            <DynamicDropdownItem label=format!("Quit {}", app) shortcut="⌘Q" />
+                        }.into_any(),
+                    }
+                }}
+            </div>
+        </div>
+    }
+}
+
+/// Dropdown item with dynamic (non-static) label
+#[component]
+fn DynamicDropdownItem(
+    label: String,
+    #[prop(optional)] shortcut: &'static str,
+    #[prop(optional)] disabled: bool,
+) -> impl IntoView {
+    let class = if disabled {
+        "dropdown-item disabled"
+    } else {
+        "dropdown-item"
+    };
+
+    view! {
+        <div class=class>
+            <span>{label}</span>
+            {if !shortcut.is_empty() {
+                view! { <span class="dropdown-shortcut">{shortcut}</span> }.into_any()
+            } else {
+                view! {}.into_any()
+            }}
         </div>
     }
 }

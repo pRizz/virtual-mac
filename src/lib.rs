@@ -13,10 +13,19 @@ use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
 use spotlight::Spotlight;
-use window_manager::WindowManager;
+use window_manager::{WindowManager, ActiveAppContext};
 
 #[component]
 fn App() -> impl IntoView {
+    // Create active app signal at App level so it's available to all components
+    let (active_app, set_active_app) = signal("Finder".to_string());
+
+    // Provide context for active app (used by MenuBar and written by WindowManager)
+    provide_context(ActiveAppContext {
+        active_app,
+        set_active_app,
+    });
+
     view! {
         <MenuBar />
         <Desktop />

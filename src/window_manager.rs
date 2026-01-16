@@ -23,6 +23,13 @@ pub struct WindowManagerContext {
     pub action_trigger: WriteSignal<WindowAction>,
 }
 
+/// Context for sharing the active app name with other components (e.g., MenuBar)
+#[derive(Clone, Copy)]
+pub struct ActiveAppContext {
+    pub active_app: ReadSignal<String>,
+    pub set_active_app: WriteSignal<String>,
+}
+
 /// Unique identifier for windows
 type WindowId = usize;
 
@@ -123,6 +130,10 @@ pub fn WindowManager() -> impl IntoView {
 
     // Action trigger for keyboard shortcuts
     let (action_trigger, set_action_trigger) = signal(WindowAction::None);
+
+    // Get active app context from parent (App component)
+    let active_app_ctx = use_context::<ActiveAppContext>();
+    let set_active_app = active_app_ctx.map(|ctx| ctx.set_active_app);
 
     // Provide context for keyboard shortcut handler
     provide_context(WindowManagerContext {
@@ -366,6 +377,18 @@ pub fn WindowManager() -> impl IntoView {
             .max_by_key(|w| w.z_index)
             .map(|w| w.id)
     };
+
+    // Update active app name when windows change
+    Effect::new(move |_| {
+        if let Some(set_active_app) = set_active_app {
+            let active_name = windows.get().iter()
+                .filter(|w| !w.is_minimized)
+                .max_by_key(|w| w.z_index)
+                .map(|w| w.title.clone())
+                .unwrap_or_else(|| "Finder".to_string());
+            set_active_app.set(active_name);
+        }
+    });
 
     // Handle keyboard shortcut actions
     Effect::new(move |_| {
