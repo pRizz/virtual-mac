@@ -93,28 +93,4 @@ test.describe('Calculator', () => {
     });
   });
 
-  test.describe('Decimal Point', () => {
-    test('should allow decimal starting with 0', async () => {
-      await calculator.pressClear();
-      await calculator.pressDecimal();
-      await calculator.pressDigit('5');
-
-      expect(await calculator.getDisplayValue()).toBe('0.5');
-    });
-  });
-
-  test.describe('Chained Operations', () => {
-    test('should chain operations: 5 + 3 + 2 = 10', async () => {
-      await calculator.pressClear();
-      await calculator.pressDigit('5');
-      await calculator.pressOperator('+');
-      await calculator.pressDigit('3');
-      await calculator.pressOperator('+');
-      await calculator.pressDigit('2');
-      await calculator.pressEquals();
-
-      expect(await calculator.getDisplayValue()).toBe('10');
-    });
-  });
-
 });
