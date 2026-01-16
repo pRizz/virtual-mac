@@ -9,6 +9,7 @@ use crate::calculator::Calculator;
 use crate::system_settings::SystemSettings;
 use crate::system_state::SystemState;
 use crate::terminal::Terminal;
+use crate::textedit::TextEdit;
 
 /// Actions that can be triggered via keyboard shortcuts
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
@@ -36,6 +37,7 @@ pub enum AppType {
     Calculator,
     SystemSettings,
     Terminal,
+    TextEdit,
 }
 
 /// Represents the state of a single window
@@ -122,11 +124,12 @@ pub fn WindowManager() -> impl IntoView {
         WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
         WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
         WindowState::new_with_app(3, "Terminal", 300.0, 120.0, 600.0, 400.0, AppType::Terminal),
+        WindowState::new_with_app(4, "TextEdit", 350.0, 200.0, 500.0, 400.0, AppType::TextEdit),
     ]);
 
-    let (next_id, set_next_id) = signal(4usize);
+    let (next_id, set_next_id) = signal(5usize);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
-    let (top_z_index, set_top_z_index) = signal(3i32);
+    let (top_z_index, set_top_z_index) = signal(4i32);
 
     // Watch for System Settings open request
     Effect::new(move |_| {
@@ -492,6 +495,7 @@ pub fn WindowManager() -> impl IntoView {
                     let is_calculator = app_type == AppType::Calculator;
                     let is_system_settings = app_type == AppType::SystemSettings;
                     let is_terminal = app_type == AppType::Terminal;
+                    let is_textedit = app_type == AppType::TextEdit;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
@@ -499,6 +503,8 @@ pub fn WindowManager() -> impl IntoView {
                         "window-content settings-content"
                     } else if is_terminal {
                         "window-content terminal-content"
+                    } else if is_textedit {
+                        "window-content textedit-content"
                     } else {
                         "window-content"
                     };
@@ -546,6 +552,8 @@ pub fn WindowManager() -> impl IntoView {
                                     view! { <SystemSettings /> }.into_any()
                                 } else if is_terminal {
                                     view! { <Terminal /> }.into_any()
+                                } else if is_textedit {
+                                    view! { <TextEdit /> }.into_any()
                                 } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {

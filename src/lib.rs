@@ -14,6 +14,7 @@ mod spotlight;
 mod system_settings;
 mod system_state;
 mod terminal;
+mod textedit;
 pub mod theme;
 mod window_manager;
 
