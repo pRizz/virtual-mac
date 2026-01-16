@@ -637,7 +637,7 @@ pub fn WindowManager() -> impl IntoView {
 
     view! {
         <div
-            class="desktop"
+            class="windows-container"
             on:mousemove=on_mouse_move
             on:mouseup=on_mouse_up
         >
