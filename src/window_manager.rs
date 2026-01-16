@@ -3,6 +3,8 @@ use leptos::ev::MouseEvent;
 
 #[allow(unused_imports)]
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::closure::Closure;
+use wasm_bindgen::JsCast;
 
 use crate::finder::Finder;
 use crate::calculator::Calculator;
@@ -18,6 +20,15 @@ pub enum AppType {
     Generic,
     Calculator,
     SystemSettings,
+}
+
+/// Animation state for window minimize/restore
+#[derive(Clone, Copy, Debug, PartialEq, Default)]
+pub enum AnimationState {
+    #[default]
+    None,
+    Minimizing,
+    Restoring,
 }
 
 /// Represents the state of a single window
@@ -36,6 +47,8 @@ pub struct WindowState {
     pub pre_maximize: Option<(f64, f64, f64, f64)>,
     /// Type of application in this window
     pub app_type: AppType,
+    /// Current animation state
+    pub animation: AnimationState,
 }
 
 impl WindowState {
@@ -52,6 +65,7 @@ impl WindowState {
             is_maximized: false,
             pre_maximize: None,
             app_type: AppType::Generic,
+            animation: AnimationState::None,
         }
     }
 
@@ -68,6 +82,7 @@ impl WindowState {
             is_maximized: false,
             pre_maximize: None,
             app_type,
+            animation: AnimationState::None,
         }
     }
 }
@@ -172,13 +187,45 @@ pub fn WindowManager() -> impl IntoView {
         });
     };
 
-    // Minimize window
+    // Minimize window with genie animation
     let minimize_window = move |window_id: WindowId| {
+        // Start the minimize animation
         set_windows.update(|windows| {
             if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
-                win.is_minimized = true;
+                win.animation = AnimationState::Minimizing;
             }
         });
+
+        // After animation completes (400ms), set minimized state
+        #[cfg(target_arch = "wasm32")]
+        {
+            let cb = Closure::once(Box::new(move || {
+                set_windows.update(|windows| {
+                    if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                        win.animation = AnimationState::None;
+                        win.is_minimized = true;
+                    }
+                });
+            }) as Box<dyn FnOnce()>);
+
+            let window = web_sys::window().unwrap();
+            window
+                .set_timeout_with_callback_and_timeout_and_arguments_0(
+                    cb.as_ref().unchecked_ref(),
+                    400, // Match animation duration
+                )
+                .unwrap();
+            cb.forget();
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            set_windows.update(|windows| {
+                if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                    win.animation = AnimationState::None;
+                    win.is_minimized = true;
+                }
+            });
+        }
     };
 
     // Maximize/restore window
@@ -204,14 +251,45 @@ pub fn WindowManager() -> impl IntoView {
         });
     };
 
-    // Restore minimized window
+    // Restore minimized window with genie animation
     let restore_window = move |window_id: WindowId| {
         bring_to_front(window_id);
+        // Start restore animation - remove minimized and add restoring
         set_windows.update(|windows| {
             if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
                 win.is_minimized = false;
+                win.animation = AnimationState::Restoring;
             }
         });
+
+        // After animation completes (400ms), clear animation state
+        #[cfg(target_arch = "wasm32")]
+        {
+            let cb = Closure::once(Box::new(move || {
+                set_windows.update(|windows| {
+                    if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                        win.animation = AnimationState::None;
+                    }
+                });
+            }) as Box<dyn FnOnce()>);
+
+            let window = web_sys::window().unwrap();
+            window
+                .set_timeout_with_callback_and_timeout_and_arguments_0(
+                    cb.as_ref().unchecked_ref(),
+                    400, // Match animation duration
+                )
+                .unwrap();
+            cb.forget();
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            set_windows.update(|windows| {
+                if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                    win.animation = AnimationState::None;
+                }
+            });
+        }
     };
 
     // Start dragging (moving) a window
@@ -375,6 +453,11 @@ pub fn WindowManager() -> impl IntoView {
                             if is_active() { classes.push("active"); }
                             if w.is_minimized { classes.push("minimized"); }
                             if w.is_maximized { classes.push("maximized"); }
+                            match w.animation {
+                                AnimationState::Minimizing => classes.push("minimizing"),
+                                AnimationState::Restoring => classes.push("restoring"),
+                                AnimationState::None => {}
+                            }
                         }
                         classes.join(" ")
                     };
