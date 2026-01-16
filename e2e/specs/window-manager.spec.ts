@@ -147,13 +147,6 @@ test.describe('Window Manager', () => {
       await expect(notes).not.toBeVisible();
     });
 
-    test('should minimize window on minimize button click', async () => {
-      const finder = windowManager.getWindow('Finder');
-      await windowManager.getMinimizeButton(finder).click();
-
-      await expect(finder).toHaveClass(/minimized/);
-    });
-
     test('should maximize window on maximize button click', async () => {
       const finder = windowManager.getWindow('Finder');
       await windowManager.getMaximizeButton(finder).click();

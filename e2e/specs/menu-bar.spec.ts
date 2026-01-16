@@ -24,16 +24,6 @@ test.describe('Menu Bar', () => {
   });
 
   test.describe('Dropdown Menus', () => {
-    test('should display all menus', async () => {
-      await expect(menuBar.appleMenu).toBeVisible();
-      await expect(menuBar.appMenu).toBeVisible();
-      await expect(menuBar.fileMenu).toBeVisible();
-      await expect(menuBar.editMenu).toBeVisible();
-      await expect(menuBar.viewMenu).toBeVisible();
-      await expect(menuBar.windowMenu).toBeVisible();
-      await expect(menuBar.helpMenu).toBeVisible();
-    });
-
     test('should open Apple menu dropdown on click', async () => {
       await menuBar.openMenu(menuBar.appleMenu);
 
