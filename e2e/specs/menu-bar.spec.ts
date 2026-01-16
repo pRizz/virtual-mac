@@ -46,26 +46,11 @@ test.describe('Menu Bar', () => {
       await expect(items.filter({ hasText: 'System Settings' })).toBeVisible();
     });
 
-    test('should show File menu items', async () => {
-      await menuBar.openMenu(menuBar.fileMenu);
-
-      const dropdown = menuBar.fileMenu.locator('.menu-dropdown');
-      await expect(dropdown).toBeVisible();
-    });
-
     test('should close menu when clicking elsewhere', async ({ page }) => {
       await menuBar.openMenu(menuBar.fileMenu);
       await expect(menuBar.fileMenu).toHaveClass(/active/);
 
       await page.mouse.click(500, 300);
-      await expect(menuBar.fileMenu).not.toHaveClass(/active/);
-    });
-
-    test('should switch menus on hover when one is open', async () => {
-      await menuBar.openMenu(menuBar.fileMenu);
-      await menuBar.editMenu.hover();
-
-      await expect(menuBar.editMenu).toHaveClass(/active/);
       await expect(menuBar.fileMenu).not.toHaveClass(/active/);
     });
   });

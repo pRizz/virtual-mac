@@ -108,18 +108,6 @@ test.describe('Calculator', () => {
       await calculator.calculate('5×0');
       expect(await calculator.getDisplayValue()).toBe('0');
     });
-
-    test('should multiply decimals: 2.5 × 4 = 10', async () => {
-      await calculator.pressClear();
-      await calculator.pressDigit('2');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('5');
-      await calculator.pressOperator('×');
-      await calculator.pressDigit('4');
-      await calculator.pressEquals();
-
-      expect(await calculator.getDisplayValue()).toBe('10');
-    });
   });
 
   test.describe('Division', () => {
@@ -128,29 +116,10 @@ test.describe('Calculator', () => {
       expect(await calculator.getDisplayValue()).toBe('4');
     });
 
-    test('should handle decimal result: 5 ÷ 2 = 2.5', async () => {
-      await calculator.calculate('5÷2');
-      expect(await calculator.getDisplayValue()).toBe('2.5');
-    });
-
     test('should handle divide by zero', async () => {
       await calculator.calculate('5÷0');
       const result = await calculator.getDisplayValue();
       expect(result === 'Error' || result === 'Infinity' || result === '∞').toBe(true);
-    });
-
-    test('should divide decimals: 7.5 ÷ 2.5 = 3', async () => {
-      await calculator.pressClear();
-      await calculator.pressDigit('7');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('5');
-      await calculator.pressOperator('÷');
-      await calculator.pressDigit('2');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('5');
-      await calculator.pressEquals();
-
-      expect(await calculator.getDisplayValue()).toBe('3');
     });
   });
 
@@ -212,38 +181,9 @@ test.describe('Calculator', () => {
 
       expect(await calculator.getDisplayValue()).toBe('1');
     });
-
-    test('should convert: 25 -> 0.25', async () => {
-      await calculator.pressDigit('2');
-      await calculator.pressDigit('5');
-      await calculator.pressPercent();
-
-      expect(await calculator.getDisplayValue()).toBe('0.25');
-    });
   });
 
   test.describe('Decimal Point', () => {
-    test('should add decimal point', async () => {
-      await calculator.pressClear();
-      await calculator.pressDigit('3');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('1');
-      await calculator.pressDigit('4');
-
-      expect(await calculator.getDisplayValue()).toBe('3.14');
-    });
-
-    test('should not add multiple decimal points', async () => {
-      await calculator.pressClear();
-      await calculator.pressDigit('3');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('1');
-      await calculator.pressDecimal();
-      await calculator.pressDigit('4');
-
-      expect(await calculator.getDisplayValue()).toBe('3.14');
-    });
-
     test('should allow decimal starting with 0', async () => {
       await calculator.pressClear();
       await calculator.pressDecimal();

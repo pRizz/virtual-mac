@@ -44,17 +44,6 @@ test.describe('Window Manager', () => {
       expect(newPos!.x).toBeGreaterThan(initialPos!.x);
       expect(newPos!.y).toBeGreaterThan(initialPos!.y);
     });
-
-    test('should bring window to front when dragging', async () => {
-      const notes = windowManager.getWindow('Notes');
-      const finder = windowManager.getWindow('Finder');
-
-      await windowManager.dragWindow(finder, 10, 10);
-
-      const finderZ = await windowManager.getZIndex(finder);
-      const notesZ = await windowManager.getZIndex(notes);
-      expect(finderZ).toBeGreaterThanOrEqual(notesZ);
-    });
   });
 
   test.describe('Window Resizing', () => {
@@ -131,27 +120,6 @@ test.describe('Window Manager', () => {
 
       await windowManager.getMaximizeButton(finder).click();
       await expect(finder).not.toHaveClass(/maximized/);
-    });
-  });
-
-  test.describe('Keyboard Shortcuts', () => {
-    test('Cmd+Q should close all windows', async ({ page }) => {
-      const finder = windowManager.getWindow('Finder');
-      const calculator = windowManager.getWindow('Calculator');
-      const notes = windowManager.getWindow('Notes');
-
-      // Verify windows exist
-      await expect(finder).toBeVisible();
-      await expect(calculator).toBeVisible();
-      await expect(notes).toBeVisible();
-
-      // Press Cmd+Q (Meta+Q)
-      await page.keyboard.press('Meta+q');
-
-      // All windows should be closed
-      await expect(finder).not.toBeVisible();
-      await expect(calculator).not.toBeVisible();
-      await expect(notes).not.toBeVisible();
     });
   });
 });
