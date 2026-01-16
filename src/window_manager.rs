@@ -483,6 +483,110 @@ pub fn WindowManager() -> impl IntoView {
         set_drag_op.set(DragOperation::None);
     };
 
+    // Set up document-level mouse event listeners for drag/resize operations.
+    // This ensures drag continues even when mouse moves over menu bar or other elements.
+    #[cfg(target_arch = "wasm32")]
+    {
+        let doc_mousemove_handler = Closure::wrap(Box::new(move |e: web_sys::MouseEvent| {
+            let op = drag_op.get();
+            match op {
+                DragOperation::None => {}
+                DragOperation::Move { window_id, start_x, start_y, window_start_x, window_start_y } => {
+                    let dx = e.client_x() as f64 - start_x;
+                    let dy = e.client_y() as f64 - start_y;
+                    set_windows.update(|windows| {
+                        if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                            win.x = (window_start_x + dx).max(0.0);
+                            win.y = (window_start_y + dy).max(0.0);
+                        }
+                    });
+                }
+                DragOperation::Resize { window_id, direction, start_x, start_y, window_start_x, window_start_y, window_start_width, window_start_height } => {
+                    let dx = e.client_x() as f64 - start_x;
+                    let dy = e.client_y() as f64 - start_y;
+
+                    set_windows.update(|windows| {
+                        if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
+                            let min_width = 200.0;
+                            let min_height = 100.0;
+
+                            match direction {
+                                ResizeDirection::E => {
+                                    win.width = (window_start_width + dx).max(min_width);
+                                }
+                                ResizeDirection::W => {
+                                    let new_width = (window_start_width - dx).max(min_width);
+                                    let actual_dx = window_start_width - new_width;
+                                    win.x = window_start_x + actual_dx;
+                                    win.width = new_width;
+                                }
+                                ResizeDirection::S => {
+                                    win.height = (window_start_height + dy).max(min_height);
+                                }
+                                ResizeDirection::N => {
+                                    let new_height = (window_start_height - dy).max(min_height);
+                                    let actual_dy = window_start_height - new_height;
+                                    win.y = window_start_y + actual_dy;
+                                    win.height = new_height;
+                                }
+                                ResizeDirection::SE => {
+                                    win.width = (window_start_width + dx).max(min_width);
+                                    win.height = (window_start_height + dy).max(min_height);
+                                }
+                                ResizeDirection::SW => {
+                                    let new_width = (window_start_width - dx).max(min_width);
+                                    let actual_dx = window_start_width - new_width;
+                                    win.x = window_start_x + actual_dx;
+                                    win.width = new_width;
+                                    win.height = (window_start_height + dy).max(min_height);
+                                }
+                                ResizeDirection::NE => {
+                                    win.width = (window_start_width + dx).max(min_width);
+                                    let new_height = (window_start_height - dy).max(min_height);
+                                    let actual_dy = window_start_height - new_height;
+                                    win.y = window_start_y + actual_dy;
+                                    win.height = new_height;
+                                }
+                                ResizeDirection::NW => {
+                                    let new_width = (window_start_width - dx).max(min_width);
+                                    let actual_dx = window_start_width - new_width;
+                                    win.x = window_start_x + actual_dx;
+                                    win.width = new_width;
+                                    let new_height = (window_start_height - dy).max(min_height);
+                                    let actual_dy = window_start_height - new_height;
+                                    win.y = window_start_y + actual_dy;
+                                    win.height = new_height;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }) as Box<dyn Fn(web_sys::MouseEvent)>);
+
+        let doc_mouseup_handler = Closure::wrap(Box::new(move |_: web_sys::MouseEvent| {
+            set_drag_op.set(DragOperation::None);
+        }) as Box<dyn Fn(web_sys::MouseEvent)>);
+
+        // Add document-level listeners
+        if let Some(window) = web_sys::window() {
+            if let Some(document) = window.document() {
+                let _ = document.add_event_listener_with_callback(
+                    "mousemove",
+                    doc_mousemove_handler.as_ref().unchecked_ref(),
+                );
+                let _ = document.add_event_listener_with_callback(
+                    "mouseup",
+                    doc_mouseup_handler.as_ref().unchecked_ref(),
+                );
+            }
+        }
+
+        // Keep closures alive for the lifetime of the app
+        doc_mousemove_handler.forget();
+        doc_mouseup_handler.forget();
+    }
+
     // Get minimized windows for dock
     let minimized_windows = move || {
         windows.get().iter()
