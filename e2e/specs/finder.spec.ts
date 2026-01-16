@@ -26,6 +26,14 @@ test.describe('Finder', () => {
       }
     });
 
+    test('should navigate to Desktop on click', async () => {
+      await finder.navigateToSidebarItem('Desktop');
+      const isSelected = await finder.isSidebarItemSelected('Desktop');
+      expect(isSelected).toBe(true);
+      const title = await finder.getToolbarTitle();
+      expect(title).toBe('Desktop');
+    });
+
   });
 
   test.describe('File Grid Display', () => {
