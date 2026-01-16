@@ -11,6 +11,7 @@ mod modals;
 mod spotlight;
 mod system_settings;
 mod system_state;
+mod terminal;
 mod window_manager;
 
 use context_menu::{ContextMenu, ContextMenuState};

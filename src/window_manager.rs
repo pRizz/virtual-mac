@@ -8,6 +8,7 @@ use crate::finder::Finder;
 use crate::calculator::Calculator;
 use crate::system_settings::SystemSettings;
 use crate::system_state::SystemState;
+use crate::terminal::Terminal;
 
 /// Unique identifier for windows
 pub type WindowId = usize;
@@ -18,6 +19,7 @@ pub enum AppType {
     Generic,
     Calculator,
     SystemSettings,
+    Terminal,
 }
 
 /// Represents the state of a single window
@@ -103,7 +105,7 @@ pub fn WindowManager() -> impl IntoView {
     let (windows, set_windows) = signal(vec![
         WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
         WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
-        WindowState::new(3, "Notes", 350.0, 200.0, 400.0, 300.0),
+        WindowState::new_with_app(3, "Terminal", 300.0, 120.0, 600.0, 400.0, AppType::Terminal),
     ]);
 
     let (next_id, set_next_id) = signal(4usize);
@@ -396,11 +398,14 @@ pub fn WindowManager() -> impl IntoView {
                     let app_type = window.app_type.clone();
                     let is_calculator = app_type == AppType::Calculator;
                     let is_system_settings = app_type == AppType::SystemSettings;
+                    let is_terminal = app_type == AppType::Terminal;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
                     } else if is_system_settings {
                         "window-content settings-content"
+                    } else if is_terminal {
+                        "window-content terminal-content"
                     } else {
                         "window-content"
                     };
@@ -446,6 +451,8 @@ pub fn WindowManager() -> impl IntoView {
                                     view! { <Calculator /> }.into_any()
                                 } else if is_system_settings {
                                     view! { <SystemSettings /> }.into_any()
+                                } else if is_terminal {
+                                    view! { <Terminal /> }.into_any()
                                 } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {
