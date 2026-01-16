@@ -6,15 +6,18 @@ use wasm_bindgen::prelude::*;
 
 use crate::finder::Finder;
 use crate::calculator::Calculator;
+use crate::system_settings::SystemSettings;
+use crate::system_state::SystemState;
 
 /// Unique identifier for windows
-type WindowId = usize;
+pub type WindowId = usize;
 
 /// Type of application in a window
 #[derive(Clone, Debug, PartialEq)]
 pub enum AppType {
     Generic,
     Calculator,
+    SystemSettings,
 }
 
 /// Represents the state of a single window
@@ -94,6 +97,8 @@ enum ResizeDirection {
 /// Desktop component that contains the window manager
 #[component]
 pub fn WindowManager() -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
+
     // Global state for all windows
     let (windows, set_windows) = signal(vec![
         WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
@@ -101,9 +106,53 @@ pub fn WindowManager() -> impl IntoView {
         WindowState::new(3, "Notes", 350.0, 200.0, 400.0, 300.0),
     ]);
 
-    let (_next_id, _set_next_id) = signal(4usize);
+    let (next_id, set_next_id) = signal(4usize);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
     let (top_z_index, set_top_z_index) = signal(3i32);
+
+    // Watch for System Settings open request
+    Effect::new(move |_| {
+        if system_state.open_system_settings.get() {
+            // Reset the signal
+            system_state.open_system_settings.set(false);
+
+            // Check if System Settings is already open
+            let already_open = windows.get().iter().any(|w| w.app_type == AppType::SystemSettings);
+            if already_open {
+                // Bring existing window to front
+                if let Some(win) = windows.get().iter().find(|w| w.app_type == AppType::SystemSettings) {
+                    let window_id = win.id;
+                    let new_z = top_z_index.get() + 1;
+                    set_top_z_index.set(new_z);
+                    set_windows.update(|windows| {
+                        if let Some(w) = windows.iter_mut().find(|w| w.id == window_id) {
+                            w.z_index = new_z;
+                            w.is_minimized = false;
+                        }
+                    });
+                }
+            } else {
+                // Create new System Settings window
+                let id = next_id.get();
+                set_next_id.set(id + 1);
+                let new_z = top_z_index.get() + 1;
+                set_top_z_index.set(new_z);
+                set_windows.update(|windows| {
+                    let mut new_window = WindowState::new_with_app(
+                        id,
+                        "System Settings",
+                        150.0,
+                        100.0,
+                        680.0,
+                        500.0,
+                        AppType::SystemSettings,
+                    );
+                    new_window.z_index = new_z;
+                    windows.push(new_window);
+                });
+            }
+        }
+    });
 
     // Bring window to front
     let bring_to_front = move |window_id: WindowId| {
@@ -346,9 +395,12 @@ pub fn WindowManager() -> impl IntoView {
                     let title_for_content = title.clone();
                     let app_type = window.app_type.clone();
                     let is_calculator = app_type == AppType::Calculator;
+                    let is_system_settings = app_type == AppType::SystemSettings;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
+                    } else if is_system_settings {
+                        "window-content settings-content"
                     } else {
                         "window-content"
                     };
@@ -392,6 +444,8 @@ pub fn WindowManager() -> impl IntoView {
                             <div class=content_class>
                                 {if is_calculator {
                                     view! { <Calculator /> }.into_any()
+                                } else if is_system_settings {
+                                    view! { <SystemSettings /> }.into_any()
                                 } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {

@@ -7,20 +7,29 @@ mod desktop;
 mod dock;
 mod finder;
 mod menu_bar;
+mod modals;
 mod spotlight;
+mod system_settings;
+mod system_state;
 mod window_manager;
 
 use context_menu::{ContextMenu, ContextMenuState};
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
+use modals::{LockScreen, ModalOverlay, PowerOverlay};
 use spotlight::Spotlight;
+use system_state::SystemState;
 use window_manager::WindowManager;
 
 #[component]
 fn App() -> impl IntoView {
     // Global context menu state
     let (context_menu_state, set_context_menu_state) = signal(ContextMenuState::default());
+
+    // Provide system state context for all child components
+    let system_state = SystemState::new();
+    provide_context(system_state);
 
     view! {
         <MenuBar />
@@ -29,6 +38,9 @@ fn App() -> impl IntoView {
         <Dock context_menu_state=set_context_menu_state />
         <Spotlight />
         <ContextMenu state=context_menu_state set_state=set_context_menu_state />
+        <ModalOverlay />
+        <LockScreen />
+        <PowerOverlay />
     }
 }
 

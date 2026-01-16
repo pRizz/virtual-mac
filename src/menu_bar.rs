@@ -1,7 +1,10 @@
 use leptos::prelude::*;
 
+use crate::system_state::{ModalType, SystemState};
+
 #[component]
 pub fn MenuBar() -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
     let (active_menu, set_active_menu) = signal::<Option<&'static str>>(None);
     let (current_time, set_current_time) = signal(get_current_time());
     let _ = &set_current_time; // Used in wasm32 block below
@@ -30,6 +33,40 @@ pub fn MenuBar() -> impl IntoView {
         set_active_menu.set(None);
     };
 
+    // Apple menu action handlers
+    let on_about = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.show_modal(ModalType::AboutThisMac);
+    });
+    let on_system_settings = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.open_system_settings.set(true);
+    });
+    let on_force_quit = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.show_modal(ModalType::ForceQuit);
+    });
+    let on_sleep = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.sleep();
+    });
+    let on_restart = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.show_modal(ModalType::RestartConfirm);
+    });
+    let on_shut_down = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.show_modal(ModalType::ShutDownConfirm);
+    });
+    let on_lock_screen = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.lock_screen();
+    });
+    let on_log_out = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.show_modal(ModalType::LogOutConfirm);
+    });
+
     view! {
         <div class="menu-bar" on:mouseleave=close_menu>
             <div class="menu-bar-left">
@@ -40,21 +77,21 @@ pub fn MenuBar() -> impl IntoView {
                     active_menu=active_menu
                     set_active_menu=set_active_menu
                 >
-                    <DropdownItem label="About This Mac" />
+                    <DropdownItem label="About This Mac" on_click=on_about />
                     <DropdownSeparator />
-                    <DropdownItem label="System Settings..." />
+                    <DropdownItem label="System Settings..." on_click=on_system_settings />
                     <DropdownItem label="App Store..." />
                     <DropdownSeparator />
                     <DropdownItem label="Recent Items" />
                     <DropdownSeparator />
-                    <DropdownItem label="Force Quit..." shortcut="⌥⌘⎋" />
+                    <DropdownItem label="Force Quit..." shortcut="⌥⌘⎋" on_click=on_force_quit />
                     <DropdownSeparator />
-                    <DropdownItem label="Sleep" />
-                    <DropdownItem label="Restart..." />
-                    <DropdownItem label="Shut Down..." />
+                    <DropdownItem label="Sleep" on_click=on_sleep />
+                    <DropdownItem label="Restart..." on_click=on_restart />
+                    <DropdownItem label="Shut Down..." on_click=on_shut_down />
                     <DropdownSeparator />
-                    <DropdownItem label="Lock Screen" shortcut="⌃⌘Q" />
-                    <DropdownItem label="Log Out..." shortcut="⇧⌘Q" />
+                    <DropdownItem label="Lock Screen" shortcut="⌃⌘Q" on_click=on_lock_screen />
+                    <DropdownItem label="Log Out..." shortcut="⇧⌘Q" on_click=on_log_out />
                 </MenuItem>
 
                 <MenuItem
@@ -220,6 +257,7 @@ fn DropdownItem(
     label: &'static str,
     #[prop(optional)] shortcut: &'static str,
     #[prop(optional)] disabled: bool,
+    #[prop(optional, into)] on_click: Option<Callback<leptos::ev::MouseEvent>>,
 ) -> impl IntoView {
     let class = if disabled {
         "dropdown-item disabled"
@@ -227,8 +265,14 @@ fn DropdownItem(
         "dropdown-item"
     };
 
+    let handler = move |e: leptos::ev::MouseEvent| {
+        if let Some(callback) = on_click {
+            callback.run(e);
+        }
+    };
+
     view! {
-        <div class=class>
+        <div class=class on:click=handler>
             <span>{label}</span>
             {if !shortcut.is_empty() {
                 view! { <span class="dropdown-shortcut">{shortcut}</span> }.into_any()
