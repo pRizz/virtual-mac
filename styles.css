@@ -838,6 +838,96 @@ html, body {
     justify-content: center;
     font-size: 11px;
     color: #666;
+}
+
+/* Finder Action Button (New Folder) */
+.finder-action-btn {
+    width: 32px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
+
+.finder-action-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.finder-action-btn:active {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+/* Finder Item Name Input (for renaming) */
+.finder-item-name-input {
+    font-size: 11px;
+    text-align: center;
+    width: 90%;
+    max-width: 100px;
+    padding: 2px 4px;
+    border: 2px solid #007aff;
+    border-radius: 4px;
+    background: white;
+    outline: none;
+}
+
+/* Context Menu */
+.context-menu {
+    position: fixed;
+    min-width: 180px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
+    padding: 4px 0;
+    z-index: 10000;
+    font-size: 13px;
+}
+
+.context-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    cursor: pointer;
+    gap: 8px;
+}
+
+.context-menu-item:hover {
+    background: #007aff;
+    color: white;
+}
+
+.context-menu-item:hover .context-menu-shortcut {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.context-menu-item.destructive:hover {
+    background: #ff3b30;
+}
+
+.context-menu-icon {
+    width: 16px;
+    text-align: center;
+}
+
+.context-menu-shortcut {
+    margin-left: auto;
+    font-size: 11px;
+    color: #888;
+}
+
+.context-menu-separator {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 4px 0;
+}
+
 /* Calculator App Styles - macOS Calculator clone */
 .calculator {
     width: 100%;
