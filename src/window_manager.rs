@@ -140,11 +140,12 @@ pub fn WindowManager() -> impl IntoView {
         WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
         WindowState::new_with_app(3, "Terminal", 300.0, 120.0, 600.0, 400.0, AppType::Terminal),
         WindowState::new_with_app(4, "TextEdit", 350.0, 200.0, 500.0, 400.0, AppType::TextEdit),
+        WindowState::new(5, "Notes", 450.0, 220.0, 400.0, 300.0),
     ]);
 
-    let (next_id, set_next_id) = signal(5usize);
+    let (next_id, set_next_id) = signal(6usize);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
-    let (top_z_index, set_top_z_index) = signal(4i32);
+    let (top_z_index, set_top_z_index) = signal(5i32);
 
     // Watch for System Settings open request
     Effect::new(move |_| {
