@@ -7,6 +7,7 @@ mod dock;
 pub mod file_system;
 mod finder;
 mod menu_bar;
+mod safari;
 mod spotlight;
 mod window_manager;
 

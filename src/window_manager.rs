@@ -6,6 +6,7 @@ use wasm_bindgen::prelude::*;
 
 use crate::finder::Finder;
 use crate::calculator::Calculator;
+use crate::safari::Safari;
 
 /// Unique identifier for windows
 type WindowId = usize;
@@ -15,6 +16,7 @@ type WindowId = usize;
 pub enum AppType {
     Generic,
     Calculator,
+    Safari,
 }
 
 /// Represents the state of a single window
@@ -98,6 +100,7 @@ pub fn WindowManager() -> impl IntoView {
     let (windows, set_windows) = signal(vec![
         WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
         WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
+        WindowState::new_with_app(3, "Safari", 150.0, 60.0, 900.0, 600.0, AppType::Safari),
         WindowState::new(3, "Notes", 350.0, 200.0, 400.0, 300.0),
     ]);
 
@@ -346,9 +349,12 @@ pub fn WindowManager() -> impl IntoView {
                     let title_for_content = title.clone();
                     let app_type = window.app_type.clone();
                     let is_calculator = app_type == AppType::Calculator;
+                    let is_safari = app_type == AppType::Safari;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
+                    } else if is_safari {
+                        "window-content safari-content"
                     } else {
                         "window-content"
                     };
@@ -392,6 +398,8 @@ pub fn WindowManager() -> impl IntoView {
                             <div class=content_class>
                                 {if is_calculator {
                                     view! { <Calculator /> }.into_any()
+                                } else if is_safari {
+                                    view! { <Safari /> }.into_any()
                                 } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {
