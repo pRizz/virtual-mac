@@ -10,6 +10,11 @@ test.describe('Calculator', () => {
     await desktop.goto();
     windowManager = new WindowManagerPage(page);
     const calcWindow = windowManager.getWindow('Calculator');
+    // Use JavaScript to bring the Calculator window to the front by clicking it
+    await calcWindow.evaluate((el) => {
+      // Dispatch mousedown event to trigger bring_to_front
+      el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    });
     calculator = new CalculatorPage(page, calcWindow);
   });
 

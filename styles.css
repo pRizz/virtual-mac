@@ -312,12 +312,15 @@ html, body {
     background: var(--window-content-bg);
     overflow: auto;
     padding: 16px;
+    position: relative;
+    z-index: 1;
 }
 
 /* Resize handles */
 .resize-handle {
     position: absolute;
     background: transparent;
+    z-index: 0;
 }
 
 .resize-handle.n {

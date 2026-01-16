@@ -34,35 +34,43 @@ export class CalculatorPage {
   }
 
   async pressDigit(digit: string) {
-    await this.getDigitButton(digit).click();
+    const button = this.getDigitButton(digit);
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async pressOperator(op: string) {
-    await this.getOperatorButton(op).click();
+    const button = this.getOperatorButton(op);
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async pressFunction(fn: string) {
-    await this.getFunctionButton(fn).click();
+    const button = this.getFunctionButton(fn);
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async pressEquals() {
-    await this.getOperatorButton('=').click();
+    const button = this.getOperatorButton('=');
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async pressClear() {
-    await this.getFunctionButton('AC').click();
+    const button = this.getFunctionButton('AC');
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async pressNegate() {
-    await this.getFunctionButton('+/−').click();
+    const button = this.getFunctionButton('+/−');
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async pressPercent() {
-    await this.getFunctionButton('%').click();
+    const button = this.getFunctionButton('%');
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async pressDecimal() {
-    await this.getDigitButton('.').click();
+    const button = this.getDigitButton('.');
+    await button.evaluate((el) => (el as HTMLElement).click());
   }
 
   async getDisplayValue(): Promise<string> {
