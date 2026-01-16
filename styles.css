@@ -1167,3 +1167,61 @@ html, body {
     background: rgba(255, 255, 255, 0.12);
     margin: 5px 12px;
 }
+
+/* Feature Tour - Desktop welcome text */
+.feature-tour {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+}
+
+.feature-tour-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.5px;
+}
+
+.feature-tour-subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 40px;
+    opacity: 0.85;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+}
+
+.feature-tour-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.feature-tour-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-tour-icon {
+    font-size: 24px;
+}
+
+.feature-tour-text {
+    font-size: 15px;
+    font-weight: 500;
+}
