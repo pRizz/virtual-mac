@@ -3,22 +3,25 @@ use leptos::prelude::*;
 /// Represents a file or folder item
 #[derive(Clone, Debug, PartialEq)]
 pub struct FileItem {
+    pub id: u32,
     pub name: String,
     pub is_folder: bool,
     pub icon: &'static str,
 }
 
 impl FileItem {
-    fn folder(name: &str) -> Self {
+    pub fn folder(id: u32, name: &str) -> Self {
         Self {
+            id,
             name: name.to_string(),
             is_folder: true,
             icon: "📁",
         }
     }
 
-    fn file(name: &str, icon: &'static str) -> Self {
+    pub fn file(id: u32, name: &str, icon: &'static str) -> Self {
         Self {
+            id,
             name: name.to_string(),
             is_folder: false,
             icon,
@@ -59,43 +62,43 @@ pub fn Finder() -> impl IntoView {
     let files = move || {
         match selected_sidebar.get() {
             "Applications" => vec![
-                FileItem::file("Safari", "🧭"),
-                FileItem::file("Mail", "✉️"),
-                FileItem::file("Calendar", "📅"),
-                FileItem::file("Notes", "📝"),
-                FileItem::file("Reminders", "☑️"),
-                FileItem::file("Music", "🎵"),
-                FileItem::file("Photos", "🖼"),
-                FileItem::file("Messages", "💬"),
-                FileItem::file("FaceTime", "📹"),
-                FileItem::file("Maps", "🗺"),
-                FileItem::file("Terminal", "⌨"),
-                FileItem::file("System Settings", "⚙️"),
+                FileItem::file(101, "Safari", "🧭"),
+                FileItem::file(102, "Mail", "✉️"),
+                FileItem::file(103, "Calendar", "📅"),
+                FileItem::file(104, "Notes", "📝"),
+                FileItem::file(105, "Reminders", "☑️"),
+                FileItem::file(106, "Music", "🎵"),
+                FileItem::file(107, "Photos", "🖼"),
+                FileItem::file(108, "Messages", "💬"),
+                FileItem::file(109, "FaceTime", "📹"),
+                FileItem::file(110, "Maps", "🗺"),
+                FileItem::file(111, "Terminal", "⌨"),
+                FileItem::file(112, "System Settings", "⚙️"),
             ],
             "Desktop" => vec![
-                FileItem::folder("Projects"),
-                FileItem::file("Screenshot.png", "🖼"),
-                FileItem::file("Notes.txt", "📄"),
+                FileItem::folder(201, "Projects"),
+                FileItem::file(202, "Screenshot.png", "🖼"),
+                FileItem::file(203, "Notes.txt", "📄"),
             ],
             "Documents" => vec![
-                FileItem::folder("Work"),
-                FileItem::folder("Personal"),
-                FileItem::file("Resume.pdf", "📕"),
-                FileItem::file("Budget.xlsx", "📊"),
-                FileItem::file("Notes.txt", "📄"),
+                FileItem::folder(301, "Work"),
+                FileItem::folder(302, "Personal"),
+                FileItem::file(303, "Resume.pdf", "📕"),
+                FileItem::file(304, "Budget.xlsx", "📊"),
+                FileItem::file(305, "Notes.txt", "📄"),
             ],
             "Downloads" => vec![
-                FileItem::file("installer.dmg", "💿"),
-                FileItem::file("photo.jpg", "🖼"),
-                FileItem::file("document.pdf", "📕"),
-                FileItem::file("archive.zip", "📦"),
+                FileItem::file(401, "installer.dmg", "💿"),
+                FileItem::file(402, "photo.jpg", "🖼"),
+                FileItem::file(403, "document.pdf", "📕"),
+                FileItem::file(404, "archive.zip", "📦"),
             ],
             "Recents" => vec![
-                FileItem::file("document.pdf", "📕"),
-                FileItem::file("photo.jpg", "🖼"),
-                FileItem::folder("Projects"),
-                FileItem::file("notes.txt", "📄"),
-                FileItem::file("spreadsheet.xlsx", "📊"),
+                FileItem::file(501, "document.pdf", "📕"),
+                FileItem::file(502, "photo.jpg", "🖼"),
+                FileItem::folder(503, "Projects"),
+                FileItem::file(504, "notes.txt", "📄"),
+                FileItem::file(505, "spreadsheet.xlsx", "📊"),
             ],
             _ => vec![],
         }
@@ -193,18 +196,35 @@ pub fn Finder() -> impl IntoView {
                     <div class="finder-grid">
                         <For
                             each=files
-                            key=|item| item.name.clone()
+                            key=|item| item.id
                             children=move |item| {
                                 let name = item.name.clone();
                                 let name_for_click = name.clone();
                                 let name_for_check = name.clone();
+                                let icon = item.icon;
+                                let item_id = item.id;
+                                let is_folder = item.is_folder;
                                 let is_selected = move || selected_items.get().contains(&name_for_check);
+
+                                // Create drag data as JSON string
+                                let drag_data = format!(
+                                    r#"{{"id":{},"name":"{}","icon":"{}","is_folder":{}}}"#,
+                                    item_id, name, icon, is_folder
+                                );
+
                                 view! {
                                     <div
                                         class=move || if is_selected() { "finder-item selected" } else { "finder-item" }
+                                        draggable="true"
                                         on:click=move |_| toggle_selection(name_for_click.clone())
+                                        on:dragstart=move |ev: web_sys::DragEvent| {
+                                            if let Some(dt) = ev.data_transfer() {
+                                                let _ = dt.set_data("application/x-virtualmac-file", &drag_data);
+                                                dt.set_effect_allowed("move");
+                                            }
+                                        }
                                     >
-                                        <div class="finder-item-icon">{item.icon}</div>
+                                        <div class="finder-item-icon">{icon}</div>
                                         <div class="finder-item-name">{name}</div>
                                     </div>
                                 }

@@ -10,7 +10,7 @@ crate-type = ["cdylib", "rlib"]
 leptos = { version = "0.7", features = ["csr"] }
 console_error_panic_hook = "0.1"
 wasm-bindgen = "0.2"
-web-sys = { version = "0.3", features = ["Window", "Document", "MouseEvent", "DomRect", "HtmlElement", "KeyboardEvent", "HtmlInputElement", "EventTarget", "Event"] }
+web-sys = { version = "0.3", features = ["Window", "Document", "MouseEvent", "DomRect", "HtmlElement", "KeyboardEvent", "HtmlInputElement", "EventTarget", "Event", "DragEvent", "DataTransfer", "DomTokenList"] }
 js-sys = "0.3"
 
 [profile.release]
