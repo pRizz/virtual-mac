@@ -6,7 +6,68 @@ use wasm_bindgen::prelude::*;
 
 use crate::finder::Finder;
 use crate::calculator::Calculator;
-use crate::window_context::{WindowId, AppType, use_window_context};
+
+/// Unique identifier for windows
+type WindowId = usize;
+
+/// Type of application in a window
+#[derive(Clone, Debug, PartialEq)]
+pub enum AppType {
+    Generic,
+    Calculator,
+}
+
+/// Represents the state of a single window
+#[derive(Clone, Debug, PartialEq)]
+pub struct WindowState {
+    pub id: WindowId,
+    pub title: String,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub z_index: i32,
+    pub is_minimized: bool,
+    pub is_maximized: bool,
+    /// Stored position/size before maximizing
+    pub pre_maximize: Option<(f64, f64, f64, f64)>,
+    /// Type of application in this window
+    pub app_type: AppType,
+}
+
+impl WindowState {
+    pub fn new(id: WindowId, title: &str, x: f64, y: f64, width: f64, height: f64) -> Self {
+        Self {
+            id,
+            title: title.to_string(),
+            x,
+            y,
+            width,
+            height,
+            z_index: id as i32,
+            is_minimized: false,
+            is_maximized: false,
+            pre_maximize: None,
+            app_type: AppType::Generic,
+        }
+    }
+
+    pub fn new_with_app(id: WindowId, title: &str, x: f64, y: f64, width: f64, height: f64, app_type: AppType) -> Self {
+        Self {
+            id,
+            title: title.to_string(),
+            x,
+            y,
+            width,
+            height,
+            z_index: id as i32,
+            is_minimized: false,
+            is_maximized: false,
+            pre_maximize: None,
+            app_type,
+        }
+    }
+}
 
 /// Drag/resize operation state
 #[derive(Clone, Debug, PartialEq)]
@@ -33,14 +94,16 @@ enum ResizeDirection {
 /// Desktop component that contains the window manager
 #[component]
 pub fn WindowManager() -> impl IntoView {
-    // Get shared window context
-    let ctx = use_window_context();
-    let windows = ctx.windows;
-    let set_windows = ctx.set_windows;
-    let top_z_index = ctx.top_z_index;
-    let set_top_z_index = ctx.set_top_z_index;
+    // Global state for all windows
+    let (windows, set_windows) = signal(vec![
+        WindowState::new(1, "Finder", 100.0, 80.0, 600.0, 400.0),
+        WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 232.0, 340.0, AppType::Calculator),
+        WindowState::new(3, "Notes", 350.0, 200.0, 400.0, 300.0),
+    ]);
 
+    let (_next_id, _set_next_id) = signal(4usize);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
+    let (top_z_index, set_top_z_index) = signal(3i32);
 
     // Bring window to front
     let bring_to_front = move |window_id: WindowId| {
@@ -372,3 +435,4 @@ pub fn WindowManager() -> impl IntoView {
         </div>
     }
 }
+
