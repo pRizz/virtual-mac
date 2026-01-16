@@ -9,7 +9,6 @@
 :root {
     --menubar-height: 25px;
     --menubar-bg: rgba(236, 236, 236, 0.8);
-    --menubar-bg-dark: rgba(40, 40, 40, 0.8);
     --menubar-text: #000;
     --menubar-text-secondary: rgba(0, 0, 0, 0.5);
     --menu-hover-bg: #0058d0;
@@ -17,7 +16,23 @@
     --menu-dropdown-bg: rgba(255, 255, 255, 0.95);
     --menu-dropdown-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     --menu-separator: rgba(0, 0, 0, 0.1);
+    --status-icon-hover: rgba(0, 0, 0, 0.1);
+    --menubar-border: rgba(0, 0, 0, 0.1);
     --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+    --menubar-bg: rgba(40, 40, 40, 0.8);
+    --menubar-text: #fff;
+    --menubar-text-secondary: rgba(255, 255, 255, 0.5);
+    --menu-hover-bg: #0058d0;
+    --menu-hover-text: #fff;
+    --menu-dropdown-bg: rgba(45, 45, 45, 0.95);
+    --menu-dropdown-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    --menu-separator: rgba(255, 255, 255, 0.1);
+    --status-icon-hover: rgba(255, 255, 255, 0.1);
+    --menubar-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -182,7 +197,7 @@ body {
 }
 
 .status-icon:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--status-icon-hover);
 }
 
 .status-icon svg {
@@ -334,6 +349,41 @@ body {
     height: 14px;
     background: linear-gradient(135deg, #ff6b9d 0%, #c44ef5 50%, #5eb5ff 100%);
     border-radius: 50%;
+}
+
+/* Dark Mode Toggle Icon */
+.dark-mode-toggle {
+    cursor: pointer;
+}
+
+.dark-mode-icon {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-mode-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    background: currentColor;
+    border-radius: 0 50% 50% 0;
+}
+
+.dark-mode-toggle.active .dark-mode-icon {
+    background: currentColor;
+}
+
+.dark-mode-toggle.active .dark-mode-icon::before {
+    background: var(--menubar-bg);
+    left: 0;
+    border-radius: 50% 0 0 50%;
 }
 
 /* Main Content Area (below menu bar) */

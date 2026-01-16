@@ -13,6 +13,7 @@ mod spotlight;
 mod system_settings;
 mod system_state;
 mod terminal;
+pub mod theme;
 mod window_manager;
 
 use context_menu::{ContextMenu, ContextMenuState};
@@ -23,6 +24,7 @@ use menu_bar::MenuBar;
 use modals::{LockScreen, ModalOverlay, PowerOverlay};
 use spotlight::Spotlight;
 use system_state::SystemState;
+use theme::ThemeProvider;
 use window_manager::WindowManager;
 
 #[component]
@@ -35,17 +37,19 @@ fn App() -> impl IntoView {
     provide_context(system_state);
 
     view! {
-        <FileSystemProvider>
-            <MenuBar />
-            <Desktop context_menu_state=set_context_menu_state />
-            <WindowManager />
-            <Dock context_menu_state=set_context_menu_state />
-            <Spotlight />
-            <ContextMenu state=context_menu_state set_state=set_context_menu_state />
-            <ModalOverlay />
-            <LockScreen />
-            <PowerOverlay />
-        </FileSystemProvider>
+        <ThemeProvider>
+            <FileSystemProvider>
+                <MenuBar />
+                <Desktop context_menu_state=set_context_menu_state />
+                <WindowManager />
+                <Dock context_menu_state=set_context_menu_state />
+                <Spotlight />
+                <ContextMenu state=context_menu_state set_state=set_context_menu_state />
+                <ModalOverlay />
+                <LockScreen />
+                <PowerOverlay />
+            </FileSystemProvider>
+        </ThemeProvider>
     }
 }
 

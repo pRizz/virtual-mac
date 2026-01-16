@@ -4,6 +4,91 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Window colors */
+    --window-bg: #f5f5f5;
+    --window-content-bg: #ffffff;
+    --window-titlebar-start: #e8e8e8;
+    --window-titlebar-end: #d0d0d0;
+    --window-titlebar-active-end: #d4d4d4;
+    --window-titlebar-border: #b8b8b8;
+    --window-title-color: #4a4a4a;
+    --window-title-active: #1a1a1a;
+    --window-shadow: 0 22px 70px 4px rgba(0, 0, 0, 0.56), 0 0 0 1px rgba(0, 0, 0, 0.1);
+    --window-shadow-active: 0 22px 70px 4px rgba(0, 0, 0, 0.56), 0 0 0 1px rgba(0, 0, 0, 0.2);
+    --traffic-light-inactive: #c8c8c8;
+
+    /* Dock colors */
+    --dock-bg: rgba(255, 255, 255, 0.2);
+    --dock-border: rgba(255, 255, 255, 0.3);
+    --dock-tooltip-bg: rgba(30, 30, 30, 0.95);
+
+    /* Finder colors */
+    --finder-bg: #ffffff;
+    --finder-toolbar-start: #f6f6f6;
+    --finder-toolbar-end: #e8e8e8;
+    --finder-toolbar-border: #c8c8c8;
+    --finder-sidebar-bg: #f3f3f3;
+    --finder-sidebar-border: #d8d8d8;
+    --finder-text: #333;
+    --finder-text-secondary: #666;
+    --finder-text-muted: #888;
+    --finder-hover: rgba(0, 0, 0, 0.05);
+    --finder-selected: rgba(0, 122, 255, 0.15);
+    --finder-accent: #007aff;
+    --finder-search-bg: #ffffff;
+    --finder-search-border: #c8c8c8;
+    --finder-view-btns-bg: #e0e0e0;
+    --finder-view-btn-active: #ffffff;
+    --finder-nav-btn-hover: rgba(0, 0, 0, 0.08);
+    --finder-nav-btn-active: rgba(0, 0, 0, 0.12);
+    --finder-statusbar-bg: #f6f6f6;
+    --finder-statusbar-border: #d8d8d8;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+    /* Window colors */
+    --window-bg: #3a3a3a;
+    --window-content-bg: #2d2d2d;
+    --window-titlebar-start: #3d3d3d;
+    --window-titlebar-end: #2d2d2d;
+    --window-titlebar-active-end: #333333;
+    --window-titlebar-border: #1a1a1a;
+    --window-title-color: #b0b0b0;
+    --window-title-active: #e5e5e5;
+    --window-shadow: 0 22px 70px 4px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --window-shadow-active: 0 22px 70px 4px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    --traffic-light-inactive: #555555;
+
+    /* Dock colors */
+    --dock-bg: rgba(50, 50, 50, 0.4);
+    --dock-border: rgba(255, 255, 255, 0.1);
+    --dock-tooltip-bg: rgba(50, 50, 50, 0.95);
+
+    /* Finder colors */
+    --finder-bg: #2d2d2d;
+    --finder-toolbar-start: #3a3a3a;
+    --finder-toolbar-end: #2d2d2d;
+    --finder-toolbar-border: #1a1a1a;
+    --finder-sidebar-bg: #252525;
+    --finder-sidebar-border: #1a1a1a;
+    --finder-text: #e5e5e5;
+    --finder-text-secondary: #a0a0a0;
+    --finder-text-muted: #777;
+    --finder-hover: rgba(255, 255, 255, 0.05);
+    --finder-selected: rgba(0, 122, 255, 0.25);
+    --finder-accent: #0a84ff;
+    --finder-search-bg: #1a1a1a;
+    --finder-search-border: #3a3a3a;
+    --finder-view-btns-bg: #3a3a3a;
+    --finder-view-btn-active: #555555;
+    --finder-nav-btn-hover: rgba(255, 255, 255, 0.08);
+    --finder-nav-btn-active: rgba(255, 255, 255, 0.12);
+    --finder-statusbar-bg: #252525;
+    --finder-statusbar-border: #1a1a1a;
+}
+
 html, body {
     width: 100%;
     height: 100%;
@@ -68,11 +153,9 @@ html, body {
 /* Window styles */
 .window {
     position: absolute;
-    background: #f5f5f5;
+    background: var(--window-bg);
     border-radius: 10px;
-    box-shadow:
-        0 22px 70px 4px rgba(0, 0, 0, 0.56),
-        0 0 0 1px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--window-shadow);
     display: flex;
     flex-direction: column;
     min-width: 200px;
@@ -81,9 +164,7 @@ html, body {
 }
 
 .window.active {
-    box-shadow:
-        0 22px 70px 4px rgba(0, 0, 0, 0.56),
-        0 0 0 1px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--window-shadow-active);
 }
 
 .window.maximized {
@@ -101,8 +182,8 @@ html, body {
 /* Title bar */
 .window-titlebar {
     height: 28px;
-    background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
-    border-bottom: 1px solid #b8b8b8;
+    background: linear-gradient(180deg, var(--window-titlebar-start) 0%, var(--window-titlebar-end) 100%);
+    border-bottom: 1px solid var(--window-titlebar-border);
     display: flex;
     align-items: center;
     padding: 0 8px;
@@ -116,7 +197,7 @@ html, body {
 }
 
 .window.active .window-titlebar {
-    background: linear-gradient(180deg, #e8e8e8 0%, #d4d4d4 100%);
+    background: linear-gradient(180deg, var(--window-titlebar-start) 0%, var(--window-titlebar-active-end) 100%);
 }
 
 /* Traffic light buttons */
@@ -187,7 +268,7 @@ html, body {
 
 /* Inactive window traffic lights */
 .window:not(.active) .traffic-light {
-    background: #c8c8c8;
+    background: var(--traffic-light-inactive);
 }
 
 .window:not(.active) .traffic-light::before {
@@ -200,7 +281,7 @@ html, body {
     text-align: center;
     font-size: 13px;
     font-weight: 500;
-    color: #4a4a4a;
+    color: var(--window-title-color);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -208,13 +289,13 @@ html, body {
 }
 
 .window.active .window-title {
-    color: #1a1a1a;
+    color: var(--window-title-active);
 }
 
 /* Window content */
 .window-content {
     flex: 1;
-    background: #ffffff;
+    background: var(--window-content-bg);
     overflow: auto;
     padding: 16px;
 }
@@ -370,11 +451,11 @@ html, body {
     justify-content: center;
     padding: 4px 12px;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--dock-bg, rgba(255, 255, 255, 0.2));
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--dock-border);
     box-shadow:
         0 0 0 0.5px rgba(0, 0, 0, 0.1),
         0 8px 32px rgba(0, 0, 0, 0.25),
@@ -477,7 +558,7 @@ html, body {
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%) translateY(-8px);
-    background: rgba(30, 30, 30, 0.95);
+    background: var(--dock-tooltip-bg);
     color: white;
     padding: 6px 12px;
     border-radius: 6px;
@@ -586,7 +667,7 @@ html, body {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: #ffffff;
+    background: var(--finder-bg);
     border-radius: 0 0 10px 10px;
     overflow: hidden;
 }
@@ -594,8 +675,8 @@ html, body {
 /* Finder Toolbar */
 .finder-toolbar {
     height: 52px;
-    background: linear-gradient(180deg, #f6f6f6 0%, #e8e8e8 100%);
-    border-bottom: 1px solid #c8c8c8;
+    background: linear-gradient(180deg, var(--finder-toolbar-start) 0%, var(--finder-toolbar-end) 100%);
+    border-bottom: 1px solid var(--finder-toolbar-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -619,16 +700,16 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: var(--finder-text-secondary);
     font-size: 10px;
 }
 
 .finder-nav-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--finder-nav-btn-hover);
 }
 
 .finder-nav-btn:active {
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--finder-nav-btn-active);
 }
 
 .finder-toolbar-title {
@@ -636,7 +717,7 @@ html, body {
     text-align: center;
     font-size: 13px;
     font-weight: 600;
-    color: #1a1a1a;
+    color: var(--finder-text);
 }
 
 .finder-toolbar-right {
@@ -647,7 +728,7 @@ html, body {
 
 .finder-view-btns {
     display: flex;
-    background: #e0e0e0;
+    background: var(--finder-view-btns-bg);
     border-radius: 6px;
     padding: 2px;
 }
@@ -662,25 +743,25 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: var(--finder-text-secondary);
     font-size: 11px;
 }
 
 .finder-view-btn.active {
-    background: #ffffff;
+    background: var(--finder-view-btn-active);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    color: #333;
+    color: var(--finder-text);
 }
 
 .finder-view-btn:hover:not(.active) {
-    color: #333;
+    color: var(--finder-text);
 }
 
 .finder-search {
     display: flex;
     align-items: center;
-    background: #ffffff;
-    border: 1px solid #c8c8c8;
+    background: var(--finder-search-bg);
+    border: 1px solid var(--finder-search-border);
     border-radius: 6px;
     padding: 4px 8px;
     gap: 6px;
@@ -699,10 +780,11 @@ html, body {
     font-size: 12px;
     width: 100%;
     font-family: inherit;
+    color: var(--finder-text);
 }
 
 .finder-search-input::placeholder {
-    color: #999;
+    color: var(--finder-text-muted);
 }
 
 /* Finder Body - Sidebar + Content */
@@ -715,8 +797,8 @@ html, body {
 /* Finder Sidebar */
 .finder-sidebar {
     width: 180px;
-    background: #f3f3f3;
-    border-right: 1px solid #d8d8d8;
+    background: var(--finder-sidebar-bg);
+    border-right: 1px solid var(--finder-sidebar-border);
     overflow-y: auto;
     padding: 8px 0;
 }
@@ -728,7 +810,7 @@ html, body {
 .sidebar-header {
     font-size: 11px;
     font-weight: 600;
-    color: #888;
+    color: var(--finder-text-muted);
     text-transform: uppercase;
     padding: 4px 12px 6px;
     letter-spacing: 0.5px;
@@ -746,11 +828,11 @@ html, body {
 }
 
 .sidebar-item:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--finder-hover);
 }
 
 .sidebar-item.selected {
-    background: rgba(0, 122, 255, 0.15);
+    background: var(--finder-selected);
 }
 
 .sidebar-icon {
@@ -761,11 +843,11 @@ html, body {
 
 .sidebar-name {
     font-size: 13px;
-    color: #333;
+    color: var(--finder-text);
 }
 
 .sidebar-item.selected .sidebar-name {
-    color: #007aff;
+    color: var(--finder-accent);
     font-weight: 500;
 }
 
@@ -774,7 +856,7 @@ html, body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #ffffff;
+    background: var(--finder-bg);
     overflow: hidden;
 }
 
@@ -799,11 +881,11 @@ html, body {
 }
 
 .finder-item:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: var(--finder-hover);
 }
 
 .finder-item.selected {
-    background: rgba(0, 122, 255, 0.15);
+    background: var(--finder-selected);
 }
 
 .finder-item-icon {
@@ -815,14 +897,14 @@ html, body {
 .finder-item-name {
     font-size: 11px;
     text-align: center;
-    color: #333;
+    color: var(--finder-text);
     word-break: break-word;
     max-width: 80px;
     line-height: 1.3;
 }
 
 .finder-item.selected .finder-item-name {
-    background: #007aff;
+    background: var(--finder-accent);
     color: white;
     padding: 1px 6px;
     border-radius: 3px;
@@ -831,13 +913,13 @@ html, body {
 /* Finder Status Bar */
 .finder-statusbar {
     height: 24px;
-    background: #f6f6f6;
-    border-top: 1px solid #d8d8d8;
+    background: var(--finder-statusbar-bg);
+    border-top: 1px solid var(--finder-statusbar-border);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 11px;
-    color: #666;
+    color: var(--finder-text-secondary);
 /* Calculator App Styles - macOS Calculator clone */
 .calculator {
     width: 100%;
