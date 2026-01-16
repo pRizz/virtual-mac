@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::wasm_bindgen;
 
+mod app_switcher;
 mod calculator;
 mod desktop;
 mod dock;
@@ -9,6 +10,7 @@ mod menu_bar;
 mod spotlight;
 mod window_manager;
 
+use app_switcher::AppSwitcher;
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
@@ -23,6 +25,7 @@ fn App() -> impl IntoView {
         <WindowManager />
         <Dock />
         <Spotlight />
+        <AppSwitcher />
     }
 }
 
