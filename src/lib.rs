@@ -7,16 +7,21 @@ mod dock;
 mod finder;
 mod menu_bar;
 mod spotlight;
+pub mod system_state;
 mod window_manager;
 
 use desktop::Desktop;
 use dock::Dock;
 use menu_bar::MenuBar;
 use spotlight::Spotlight;
+use system_state::provide_clipboard_context;
 use window_manager::WindowManager;
 
 #[component]
 fn App() -> impl IntoView {
+    // Provide global clipboard state
+    provide_clipboard_context();
+
     view! {
         <MenuBar />
         <Desktop />
