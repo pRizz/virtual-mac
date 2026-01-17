@@ -2,9 +2,9 @@
 
 ## Current Position
 
-**Active Phase:** Phase 5 - Finder Polish (In Progress)
-**Last Completed:** Phase 5, Plan 04 - Search & Path Bar
-**Next Action:** Execute Phase 5, Plan 06 (Gallery View)
+**Active Phase:** Phase 5 - Finder Polish (COMPLETE)
+**Last Completed:** Phase 5, Plan 06 - Final Finder Polish
+**Next Action:** Phase 6 (System Polish) or project completion
 
 ## Progress
 
@@ -14,25 +14,23 @@
 | 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Complete | 4 | 4 |
 | 4 - TextEdit | Complete | 3 | 3 |
-| 5 - Finder | In Progress | 6 | 5 |
+| 5 - Finder | Complete | 6 | 6 |
 
-**Overall:** 95% complete (18/19 plans across phases)
+**Overall:** 100% complete (19/19 plans across phases)
 
-Progress: [#########.] 95%
+Progress: [##########] 100%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed Phase 5 Plan 04 (Search & Path Bar)
-- Added search_query signal and filtered_files Memo
-- Wired search input to filter Icons and List views
-- Added path bar with clickable breadcrumb navigation
-- Path bar shows hierarchical path to current folder
+- Completed Phase 5 Plan 06 (Final Finder Polish)
+- Added iCloud and Tags sidebar sections
+- Enhanced status bar with selection count and available space
+- All REQ-005 requirements met
 
 **Context for Next Session:**
-- Finder has Icons, List, Column views, search, and path bar
-- Gallery view still falls back to Icons view (Plan 06)
-- Context menu actions: New Folder, Rename, Move to Trash functional
+- All 5 app phases complete (Calculator, Terminal, Notes, TextEdit, Finder)
+- Open issues remain for system-level polish (see Open Issues section)
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -72,6 +70,9 @@ Progress: [#########.] 95%
 | Effect-based action handling | 2026-01-17 | Pending action signal + Effect cleaner than inline processing |
 | Search scope Icons/List only | 2026-01-17 | Column view maintains hierarchical navigation, doesn't fit filter paradigm |
 | Path bar button elements | 2026-01-17 | Clickable segments using buttons for consistent macOS behavior |
+| iCloud section visual-only | 2026-01-17 | No actual iCloud integration for simulator, visual completeness only |
+| Tags visual-only | 2026-01-17 | Tags display colored dots but are non-functional (opacity 0.6) |
+| Hardcoded disk space | 2026-01-17 | "128 GB available" static value for simulated filesystem |
 
 ## Open Issues
 
@@ -91,4 +92,5 @@ Progress: [#########.] 95%
 ---
 
 *State updated: 2026-01-17*
-*Phase 5 plan 04 completed: 2026-01-17*
+*Phase 5 plan 06 completed: 2026-01-17*
+*App Polish Milestone complete: 2026-01-17*
