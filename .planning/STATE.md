@@ -3,35 +3,36 @@
 ## Current Position
 
 **Active Phase:** Phase 2 - Terminal Polish
-**Last Completed:** 02-02-PLAN.md (Terminal Visual Polish)
-**Next Action:** Execute remaining Terminal plans or move to Phase 3
+**Last Completed:** 02-01-PLAN.md (Terminal VirtualFileSystem Integration)
+**Next Action:** Execute remaining Terminal plans (02-03, 02-04) or move to Phase 3
 
 ## Progress
 
 | Phase | Status | Plans | Completed |
 |-------|--------|-------|-----------|
 | 1 - Calculator | Complete | 2 | 2 |
-| 2 - Terminal | In Progress | 2 | 1 |
+| 2 - Terminal | In Progress | 4 | 2 |
 | 3 - Notes | Not Started | 0 | - |
 | 4 - TextEdit | Not Started | 0 | - |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 30% complete (3/10 estimated plans across 5 phases)
+**Overall:** 40% complete (4/10 estimated plans across 5 phases)
 
-Progress: [###.......] 30%
+Progress: [####......] 40%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Executed 02-02-PLAN.md (Terminal Visual Polish)
-- Added Terminal Pro profile CSS styling
-- Dark background (85% opacity), white text, SF Mono font at 11px
-- macOS-style scrollbar with semi-transparent thumb
-- 2 commits: feat + feat
+- Executed 02-01-PLAN.md (Terminal VirtualFileSystem Integration)
+- Removed FsNode in favor of shared VirtualFileSystem
+- Terminal and Finder now share file system state
+- Added mkdir, rm, touch commands
+- Updated prompt to macOS zsh format
 
 **Context for Next Session:**
-- Terminal visual styling complete
-- May need additional terminal plans (if any)
+- Terminal VirtualFileSystem integration complete
+- Terminal visual styling complete (02-02)
+- Remaining: 02-03 (Cursor/History), 02-04 (Autocomplete)
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -46,6 +47,7 @@ Progress: [###.......] 30%
 | Operator color #FF9500 | 2026-01-17 | User-specified exact orange shade for calculator operators |
 | Terminal Pro profile colors | 2026-01-17 | Black bg at 85% opacity, white text matches macOS Terminal default |
 | Terminal font SF Mono 11px | 2026-01-17 | Matches macOS Terminal Pro profile defaults |
+| Root path as home | 2026-01-17 | VirtualFileSystem uses / as root, displayed as ~ in Terminal prompt |
 
 ## Open Issues
 
