@@ -45,17 +45,17 @@ pub fn TextEdit() -> impl IntoView {
 
     let toggle_bold = move |_: MouseEvent| {
         execCommand("bold", false, "");
-        // State will be updated by selectionchange listener
+        set_is_bold.set(queryCommandState("bold"));
     };
 
     let toggle_italic = move |_: MouseEvent| {
         execCommand("italic", false, "");
-        // State will be updated by selectionchange listener
+        set_is_italic.set(queryCommandState("italic"));
     };
 
     let toggle_underline = move |_: MouseEvent| {
         execCommand("underline", false, "");
-        // State will be updated by selectionchange listener
+        set_is_underline.set(queryCommandState("underline"));
     };
 
     let on_font_change = move |e: web_sys::Event| {
