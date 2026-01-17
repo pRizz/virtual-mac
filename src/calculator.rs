@@ -107,6 +107,24 @@ pub fn Calculator() -> impl IntoView {
             use wasm_bindgen::closure::Closure;
 
             let closure = Closure::wrap(Box::new(move |evt: web_sys::KeyboardEvent| {
+                // Skip handling if event is from an input element (e.g., Terminal input)
+                if let Some(target) = evt.target() {
+                    if let Some(element) = target.dyn_ref::<web_sys::HtmlInputElement>() {
+                        // Allow the input to handle its own events
+                        let _ = element;
+                        return;
+                    }
+                    if let Some(element) = target.dyn_ref::<web_sys::HtmlTextAreaElement>() {
+                        let _ = element;
+                        return;
+                    }
+                    // Also check contenteditable elements
+                    if let Some(element) = target.dyn_ref::<web_sys::HtmlElement>() {
+                        if element.is_content_editable() {
+                            return;
+                        }
+                    }
+                }
                 match evt.key().as_str() {
                     "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "." => {
                         let digit = evt.key();
