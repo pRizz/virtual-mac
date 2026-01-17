@@ -3,8 +3,8 @@
 ## Current Position
 
 **Active Phase:** Phase 5 - Finder Polish (In Progress)
-**Last Completed:** Phase 5, Plan 03 - Column View
-**Next Action:** Execute Phase 5, Plan 04
+**Last Completed:** Phase 5, Plan 05 - Context Menu Actions
+**Next Action:** Execute Phase 5, Plan 06 (Gallery View)
 
 ## Progress
 
@@ -14,24 +14,25 @@
 | 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Complete | 4 | 4 |
 | 4 - TextEdit | Complete | 3 | 3 |
-| 5 - Finder | In Progress | 6 | 3 |
+| 5 - Finder | In Progress | 6 | 5 |
 
-**Overall:** 84% complete (16/19 plans across phases)
+**Overall:** 95% complete (18/19 plans across phases)
 
-Progress: [########..] 84%
+Progress: [#########.] 95%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed Phase 5 Plan 03 (Column View / Miller Columns)
-- Implemented ViewMode::Column case with hierarchical navigation
-- Added column view CSS with horizontal scroll and fixed-width columns
-- Chevron indicators for folders via CSS ::after
+- Completed Phase 5 Plan 05 (Context Menu Actions)
+- Added context menu trigger to Finder (right-click on items and background)
+- Wired New Folder action to VirtualFileSystem
+- Wired Rename action with inline input
+- Wired Move to Trash action
 
 **Context for Next Session:**
-- Finder now has Icons, List, and Column views working
-- Gallery view still falls back to Icons view
-- Column view uses truncate+push pattern for navigation
+- Finder has Icons, List, Column views and working context menu
+- Gallery view still falls back to Icons view (Plan 06)
+- Context menu actions: New Folder, Rename, Move to Trash functional
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -67,6 +68,8 @@ Progress: [########..] 84%
 | File kind from extension | 2026-01-17 | Common mappings with fallback to "{EXT} Document" |
 | Static class for column items | 2026-01-17 | Computed at render time, avoids reactive overhead for static values |
 | CSS ::after for chevrons | 2026-01-17 | Cleaner DOM than inline span element for folder indicators |
+| StoredValue for action callback | 2026-01-17 | Leptos pattern to store optional callback for use in closures |
+| Effect-based action handling | 2026-01-17 | Pending action signal + Effect cleaner than inline processing |
 
 ## Open Issues
 
@@ -86,4 +89,4 @@ Progress: [########..] 84%
 ---
 
 *State updated: 2026-01-17*
-*Phase 5 plan 03 completed: 2026-01-17*
+*Phase 5 plan 05 completed: 2026-01-17*
