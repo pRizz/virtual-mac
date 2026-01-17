@@ -692,6 +692,45 @@ fn NoteEditor(
         }
     });
 
+    // Set up click handler for checkboxes in editor
+    Effect::new(move |_| {
+        // Re-run when selected note changes to attach handlers to new content
+        let _ = selected_note.get();
+
+        #[cfg(target_arch = "wasm32")]
+        {
+            if let Some(el) = editor_ref.get() {
+                use wasm_bindgen::JsCast;
+
+                // Use event delegation on the editor element for checkbox clicks
+                let el_clone = el.clone();
+                let set_state_clone = set_state;
+
+                let handler = wasm_bindgen::closure::Closure::wrap(Box::new(move |e: web_sys::Event| {
+                    if let Some(target) = e.target() {
+                        if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
+                            if input.class_list().contains("note-checkbox") {
+                                // Checkbox was clicked, save the state
+                                let content = el_clone.inner_html();
+                                set_state_clone.update(|s| {
+                                    if let Some(note_id) = &s.selected_note_id {
+                                        if let Some(note) = s.notes.iter_mut().find(|n| &n.id == note_id) {
+                                            note.content = content.clone();
+                                            note.updated_at = js_sys::Date::now();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }) as Box<dyn Fn(web_sys::Event)>);
+
+                let _ = el.add_event_listener_with_callback("click", handler.as_ref().unchecked_ref());
+                handler.forget(); // Keep the closure alive
+            }
+        }
+    });
+
     // Save content helper
     let save_content = move || {
         if let Some(el) = editor_ref.get() {
