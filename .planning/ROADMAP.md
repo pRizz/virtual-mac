@@ -9,8 +9,8 @@ Five phases, one per application. Each phase brings an app to macOS-replica qual
 | Phase | Name | Status | Requirements |
 |-------|------|--------|--------------|
 | 1 | Calculator Polish | Complete | REQ-001 |
-| 2 | Terminal Polish | ✓ Complete | REQ-002 |
-| 3 | Notes App Creation | Not Started | REQ-003 |
+| 2 | Terminal Polish | Complete | REQ-002 |
+| 3 | Notes App Creation | Planned | REQ-003 |
 | 4 | TextEdit Polish | Not Started | REQ-004 |
 | 5 | Finder Polish | Not Started | REQ-005 |
 
@@ -75,6 +75,14 @@ Plans:
 **Goal:** Create a Notes app that closely replicates macOS Notes appearance and functionality.
 
 **Requirements Covered:** REQ-003 (all sub-requirements)
+
+**Plans:** 4 plans
+
+Plans:
+- [ ] 03-01-PLAN.md - Core component, data model, localStorage persistence, window integration
+- [ ] 03-02-PLAN.md - CSS styling for three-column layout and macOS Notes appearance
+- [ ] 03-03-PLAN.md - Rich text formatting toolbar (bold, italic, underline, lists, checklists)
+- [ ] 03-04-PLAN.md - CRUD operations for notes and folders, search functionality
 
 **Key Deliverables:**
 - Three-column layout (folders, notes list, editor)
@@ -145,3 +153,4 @@ Phases 1, 3, 4 can execute in any order. Phase 2 and 5 share filesystem concerns
 ---
 
 *Roadmap created: 2026-01-17*
+*Phase 3 planned: 2026-01-17*
