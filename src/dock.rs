@@ -169,8 +169,10 @@ pub fn Dock(
         DockItem::new("Mail", "✉️", "mail", true),
         DockItem::new("Photos", "🖼", "photos", false),
         DockItem::new("Music", "🎵", "music", false),
-        DockItem::new("Notes", "📝", "notes", false),
+        DockItem::new("Notes", "📝", "notes", true),
         DockItem::new("Calendar", "📅", "calendar", false),
+        DockItem::new("TextEdit", "📄", "textedit", true),
+        DockItem::new("Calculator", "🧮", "calculator", true),
         DockItem::new("System Settings", "⚙️", "settings", false),
         DockItem::new("Terminal", "⌨", "terminal", true),
     ];
