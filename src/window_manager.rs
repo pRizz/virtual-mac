@@ -44,6 +44,7 @@ pub enum AppType {
     Terminal,
     TextEdit,
     Notes,
+    Finder,
 }
 
 /// Animation state for window minimize/restore
@@ -203,7 +204,7 @@ pub fn WindowManager() -> impl IntoView {
 
             // Map app name to AppType
             let app_type = match app_name.as_str() {
-                "Finder" => Some(AppType::Generic),
+                "Finder" => Some(AppType::Finder),
                 "Calculator" => Some(AppType::Calculator),
                 "Terminal" => Some(AppType::Terminal),
                 "TextEdit" => Some(AppType::TextEdit),
@@ -242,7 +243,8 @@ pub fn WindowManager() -> impl IntoView {
                         AppType::TextEdit => ("TextEdit", 350.0, 200.0, 500.0, 400.0),
                         AppType::Notes => ("Notes", 450.0, 220.0, 700.0, 500.0),
                         AppType::SystemSettings => ("System Settings", 150.0, 100.0, 680.0, 500.0),
-                        AppType::Generic => ("Finder", 100.0, 80.0, 600.0, 400.0),
+                        AppType::Finder => ("Finder", 100.0, 80.0, 600.0, 400.0),
+                        AppType::Generic => ("Window", 100.0, 80.0, 600.0, 400.0),
                     };
 
                     set_windows.update(|windows| {
@@ -750,6 +752,7 @@ pub fn WindowManager() -> impl IntoView {
                     let is_terminal = app_type == AppType::Terminal;
                     let is_textedit = app_type == AppType::TextEdit;
                     let is_notes = app_type == AppType::Notes;
+                    let is_finder = app_type == AppType::Finder;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
@@ -761,6 +764,8 @@ pub fn WindowManager() -> impl IntoView {
                         "window-content textedit-content"
                     } else if is_notes {
                         "window-content notes-content"
+                    } else if is_finder {
+                        "window-content finder-content"
                     } else {
                         "window-content"
                     };
@@ -812,7 +817,7 @@ pub fn WindowManager() -> impl IntoView {
                                     view! { <TextEdit /> }.into_any()
                                 } else if is_notes {
                                     view! { <Notes /> }.into_any()
-                                } else if title_for_content == "Finder" {
+                                } else if is_finder {
                                     view! { <Finder /> }.into_any()
                                 } else {
                                     view! { <p>"Window: " {title_for_content}</p> }.into_any()
