@@ -40,13 +40,13 @@ Polish the five core applications (Calculator, Terminal, Notes, TextEdit, Finder
 **Target State:** Near-identical replica of macOS Calculator (Basic mode).
 
 **Acceptance Criteria:**
-- [ ] REQ-001.1: Rounded button styling matching macOS Calculator
-- [ ] REQ-001.2: Correct color scheme (orange operators, dark gray numbers, light gray functions)
-- [ ] REQ-001.3: Proper button grid layout (4 columns, correct spacing)
-- [ ] REQ-001.4: Display matches macOS (right-aligned, proper font, number formatting)
-- [ ] REQ-001.5: Button press animations and hover states
-- [ ] REQ-001.6: Keyboard input support (0-9, +, -, *, /, =, Enter, Escape, Backspace)
-- [ ] REQ-001.7: Correct operator precedence and calculation behavior
+- [x] REQ-001.1: Rounded button styling matching macOS Calculator
+- [x] REQ-001.2: Correct color scheme (orange operators, dark gray numbers, light gray functions)
+- [x] REQ-001.3: Proper button grid layout (4 columns, correct spacing)
+- [x] REQ-001.4: Display matches macOS (right-aligned, proper font, number formatting)
+- [x] REQ-001.5: Button press animations and hover states
+- [x] REQ-001.6: Keyboard input support (0-9, +, -, *, /, =, Enter, Escape, Backspace)
+- [x] REQ-001.7: Correct operator precedence and calculation behavior
 
 ### REQ-002: Terminal App Polish
 

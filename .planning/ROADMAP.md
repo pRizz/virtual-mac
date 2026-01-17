@@ -8,7 +8,7 @@ Five phases, one per application. Each phase brings an app to macOS-replica qual
 
 | Phase | Name | Status | Requirements |
 |-------|------|--------|--------------|
-| 1 | Calculator Polish | Planned | REQ-001 |
+| 1 | Calculator Polish | ✓ Complete | REQ-001 |
 | 2 | Terminal Polish | Not Started | REQ-002 |
 | 3 | Notes App Creation | Not Started | REQ-003 |
 | 4 | TextEdit Polish | Not Started | REQ-004 |
@@ -25,8 +25,8 @@ Five phases, one per application. Each phase brings an app to macOS-replica qual
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md - Visual styling (CSS) for rounded buttons, gaps, display
-- [ ] 01-02-PLAN.md - Keyboard support, operator highlighting, AC/C toggle, number formatting
+- [x] 01-01-PLAN.md - Visual styling (CSS) for rounded buttons, gaps, display
+- [x] 01-02-PLAN.md - Keyboard support, operator highlighting, AC/C toggle, number formatting
 
 **Key Deliverables:**
 - Rounded buttons with macOS color scheme
