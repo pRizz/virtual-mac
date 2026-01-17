@@ -116,7 +116,7 @@ pub fn Finder() -> impl IntoView {
 
     // Column view state: tracks which paths are shown in each column
     // e.g., ["/", "/Documents", "/Documents/Work"] shows 3 columns
-    let (_column_paths, set_column_paths) = signal(vec!["/".to_string()]);
+    let (column_paths, set_column_paths) = signal(vec!["/".to_string()]);
 
     // Sync column_paths with current_path when in column view
     Effect::new(move |_| {
@@ -367,6 +367,71 @@ pub fn Finder() -> impl IntoView {
                         let current_files = files.get();
 
                         match current_view_mode {
+                            ViewMode::Column => {
+                                let cols = column_paths.get();
+                                view! {
+                                    <div class="finder-columns">
+                                        {cols.into_iter().enumerate().map(|(col_idx, col_path)| {
+                                            let fs = use_file_system();
+                                            let col_path_for_list = col_path.clone();
+                                            let items: Vec<_> = {
+                                                let _ = fs.version.get();
+                                                fs.list_dir(&col_path_for_list)
+                                            };
+
+                                            view! {
+                                                <div class="finder-column">
+                                                    {items.into_iter().map(|entry| {
+                                                        let path = entry.metadata.path.clone();
+                                                        let path_for_click = path.clone();
+                                                        let path_for_check = path.clone();
+                                                        let name = entry.metadata.name.clone();
+                                                        let name_for_selection = name.clone();
+                                                        let icon = entry.metadata.icon.clone();
+                                                        let is_folder = entry.is_directory();
+
+                                                        // Check if this item is selected (it's the parent of the next column)
+                                                        let is_item_selected = {
+                                                            let paths = column_paths.get();
+                                                            paths.get(col_idx + 1).map(|s| s == &path_for_check).unwrap_or(false)
+                                                        };
+
+                                                        let class_str = {
+                                                            let mut cls = "finder-column-item".to_string();
+                                                            if is_item_selected { cls.push_str(" selected"); }
+                                                            if is_folder { cls.push_str(" has-children"); }
+                                                            cls
+                                                        };
+
+                                                        view! {
+                                                            <div
+                                                                class=class_str
+                                                                on:click=move |_| {
+                                                                    // Truncate columns to current + add this path if folder
+                                                                    set_column_paths.update(|paths| {
+                                                                        paths.truncate(col_idx + 1);
+                                                                        if is_folder {
+                                                                            paths.push(path_for_click.clone());
+                                                                        }
+                                                                    });
+                                                                    // Update current_path and selection
+                                                                    if is_folder {
+                                                                        set_current_path.set(path_for_click.clone());
+                                                                    }
+                                                                    set_selected_items.set(vec![name_for_selection.clone()]);
+                                                                }
+                                                            >
+                                                                <span class="column-item-icon">{icon}</span>
+                                                                <span class="column-item-name">{name}</span>
+                                                            </div>
+                                                        }
+                                                    }).collect::<Vec<_>>()}
+                                                </div>
+                                            }
+                                        }).collect::<Vec<_>>()}
+                                    </div>
+                                }.into_any()
+                            }
                             ViewMode::List => view! {
                                 <div class="finder-list">
                                     <div class="finder-list-header">
