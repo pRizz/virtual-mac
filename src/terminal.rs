@@ -278,6 +278,13 @@ pub fn Terminal() -> impl IntoView {
     };
 
     let on_keydown = move |e: KeyboardEvent| {
+        // Cmd+K clears terminal (macOS standard)
+        if e.meta_key() && e.key() == "k" {
+            e.prevent_default();
+            set_history.set(Vec::new());
+            return;
+        }
+
         match e.key().as_str() {
             "ArrowUp" => {
                 e.prevent_default();
