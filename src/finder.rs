@@ -1,10 +1,12 @@
 use leptos::prelude::*;
+use wasm_bindgen::JsValue;
 
 use crate::file_system::{use_file_system, FileEntry};
 
 /// View mode for Finder content area
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum ViewMode {
+    #[default]
     Icons,
     List,
     Column,
@@ -18,6 +20,8 @@ pub struct FileItem {
     pub path: String,
     pub is_folder: bool,
     pub icon: String,
+    pub size: usize,
+    pub modified: f64,
 }
 
 impl FileItem {
@@ -27,7 +31,67 @@ impl FileItem {
             path: entry.metadata.path.clone(),
             is_folder: entry.is_directory(),
             icon: entry.metadata.icon.clone(),
+            size: entry.metadata.size,
+            modified: entry.metadata.modified,
         }
+    }
+}
+
+/// Format a timestamp as a readable date (e.g., "Jan 17, 2026")
+fn format_date(timestamp: f64) -> String {
+    let date = js_sys::Date::new(&JsValue::from_f64(timestamp));
+    let month = match date.get_month() {
+        0 => "Jan",
+        1 => "Feb",
+        2 => "Mar",
+        3 => "Apr",
+        4 => "May",
+        5 => "Jun",
+        6 => "Jul",
+        7 => "Aug",
+        8 => "Sep",
+        9 => "Oct",
+        10 => "Nov",
+        _ => "Dec",
+    };
+    format!("{} {}, {}", month, date.get_date(), date.get_full_year())
+}
+
+/// Format file size for display
+fn format_size(size: usize) -> String {
+    if size < 1024 {
+        format!("{} bytes", size)
+    } else if size < 1024 * 1024 {
+        format!("{} KB", size / 1024)
+    } else {
+        format!("{} MB", size / (1024 * 1024))
+    }
+}
+
+/// Get the "Kind" description for a file
+fn get_file_kind(name: &str, is_folder: bool) -> String {
+    if is_folder {
+        "Folder".to_string()
+    } else if let Some(ext) = name.rsplit('.').next() {
+        if ext == name {
+            // No extension found
+            "Document".to_string()
+        } else {
+            match ext.to_lowercase().as_str() {
+                "txt" => "Plain Text".to_string(),
+                "pdf" => "PDF Document".to_string(),
+                "png" | "jpg" | "jpeg" | "gif" => "Image".to_string(),
+                "mp3" | "wav" | "aac" => "Audio".to_string(),
+                "mp4" | "mov" | "avi" => "Video".to_string(),
+                "zip" | "tar" | "gz" => "Archive".to_string(),
+                "dmg" => "Disk Image".to_string(),
+                "xlsx" | "xls" => "Spreadsheet".to_string(),
+                "docx" | "doc" => "Word Document".to_string(),
+                _ => format!("{} Document", ext.to_uppercase()),
+            }
+        }
+    } else {
+        "Document".to_string()
     }
 }
 
@@ -52,7 +116,7 @@ pub fn Finder() -> impl IntoView {
 
     // Column view state: tracks which paths are shown in each column
     // e.g., ["/", "/Documents", "/Documents/Work"] shows 3 columns
-    let (column_paths, set_column_paths) = signal(vec!["/".to_string()]);
+    let (_column_paths, set_column_paths) = signal(vec!["/".to_string()]);
 
     // Sync column_paths with current_path when in column view
     Effect::new(move |_| {
@@ -298,37 +362,95 @@ pub fn Finder() -> impl IntoView {
 
                 // Main content area
                 <div class="finder-content">
-                    <div class="finder-grid">
-                        <For
-                            each=move || files.get()
-                            key=|item| item.path.clone()
-                            children=move |item| {
-                                let name = item.name.clone();
-                                let path = item.path.clone();
-                                let path_for_dblclick = path.clone();
-                                let name_for_click = name.clone();
-                                let name_for_check = name.clone();
-                                let is_folder = item.is_folder;
-                                let icon = item.icon.clone();
-                                let is_selected = move || selected_items.get().contains(&name_for_check);
+                    {move || {
+                        let current_view_mode = view_mode.get();
+                        let current_files = files.get();
 
-                                view! {
-                                    <div
-                                        class=move || if is_selected() { "finder-item selected" } else { "finder-item" }
-                                        on:click=move |_| toggle_selection(name_for_click.clone())
-                                        on:dblclick=move |_| {
-                                            if is_folder {
-                                                navigate_to(path_for_dblclick.clone());
-                                            }
-                                        }
-                                    >
-                                        <div class="finder-item-icon">{icon}</div>
-                                        <div class="finder-item-name">{name}</div>
+                        match current_view_mode {
+                            ViewMode::List => view! {
+                                <div class="finder-list">
+                                    <div class="finder-list-header">
+                                        <div class="list-col name">"Name"</div>
+                                        <div class="list-col date">"Date Modified"</div>
+                                        <div class="list-col size">"Size"</div>
+                                        <div class="list-col kind">"Kind"</div>
                                     </div>
-                                }
-                            }
-                        />
-                    </div>
+                                    <div class="finder-list-body">
+                                        {current_files.into_iter().map(|item| {
+                                            let name = item.name.clone();
+                                            let path = item.path.clone();
+                                            let path_for_dblclick = path.clone();
+                                            let name_for_click = name.clone();
+                                            let name_for_check = name.clone();
+                                            let name_for_kind = name.clone();
+                                            let is_folder = item.is_folder;
+                                            let icon = item.icon.clone();
+                                            let size = item.size;
+                                            let modified = item.modified;
+                                            let is_selected = move || selected_items.get().contains(&name_for_check);
+
+                                            let size_display = if is_folder {
+                                                "--".to_string()
+                                            } else {
+                                                format_size(size)
+                                            };
+                                            let kind = get_file_kind(&name_for_kind, is_folder);
+                                            let date_display = format_date(modified);
+
+                                            view! {
+                                                <div
+                                                    class=move || if is_selected() { "finder-list-row selected" } else { "finder-list-row" }
+                                                    on:click=move |_| toggle_selection(name_for_click.clone())
+                                                    on:dblclick=move |_| {
+                                                        if is_folder {
+                                                            navigate_to(path_for_dblclick.clone());
+                                                        }
+                                                    }
+                                                >
+                                                    <div class="list-col name">
+                                                        <span class="list-item-icon">{icon}</span>
+                                                        <span class="list-item-name">{name}</span>
+                                                    </div>
+                                                    <div class="list-col date">{date_display}</div>
+                                                    <div class="list-col size">{size_display}</div>
+                                                    <div class="list-col kind">{kind}</div>
+                                                </div>
+                                            }
+                                        }).collect::<Vec<_>>()}
+                                    </div>
+                                </div>
+                            }.into_any(),
+                            _ => view! {
+                                <div class="finder-grid">
+                                    {current_files.into_iter().map(|item| {
+                                        let name = item.name.clone();
+                                        let path = item.path.clone();
+                                        let path_for_dblclick = path.clone();
+                                        let name_for_click = name.clone();
+                                        let name_for_check = name.clone();
+                                        let is_folder = item.is_folder;
+                                        let icon = item.icon.clone();
+                                        let is_selected = move || selected_items.get().contains(&name_for_check);
+
+                                        view! {
+                                            <div
+                                                class=move || if is_selected() { "finder-item selected" } else { "finder-item" }
+                                                on:click=move |_| toggle_selection(name_for_click.clone())
+                                                on:dblclick=move |_| {
+                                                    if is_folder {
+                                                        navigate_to(path_for_dblclick.clone());
+                                                    }
+                                                }
+                                            >
+                                                <div class="finder-item-icon">{icon}</div>
+                                                <div class="finder-item-name">{name}</div>
+                                            </div>
+                                        }
+                                    }).collect::<Vec<_>>()}
+                                </div>
+                            }.into_any(),
+                        }
+                    }}
 
                     // Status bar
                     <div class="finder-statusbar">
