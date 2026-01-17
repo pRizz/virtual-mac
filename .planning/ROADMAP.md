@@ -10,8 +10,8 @@ Five phases, one per application. Each phase brings an app to macOS-replica qual
 |-------|------|--------|--------------|
 | 1 | Calculator Polish | Complete | REQ-001 |
 | 2 | Terminal Polish | Complete | REQ-002 |
-| 3 | Notes App Creation | Planned | REQ-003 |
-| 4 | TextEdit Polish | Not Started | REQ-004 |
+| 3 | Notes App Creation | Complete | REQ-003 |
+| 4 | TextEdit Polish | Planned | REQ-004 |
 | 5 | Finder Polish | Not Started | REQ-005 |
 
 ## Phase Details
@@ -79,10 +79,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 03-01-PLAN.md - Core component, data model, localStorage persistence, window integration
-- [ ] 03-02-PLAN.md - CSS styling for three-column layout and macOS Notes appearance
-- [ ] 03-03-PLAN.md - Rich text formatting toolbar (bold, italic, underline, lists, checklists)
-- [ ] 03-04-PLAN.md - CRUD operations for notes and folders, search functionality
+- [x] 03-01-PLAN.md - Core component, data model, localStorage persistence, window integration
+- [x] 03-02-PLAN.md - CSS styling for three-column layout and macOS Notes appearance
+- [x] 03-03-PLAN.md - Rich text formatting toolbar (bold, italic, underline, lists, checklists)
+- [x] 03-04-PLAN.md - CRUD operations for notes and folders, search functionality
 
 **Key Deliverables:**
 - Three-column layout (folders, notes list, editor)
@@ -104,11 +104,19 @@ Plans:
 
 **Requirements Covered:** REQ-004 (all sub-requirements)
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md - Core toolbar with font family/size dropdowns, B/I/U buttons, alignment
+- [ ] 04-02-PLAN.md - Document appearance (white page on gray), text/highlight color pickers
+- [ ] 04-03-PLAN.md - Status bar with word count, toolbar polish, final visual verification
+
 **Key Deliverables:**
 - macOS TextEdit toolbar styling
-- Document-style appearance
+- Document-style appearance (white page with margins)
 - Font and formatting controls
-- Modern rich text implementation (replacing execCommand)
+- Text and highlight color pickers
+- Status bar with word/character count
 
 **Success Criteria:**
 - Visual comparison with macOS TextEdit shows near-identical appearance
@@ -154,3 +162,4 @@ Phases 1, 3, 4 can execute in any order. Phase 2 and 5 share filesystem concerns
 
 *Roadmap created: 2026-01-17*
 *Phase 3 planned: 2026-01-17*
+*Phase 4 planned: 2026-01-17*
