@@ -1636,6 +1636,72 @@ html, body {
     pointer-events: none;
 }
 
+/* Cursor and selection styling */
+.textedit-document {
+    cursor: text;
+    caret-color: #000000;
+}
+
+[data-theme="dark"] .textedit-document {
+    caret-color: #ffffff;
+}
+
+/* Selection styling to match macOS */
+.textedit-document::selection {
+    background: #b4d5fe;
+}
+
+.textedit-document *::selection {
+    background: #b4d5fe;
+}
+
+[data-theme="dark"] .textedit-document::selection {
+    background: #3f638b;
+}
+
+[data-theme="dark"] .textedit-document *::selection {
+    background: #3f638b;
+}
+
+/* Scrollbar styling for document wrapper */
+.textedit-document-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+.textedit-document-wrapper::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.textedit-document-wrapper::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 5px;
+    border: 2px solid #f0f0f0;
+}
+
+.textedit-document-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
+[data-theme="dark"] .textedit-document-wrapper::-webkit-scrollbar-track {
+    background: #2d2d2d;
+}
+
+[data-theme="dark"] .textedit-document-wrapper::-webkit-scrollbar-thumb {
+    background: #5a5a5a;
+    border-color: #2d2d2d;
+}
+
+/* Placeholder text styling */
+.textedit-document:empty::before {
+    content: "Start typing...";
+    color: #999;
+    pointer-events: none;
+}
+
+[data-theme="dark"] .textedit-document:empty::before {
+    color: #666;
+}
+
 .textedit-statusbar {
     height: 22px;
     background: #f6f6f6;
