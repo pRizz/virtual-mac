@@ -1,6 +1,13 @@
 use leptos::prelude::*;
 use leptos::html;
 use serde::{Deserialize, Serialize};
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = document)]
+    fn execCommand(command: &str, show_ui: bool, value: &str) -> bool;
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Note {
