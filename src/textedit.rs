@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use leptos::ev::MouseEvent;
+use leptos::html::Div;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -22,6 +23,11 @@ pub fn TextEdit() -> impl IntoView {
     let (text_color, set_text_color) = signal("#000000".to_string());
     let (highlight_color, set_highlight_color) = signal("#ffff00".to_string());
     let (alignment, set_alignment) = signal("left".to_string());
+    let (word_count, set_word_count) = signal(0usize);
+    let (char_count, set_char_count) = signal(0usize);
+
+    // Node reference for the document div
+    let doc_ref = NodeRef::<Div>::new();
 
     // Web-safe fonts that work across browsers
     const FONTS: &[(&str, &str)] = &[
@@ -97,6 +103,17 @@ pub fn TextEdit() -> impl IntoView {
             };
             execCommand(cmd, false, "");
             set_alignment.set(align.to_string());
+        }
+    };
+
+    // Update word and character counts on input
+    let update_counts = move |_| {
+        if let Some(el) = doc_ref.get() {
+            let text = el.inner_text();
+            let chars = text.chars().count();
+            let words = text.split_whitespace().count();
+            set_char_count.set(chars);
+            set_word_count.set(words);
         }
     };
 
@@ -211,13 +228,21 @@ pub fn TextEdit() -> impl IntoView {
                 <div
                     class="textedit-document"
                     contenteditable="true"
+                    node_ref=doc_ref
+                    on:input=update_counts
                     style=move || format!("font-size: {}px;", font_size.get())
                 >
                     "Start typing here..."
                 </div>
             </div>
             <div class="textedit-statusbar">
-                <span>"TextEdit"</span>
+                <span class="textedit-statusbar-item">
+                    {move || format!("{} words", word_count.get())}
+                </span>
+                <span class="textedit-statusbar-separator"></span>
+                <span class="textedit-statusbar-item">
+                    {move || format!("{} characters", char_count.get())}
+                </span>
             </div>
         </div>
     }
