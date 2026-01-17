@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use wasm_bindgen::JsValue;
 
+use crate::context_menu::{show_context_menu, ContextMenu, ContextMenuState, ContextMenuType};
 use crate::file_system::{use_file_system, FileEntry};
 
 /// View mode for Finder content area
@@ -113,6 +114,16 @@ pub fn Finder() -> impl IntoView {
     let (path_history, set_path_history) = signal(vec!["/".to_string()]);
     let (history_index, set_history_index) = signal(0usize);
     let (view_mode, set_view_mode) = signal(ViewMode::Icons);
+    let (search_query, set_search_query) = signal(String::new());
+
+    // Context menu state
+    let (context_menu_state, set_context_menu_state) = signal(ContextMenuState::default());
+
+    // Pending action from context menu
+    let (pending_action, set_pending_action) = signal::<Option<String>>(None);
+
+    // Item being renamed
+    let (renaming_item, set_renaming_item) = signal::<Option<String>>(None);
 
     // Column view state: tracks which paths are shown in each column
     // e.g., ["/", "/Documents", "/Documents/Work"] shows 3 columns
@@ -190,6 +201,11 @@ pub fn Finder() -> impl IntoView {
         }
     };
 
+    // Clone fs for context menu actions before moving into Memo
+    let fs_for_actions = fs.clone();
+    // Clone fs for view use (rename handlers etc.)
+    let fs_for_view = fs.clone();
+
     // Get files for current view (using Memo so it can be used in multiple places)
     let files = Memo::new(move |_| {
         // Subscribe to FS version for reactivity
@@ -212,6 +228,69 @@ pub fn Finder() -> impl IntoView {
             }
         }
     });
+
+    // Filtered files based on search query
+    let filtered_files = Memo::new(move |_| {
+        let query = search_query.get().to_lowercase();
+        let all_files = files.get();
+
+        if query.is_empty() {
+            all_files
+        } else {
+            all_files
+                .into_iter()
+                .filter(|f| f.name.to_lowercase().contains(&query))
+                .collect()
+        }
+    });
+
+    // Handle context menu actions
+    {
+        let fs = fs_for_actions;
+        Effect::new(move |_| {
+            if let Some(action) = pending_action.get() {
+                let path = current_path.get();
+                match action.as_str() {
+                    "New Folder" => {
+                        // Generate unique name
+                        let base_name = "untitled folder";
+                        let mut name = base_name.to_string();
+                        let mut counter = 1;
+                        while fs.exists(&format!("{}/{}", path, name)) {
+                            counter += 1;
+                            name = format!("{} {}", base_name, counter);
+                        }
+                        let folder_path = if path == "/" {
+                            format!("/{}", name)
+                        } else {
+                            format!("{}/{}", path, name)
+                        };
+                        fs.create_dir(&folder_path);
+                    }
+                    "Move to Trash" => {
+                        let items = selected_items.get();
+                        for item_name in items {
+                            let item_path = if path == "/" {
+                                format!("/{}", item_name)
+                            } else {
+                                format!("{}/{}", path, item_name)
+                            };
+                            fs.delete(&item_path);
+                        }
+                        set_selected_items.set(Vec::new());
+                    }
+                    "Rename" => {
+                        let items = selected_items.get();
+                        if let Some(first) = items.first() {
+                            set_renaming_item.set(Some(first.clone()));
+                        }
+                    }
+                    _ => {}
+                }
+                set_pending_action.set(None);
+            }
+        });
+    }
 
     let toggle_selection = move |name: String| {
         set_selected_items.update(|items| {
@@ -303,7 +382,15 @@ pub fn Finder() -> impl IntoView {
                     </div>
                     <div class="finder-search">
                         <span class="search-icon">"🔍"</span>
-                        <input type="text" placeholder="Search" class="finder-search-input" />
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            class="finder-search-input"
+                            on:input=move |ev| {
+                                set_search_query.set(event_target_value(&ev));
+                            }
+                            prop:value=move || search_query.get()
+                        />
                     </div>
                 </div>
             </div>
@@ -364,7 +451,7 @@ pub fn Finder() -> impl IntoView {
                 <div class="finder-content">
                     {move || {
                         let current_view_mode = view_mode.get();
-                        let current_files = files.get();
+                        let current_files = filtered_files.get();
 
                         match current_view_mode {
                             ViewMode::Column => {
@@ -433,7 +520,18 @@ pub fn Finder() -> impl IntoView {
                                 }.into_any()
                             }
                             ViewMode::List => view! {
-                                <div class="finder-list">
+                                <div
+                                    class="finder-list"
+                                    on:contextmenu=move |ev: web_sys::MouseEvent| {
+                                        ev.prevent_default();
+                                        show_context_menu(
+                                            set_context_menu_state,
+                                            ev.client_x() as f64,
+                                            ev.client_y() as f64,
+                                            ContextMenuType::Desktop,
+                                        );
+                                    }
+                                >
                                     <div class="finder-list-header">
                                         <div class="list-col name">"Name"</div>
                                         <div class="list-col date">"Date Modified"</div>
@@ -443,16 +541,21 @@ pub fn Finder() -> impl IntoView {
                                     <div class="finder-list-body">
                                         {current_files.into_iter().map(|item| {
                                             let name = item.name.clone();
+                                            let name_for_display = name.clone();
+                                            let name_for_context = name.clone();
                                             let path = item.path.clone();
                                             let path_for_dblclick = path.clone();
                                             let name_for_click = name.clone();
                                             let name_for_check = name.clone();
                                             let name_for_kind = name.clone();
+                                            let name_for_rename_check = name.clone();
+                                            let name_for_rename = name.clone();
                                             let is_folder = item.is_folder;
                                             let icon = item.icon.clone();
                                             let size = item.size;
                                             let modified = item.modified;
                                             let is_selected = move || selected_items.get().contains(&name_for_check);
+                                            let fs_for_rename = fs_for_view.clone();
 
                                             let size_display = if is_folder {
                                                 "--".to_string()
@@ -471,10 +574,77 @@ pub fn Finder() -> impl IntoView {
                                                             navigate_to(path_for_dblclick.clone());
                                                         }
                                                     }
+                                                    on:contextmenu=move |ev: web_sys::MouseEvent| {
+                                                        ev.prevent_default();
+                                                        ev.stop_propagation();
+                                                        if !selected_items.get().contains(&name_for_context) {
+                                                            set_selected_items.set(vec![name_for_context.clone()]);
+                                                        }
+                                                        show_context_menu(
+                                                            set_context_menu_state,
+                                                            ev.client_x() as f64,
+                                                            ev.client_y() as f64,
+                                                            ContextMenuType::FinderItem {
+                                                                name: name_for_context.clone(),
+                                                                is_folder,
+                                                            },
+                                                        );
+                                                    }
                                                 >
                                                     <div class="list-col name">
                                                         <span class="list-item-icon">{icon}</span>
-                                                        <span class="list-item-name">{name}</span>
+                                                        {move || {
+                                                            let is_renaming = renaming_item.get().map(|r| r == name_for_rename_check).unwrap_or(false);
+                                                            if is_renaming {
+                                                                let current_name = name_for_rename.clone();
+                                                                let fs_clone = fs_for_rename.clone();
+                                                                view! {
+                                                                    <input
+                                                                        type="text"
+                                                                        class="finder-rename-input"
+                                                                        prop:value=current_name.clone()
+                                                                        on:blur=move |ev| {
+                                                                            let new_name = event_target_value(&ev);
+                                                                            if !new_name.is_empty() && new_name != current_name {
+                                                                                let path = current_path.get();
+                                                                                let old_path = if path == "/" {
+                                                                                    format!("/{}", current_name)
+                                                                                } else {
+                                                                                    format!("{}/{}", path, current_name)
+                                                                                };
+                                                                                let new_path = if path == "/" {
+                                                                                    format!("/{}", new_name)
+                                                                                } else {
+                                                                                    format!("{}/{}", path, new_name)
+                                                                                };
+                                                                                fs_clone.rename(&old_path, &new_path);
+                                                                            }
+                                                                            set_renaming_item.set(None);
+                                                                        }
+                                                                        on:keydown=move |ev: web_sys::KeyboardEvent| {
+                                                                            if ev.key() == "Enter" {
+                                                                                if let Some(target) = ev.target() {
+                                                                                    use wasm_bindgen::JsCast;
+                                                                                    if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
+                                                                                        let _ = input.blur();
+                                                                                    }
+                                                                                }
+                                                                            } else if ev.key() == "Escape" {
+                                                                                set_renaming_item.set(None);
+                                                                            }
+                                                                        }
+                                                                        on:click=move |ev: web_sys::MouseEvent| {
+                                                                            ev.stop_propagation();
+                                                                        }
+                                                                        autofocus=true
+                                                                    />
+                                                                }.into_any()
+                                                            } else {
+                                                                view! {
+                                                                    <span class="list-item-name">{name_for_display.clone()}</span>
+                                                                }.into_any()
+                                                            }
+                                                        }}
                                                     </div>
                                                     <div class="list-col date">{date_display}</div>
                                                     <div class="list-col size">{size_display}</div>
@@ -486,16 +656,32 @@ pub fn Finder() -> impl IntoView {
                                 </div>
                             }.into_any(),
                             _ => view! {
-                                <div class="finder-grid">
+                                <div
+                                    class="finder-grid"
+                                    on:contextmenu=move |ev: web_sys::MouseEvent| {
+                                        ev.prevent_default();
+                                        show_context_menu(
+                                            set_context_menu_state,
+                                            ev.client_x() as f64,
+                                            ev.client_y() as f64,
+                                            ContextMenuType::Desktop,
+                                        );
+                                    }
+                                >
                                     {current_files.into_iter().map(|item| {
                                         let name = item.name.clone();
+                                        let name_for_display = name.clone();
+                                        let name_for_context = name.clone();
                                         let path = item.path.clone();
                                         let path_for_dblclick = path.clone();
                                         let name_for_click = name.clone();
                                         let name_for_check = name.clone();
+                                        let name_for_rename_check = name.clone();
+                                        let name_for_rename = name.clone();
                                         let is_folder = item.is_folder;
                                         let icon = item.icon.clone();
                                         let is_selected = move || selected_items.get().contains(&name_for_check);
+                                        let fs_for_rename = fs_for_view.clone();
 
                                         view! {
                                             <div
@@ -506,9 +692,77 @@ pub fn Finder() -> impl IntoView {
                                                         navigate_to(path_for_dblclick.clone());
                                                     }
                                                 }
+                                                on:contextmenu=move |ev: web_sys::MouseEvent| {
+                                                    ev.prevent_default();
+                                                    ev.stop_propagation();
+                                                    // Select the item if not already selected
+                                                    if !selected_items.get().contains(&name_for_context) {
+                                                        set_selected_items.set(vec![name_for_context.clone()]);
+                                                    }
+                                                    show_context_menu(
+                                                        set_context_menu_state,
+                                                        ev.client_x() as f64,
+                                                        ev.client_y() as f64,
+                                                        ContextMenuType::FinderItem {
+                                                            name: name_for_context.clone(),
+                                                            is_folder,
+                                                        },
+                                                    );
+                                                }
                                             >
                                                 <div class="finder-item-icon">{icon}</div>
-                                                <div class="finder-item-name">{name}</div>
+                                                {move || {
+                                                    let is_renaming = renaming_item.get().map(|r| r == name_for_rename_check).unwrap_or(false);
+                                                    if is_renaming {
+                                                        let current_name = name_for_rename.clone();
+                                                        let fs_clone = fs_for_rename.clone();
+                                                        view! {
+                                                            <input
+                                                                type="text"
+                                                                class="finder-rename-input"
+                                                                prop:value=current_name.clone()
+                                                                on:blur=move |ev| {
+                                                                    let new_name = event_target_value(&ev);
+                                                                    if !new_name.is_empty() && new_name != current_name {
+                                                                        let path = current_path.get();
+                                                                        let old_path = if path == "/" {
+                                                                            format!("/{}", current_name)
+                                                                        } else {
+                                                                            format!("{}/{}", path, current_name)
+                                                                        };
+                                                                        let new_path = if path == "/" {
+                                                                            format!("/{}", new_name)
+                                                                        } else {
+                                                                            format!("{}/{}", path, new_name)
+                                                                        };
+                                                                        fs_clone.rename(&old_path, &new_path);
+                                                                    }
+                                                                    set_renaming_item.set(None);
+                                                                }
+                                                                on:keydown=move |ev: web_sys::KeyboardEvent| {
+                                                                    if ev.key() == "Enter" {
+                                                                        if let Some(target) = ev.target() {
+                                                                            use wasm_bindgen::JsCast;
+                                                                            if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
+                                                                                let _ = input.blur();
+                                                                            }
+                                                                        }
+                                                                    } else if ev.key() == "Escape" {
+                                                                        set_renaming_item.set(None);
+                                                                    }
+                                                                }
+                                                                on:click=move |ev: web_sys::MouseEvent| {
+                                                                    ev.stop_propagation();
+                                                                }
+                                                                autofocus=true
+                                                            />
+                                                        }.into_any()
+                                                    } else {
+                                                        view! {
+                                                            <div class="finder-item-name">{name_for_display.clone()}</div>
+                                                        }.into_any()
+                                                    }
+                                                }}
                                             </div>
                                         }
                                     }).collect::<Vec<_>>()}
@@ -520,12 +774,21 @@ pub fn Finder() -> impl IntoView {
                     // Status bar
                     <div class="finder-statusbar">
                         {move || {
-                            let count = files.get().len();
+                            let count = filtered_files.get().len();
                             format!("{} items", count)
                         }}
                     </div>
                 </div>
             </div>
+
+            // Context menu
+            <ContextMenu
+                state=context_menu_state
+                set_state=set_context_menu_state
+                on_action=Callback::new(move |action: String| {
+                    set_pending_action.set(Some(action));
+                })
+            />
         </div>
     }
 }

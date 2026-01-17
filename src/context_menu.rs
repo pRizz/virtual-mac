@@ -166,12 +166,16 @@ fn get_menu_items(menu_type: &ContextMenuType) -> Vec<ContextMenuItem> {
 pub fn ContextMenu(
     state: ReadSignal<ContextMenuState>,
     set_state: WriteSignal<ContextMenuState>,
+    #[prop(optional)] on_action: Option<Callback<String>>,
 ) -> impl IntoView {
     let close_menu = move |_| {
         set_state.update(|s| s.visible = false);
     };
 
     let items = move || get_menu_items(&state.get().menu_type);
+
+    // Store on_action in a signal so it can be used in closures
+    let on_action_stored = StoredValue::new(on_action);
 
     view! {
         <Show when=move || state.get().visible>
@@ -199,9 +203,19 @@ pub fn ContextMenu(
                             "context-menu-item"
                         };
                         let shortcut = item.shortcut;
+                        let label = item.label;
                         view! {
-                            <div class=class on:click=close_menu>
-                                <span class="context-menu-label">{item.label}</span>
+                            <div
+                                class=class
+                                on:click=move |_| {
+                                    // Call the action callback if provided
+                                    if let Some(callback) = on_action_stored.get_value() {
+                                        callback.run(label.to_string());
+                                    }
+                                    set_state.update(|s| s.visible = false);
+                                }
+                            >
+                                <span class="context-menu-label">{label}</span>
                                 {shortcut.map(|s| view! {
                                     <span class="context-menu-shortcut">{s}</span>
                                 })}
