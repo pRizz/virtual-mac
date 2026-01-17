@@ -1652,3 +1652,77 @@ html, body {
     font-size: 10px;
     opacity: 0.8;
 }
+
+/* ===============================
+   TERMINAL STYLES
+   =============================== */
+
+/* Terminal CSS custom properties (Pro profile) */
+:root {
+    --terminal-bg: #000000;
+    --terminal-bg-opacity: 0.85;
+    --terminal-text: #FFFFFF;
+    --terminal-cursor: #FFFFFF;
+    --terminal-selection: #4A90D9;
+    --terminal-scrollbar-thumb: rgba(255, 255, 255, 0.3);
+    --terminal-scrollbar-track: transparent;
+}
+
+.terminal {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, var(--terminal-bg-opacity));
+    color: var(--terminal-text);
+    font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 4px;
+}
+
+.terminal-line {
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-height: 1.4em;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.terminal-prompt {
+    color: var(--terminal-text);
+    flex-shrink: 0;
+    white-space: pre;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--terminal-text);
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    caret-color: var(--terminal-cursor);
+    padding: 0;
+    margin: 0;
+}
+
+.terminal-input::selection {
+    background: var(--terminal-selection);
+}
