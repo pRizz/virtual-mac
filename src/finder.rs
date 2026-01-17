@@ -771,6 +771,69 @@ pub fn Finder() -> impl IntoView {
                         }
                     }}
 
+                    // Path bar - shows current location as clickable breadcrumbs
+                    <div class="finder-pathbar">
+                        {move || {
+                            let path = current_path.get();
+                            if path == "/" {
+                                // Just show root
+                                view! {
+                                    <button
+                                        class="pathbar-segment"
+                                        on:click=move |_| navigate_to("/".to_string())
+                                    >
+                                        <span class="pathbar-icon">"💾"</span>
+                                        <span>"Macintosh HD"</span>
+                                    </button>
+                                }.into_any()
+                            } else {
+                                // Build breadcrumb segments
+                                let parts: Vec<&str> = path.split('/').filter(|s| !s.is_empty()).collect();
+                                let segments: Vec<_> = parts.iter().enumerate().map(|(i, part)| {
+                                    let full_path = if i == 0 {
+                                        format!("/{}", part)
+                                    } else {
+                                        format!("/{}", parts[0..=i].join("/"))
+                                    };
+                                    let path_for_click = full_path.clone();
+                                    let is_last = i == parts.len() - 1;
+                                    let display_name = part.to_string();
+
+                                    view! {
+                                        <>
+                                            <button
+                                                class="pathbar-segment"
+                                                on:click=move |_| navigate_to(path_for_click.clone())
+                                            >
+                                                {display_name}
+                                            </button>
+                                            {if !is_last {
+                                                Some(view! { <span class="pathbar-separator">"›"</span> })
+                                            } else {
+                                                None
+                                            }}
+                                        </>
+                                    }
+                                }).collect();
+
+                                // Prepend root
+                                view! {
+                                    <>
+                                        <button
+                                            class="pathbar-segment"
+                                            on:click=move |_| navigate_to("/".to_string())
+                                        >
+                                            <span class="pathbar-icon">"💾"</span>
+                                            <span>"Macintosh HD"</span>
+                                        </button>
+                                        <span class="pathbar-separator">"›"</span>
+                                        {segments}
+                                    </>
+                                }.into_any()
+                            }
+                        }}
+                    </div>
+
                     // Status bar
                     <div class="finder-statusbar">
                         {move || {
