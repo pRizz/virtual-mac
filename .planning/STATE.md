@@ -2,35 +2,36 @@
 
 ## Current Position
 
-**Active Phase:** Phase 2 - Terminal Polish
-**Last Completed:** 02-03-PLAN.md (Command History and Tab Completion)
-**Next Action:** Execute 02-04-PLAN.md (Autocomplete) or move to Phase 3
+**Active Phase:** Phase 2 - Terminal Polish (Complete)
+**Last Completed:** 02-04-PLAN.md (Clear Command and Auto-scroll)
+**Next Action:** Begin Phase 3 (Notes app) or other app polish
 
 ## Progress
 
 | Phase | Status | Plans | Completed |
 |-------|--------|-------|-----------|
 | 1 - Calculator | Complete | 2 | 2 |
-| 2 - Terminal | In Progress | 4 | 3 |
+| 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Not Started | 0 | - |
 | 4 - TextEdit | Not Started | 0 | - |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 50% complete (5/10 estimated plans across 5 phases)
+**Overall:** 60% complete (6/10 estimated plans across 5 phases)
 
-Progress: [#####.....] 50%
+Progress: [######....] 60%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Executed 02-03-PLAN.md (Command History and Tab Completion)
-- Added up/down arrow command history navigation
-- Added tab completion for file paths using VirtualFileSystem
-- Clone fs for separate closures to handle Rust move semantics
+- Completed 02-04-PLAN.md (Clear Command and Auto-scroll)
+- Added clear command and Cmd+K shortcut
+- Added auto-scroll to bottom on new output
+- Adjusted terminal opacity to 93% per user preference
+- Phase 2 Terminal Polish complete
 
 **Context for Next Session:**
-- Terminal history navigation and tab completion complete
-- Remaining: 02-04 (Autocomplete) - may overlap with tab completion
+- Terminal polish complete with all REQ-002 criteria verified
+- Phase 2 complete - ready for Phase 3 (Notes) or other app polish
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -51,7 +52,10 @@ Progress: [#####.....] 50%
 
 ## Open Issues
 
-None currently.
+| Issue | Found | Description |
+|-------|-------|-------------|
+| Window drag bounds | 2026-01-17 | Windows can be dragged above menu bar - top of windows should not go higher than bottom of menu bar |
+| Window title centering | 2026-01-17 | Window titles are centered relative to space between traffic lights and right edge, should be centered relative to full window width |
 
 ## Todos
 
@@ -61,3 +65,4 @@ None currently.
 ---
 
 *State updated: 2026-01-17*
+*Phase 2 completed: 2026-01-17*
