@@ -97,8 +97,8 @@ pub fn Spotlight() -> impl IntoView {
             }
 
             // Handle arrow keys and Enter when visible
-            if is_visible.get() {
-                let results_vec = results.get();
+            if is_visible.get_untracked() {
+                let results_vec = results.get_untracked();
                 match e.code().as_str() {
                     "ArrowDown" => {
                         e.prevent_default();
