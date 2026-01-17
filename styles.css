@@ -912,6 +912,23 @@ html, body {
     font-weight: 500;
 }
 
+/* Sidebar tag dots */
+.sidebar-tag-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.tag-item {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.tag-item:hover {
+    background: transparent;
+}
+
 /* Finder Content Area */
 .finder-content {
     flex: 1;

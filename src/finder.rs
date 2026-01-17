@@ -156,10 +156,26 @@ pub fn Finder() -> impl IntoView {
         SidebarItem { name: "Downloads", icon: "📥", path: Some("/Downloads") },
     ];
 
+    // Sidebar iCloud items
+    let sidebar_icloud = vec![
+        SidebarItem { name: "iCloud Drive", icon: "☁️", path: Some("/") },
+    ];
+
     // Sidebar locations
     let sidebar_locations = vec![
         SidebarItem { name: "Macintosh HD", icon: "💾", path: Some("/") },
         SidebarItem { name: "Network", icon: "🌐", path: None },
+    ];
+
+    // Sidebar tags (visual only - no functionality)
+    let sidebar_tags: Vec<(&str, &str)> = vec![
+        ("Red", "#ff3b30"),
+        ("Orange", "#ff9500"),
+        ("Yellow", "#ffcc00"),
+        ("Green", "#34c759"),
+        ("Blue", "#007aff"),
+        ("Purple", "#af52de"),
+        ("Gray", "#8e8e93"),
     ];
 
     // Navigate to a path
@@ -423,6 +439,30 @@ pub fn Finder() -> impl IntoView {
                     </div>
 
                     <div class="sidebar-section">
+                        <div class="sidebar-header">"iCloud"</div>
+                        {sidebar_icloud.into_iter().map(|item| {
+                            let name = item.name;
+                            let icon = item.icon;
+                            let path = item.path;
+                            let is_selected = move || selected_sidebar.get() == name;
+                            view! {
+                                <div
+                                    class=move || if is_selected() { "sidebar-item selected" } else { "sidebar-item" }
+                                    on:click=move |_| {
+                                        set_selected_sidebar.set(name);
+                                        if let Some(p) = path {
+                                            set_current_path.set(p.to_string());
+                                        }
+                                    }
+                                >
+                                    <span class="sidebar-icon">{icon}</span>
+                                    <span class="sidebar-name">{name}</span>
+                                </div>
+                            }
+                        }).collect::<Vec<_>>()}
+                    </div>
+
+                    <div class="sidebar-section">
                         <div class="sidebar-header">"Locations"</div>
                         {sidebar_locations.into_iter().map(|item| {
                             let name = item.name;
@@ -440,6 +480,18 @@ pub fn Finder() -> impl IntoView {
                                     }
                                 >
                                     <span class="sidebar-icon">{icon}</span>
+                                    <span class="sidebar-name">{name}</span>
+                                </div>
+                            }
+                        }).collect::<Vec<_>>()}
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="sidebar-header">"Tags"</div>
+                        {sidebar_tags.into_iter().map(|(name, color)| {
+                            view! {
+                                <div class="sidebar-item tag-item">
+                                    <span class="sidebar-tag-dot" style:background=color></span>
                                     <span class="sidebar-name">{name}</span>
                                 </div>
                             }
