@@ -72,17 +72,17 @@ Polish the five core applications (Calculator, Terminal, Notes, TextEdit, Finder
 **Target State:** Near-identical replica of macOS Notes with core functionality.
 
 **Acceptance Criteria:**
-- [ ] REQ-003.1: Three-column layout (folders, notes list, note editor)
-- [ ] REQ-003.2: Folder sidebar with default folders (All Notes, Recently Deleted)
-- [ ] REQ-003.3: Notes list with title preview and date
-- [ ] REQ-003.4: Rich text editor with formatting toolbar
-- [ ] REQ-003.5: Bold, italic, underline, strikethrough formatting
-- [ ] REQ-003.6: Bullet and numbered lists
-- [ ] REQ-003.7: Checklist support with clickable checkboxes
-- [ ] REQ-003.8: Search functionality across all notes
-- [ ] REQ-003.9: Create, rename, delete notes
-- [ ] REQ-003.10: Create, rename, delete folders
-- [ ] REQ-003.11: Note persistence to localStorage
+- [x] REQ-003.1: Three-column layout (folders, notes list, note editor)
+- [x] REQ-003.2: Folder sidebar with default folders (All Notes, Recently Deleted)
+- [x] REQ-003.3: Notes list with title preview and date
+- [x] REQ-003.4: Rich text editor with formatting toolbar
+- [x] REQ-003.5: Bold, italic, underline, strikethrough formatting
+- [x] REQ-003.6: Bullet and numbered lists
+- [x] REQ-003.7: Checklist support with clickable checkboxes
+- [x] REQ-003.8: Search functionality across all notes
+- [x] REQ-003.9: Create, rename, delete notes
+- [x] REQ-003.10: Create, rename, delete folders
+- [x] REQ-003.11: Note persistence to localStorage
 
 ### REQ-004: TextEdit App Polish
 
@@ -109,17 +109,17 @@ Polish the five core applications (Calculator, Terminal, Notes, TextEdit, Finder
 **Target State:** Near-identical replica of macOS Finder appearance and behavior.
 
 **Acceptance Criteria:**
-- [ ] REQ-005.1: Sidebar styling matching macOS (Favorites, iCloud, Locations sections)
-- [ ] REQ-005.2: Toolbar with back/forward, view mode buttons, search field
-- [ ] REQ-005.3: Icon view with proper grid spacing and icon sizes
-- [ ] REQ-005.4: List view with columns (Name, Date Modified, Size, Kind)
-- [ ] REQ-005.5: Column view navigation
-- [ ] REQ-005.6: Path bar at bottom showing current location
-- [ ] REQ-005.7: Status bar showing item count and available space
-- [ ] REQ-005.8: Functional search that filters current view
-- [ ] REQ-005.9: Context menu with working actions (New Folder, Get Info, etc.)
-- [ ] REQ-005.10: Double-click to open folders/files
-- [ ] REQ-005.11: File/folder icons matching macOS style
+- [x] REQ-005.1: Sidebar styling matching macOS (Favorites, iCloud, Locations sections)
+- [x] REQ-005.2: Toolbar with back/forward, view mode buttons, search field
+- [x] REQ-005.3: Icon view with proper grid spacing and icon sizes
+- [x] REQ-005.4: List view with columns (Name, Date Modified, Size, Kind)
+- [x] REQ-005.5: Column view navigation
+- [x] REQ-005.6: Path bar at bottom showing current location
+- [x] REQ-005.7: Status bar showing item count and available space
+- [x] REQ-005.8: Functional search that filters current view
+- [x] REQ-005.9: Context menu with working actions (New Folder, Get Info, etc.)
+- [x] REQ-005.10: Double-click to open folders/files
+- [x] REQ-005.11: File/folder icons matching macOS style
 
 ---
 
