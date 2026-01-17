@@ -43,17 +43,20 @@ pub fn TextEdit() -> impl IntoView {
 
     const FONT_SIZES: &[u32] = &[9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 64, 72];
 
-    let toggle_bold = move |_: MouseEvent| {
+    let toggle_bold = move |e: MouseEvent| {
+        e.prevent_default();
         execCommand("bold", false, "");
         set_is_bold.set(queryCommandState("bold"));
     };
 
-    let toggle_italic = move |_: MouseEvent| {
+    let toggle_italic = move |e: MouseEvent| {
+        e.prevent_default();
         execCommand("italic", false, "");
         set_is_italic.set(queryCommandState("italic"));
     };
 
-    let toggle_underline = move |_: MouseEvent| {
+    let toggle_underline = move |e: MouseEvent| {
+        e.prevent_default();
         execCommand("underline", false, "");
         set_is_underline.set(queryCommandState("underline"));
     };
@@ -141,21 +144,21 @@ pub fn TextEdit() -> impl IntoView {
                 <div class="textedit-toolbar-group">
                     <button
                         class=move || if is_bold.get() { "textedit-btn active" } else { "textedit-btn" }
-                        on:click=toggle_bold
+                        on:mousedown=toggle_bold
                         title="Bold"
                     >
                         <strong>"B"</strong>
                     </button>
                     <button
                         class=move || if is_italic.get() { "textedit-btn active" } else { "textedit-btn" }
-                        on:click=toggle_italic
+                        on:mousedown=toggle_italic
                         title="Italic"
                     >
                         <em>"I"</em>
                     </button>
                     <button
                         class=move || if is_underline.get() { "textedit-btn active" } else { "textedit-btn" }
-                        on:click=toggle_underline
+                        on:mousedown=toggle_underline
                         title="Underline"
                     >
                         <span style="text-decoration: underline">"U"</span>
