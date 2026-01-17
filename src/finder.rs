@@ -2,6 +2,15 @@ use leptos::prelude::*;
 
 use crate::file_system::{use_file_system, FileEntry};
 
+/// View mode for Finder content area
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ViewMode {
+    Icons,
+    List,
+    Column,
+    Gallery,
+}
+
 /// Represents a file or folder item for display
 #[derive(Clone, Debug, PartialEq)]
 pub struct FileItem {
@@ -39,6 +48,28 @@ pub fn Finder() -> impl IntoView {
     let (selected_items, set_selected_items) = signal(Vec::<String>::new());
     let (path_history, set_path_history) = signal(vec!["/".to_string()]);
     let (history_index, set_history_index) = signal(0usize);
+    let (view_mode, set_view_mode) = signal(ViewMode::Icons);
+
+    // Column view state: tracks which paths are shown in each column
+    // e.g., ["/", "/Documents", "/Documents/Work"] shows 3 columns
+    let (column_paths, set_column_paths) = signal(vec!["/".to_string()]);
+
+    // Sync column_paths with current_path when in column view
+    Effect::new(move |_| {
+        let path = current_path.get();
+        let view = view_mode.get();
+        if view == ViewMode::Column {
+            // Build column paths from root to current path
+            let mut paths = vec!["/".to_string()];
+            let parts: Vec<&str> = path.split('/').filter(|s| !s.is_empty()).collect();
+            let mut accumulated = String::new();
+            for part in parts {
+                accumulated = format!("{}/{}", accumulated, part);
+                paths.push(accumulated.clone());
+            }
+            set_column_paths.set(paths);
+        }
+    });
 
     // Sidebar favorites with their corresponding paths
     let sidebar_favorites = vec![
@@ -177,16 +208,32 @@ pub fn Finder() -> impl IntoView {
                 </div>
                 <div class="finder-toolbar-right">
                     <div class="finder-view-btns">
-                        <button class="finder-view-btn active" title="Icons">
+                        <button
+                            class=move || if view_mode.get() == ViewMode::Icons { "finder-view-btn active" } else { "finder-view-btn" }
+                            title="Icons"
+                            on:click=move |_| set_view_mode.set(ViewMode::Icons)
+                        >
                             <span>"⊞"</span>
                         </button>
-                        <button class="finder-view-btn" title="List">
+                        <button
+                            class=move || if view_mode.get() == ViewMode::List { "finder-view-btn active" } else { "finder-view-btn" }
+                            title="List"
+                            on:click=move |_| set_view_mode.set(ViewMode::List)
+                        >
                             <span>"☰"</span>
                         </button>
-                        <button class="finder-view-btn" title="Columns">
+                        <button
+                            class=move || if view_mode.get() == ViewMode::Column { "finder-view-btn active" } else { "finder-view-btn" }
+                            title="Columns"
+                            on:click=move |_| set_view_mode.set(ViewMode::Column)
+                        >
                             <span>"❘❘❘"</span>
                         </button>
-                        <button class="finder-view-btn" title="Gallery">
+                        <button
+                            class=move || if view_mode.get() == ViewMode::Gallery { "finder-view-btn active" } else { "finder-view-btn" }
+                            title="Gallery"
+                            on:click=move |_| set_view_mode.set(ViewMode::Gallery)
+                        >
                             <span>"▭"</span>
                         </button>
                     </div>
