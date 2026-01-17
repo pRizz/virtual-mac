@@ -3,7 +3,7 @@
 ## Current Position
 
 **Active Phase:** Phase 5 - Finder Polish (In Progress)
-**Last Completed:** Phase 5, Plan 05 - Context Menu Actions
+**Last Completed:** Phase 5, Plan 04 - Search & Path Bar
 **Next Action:** Execute Phase 5, Plan 06 (Gallery View)
 
 ## Progress
@@ -23,14 +23,14 @@ Progress: [#########.] 95%
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed Phase 5 Plan 05 (Context Menu Actions)
-- Added context menu trigger to Finder (right-click on items and background)
-- Wired New Folder action to VirtualFileSystem
-- Wired Rename action with inline input
-- Wired Move to Trash action
+- Completed Phase 5 Plan 04 (Search & Path Bar)
+- Added search_query signal and filtered_files Memo
+- Wired search input to filter Icons and List views
+- Added path bar with clickable breadcrumb navigation
+- Path bar shows hierarchical path to current folder
 
 **Context for Next Session:**
-- Finder has Icons, List, Column views and working context menu
+- Finder has Icons, List, Column views, search, and path bar
 - Gallery view still falls back to Icons view (Plan 06)
 - Context menu actions: New Folder, Rename, Move to Trash functional
 - YOLO mode enabled - auto-approve most decisions
@@ -70,6 +70,8 @@ Progress: [#########.] 95%
 | CSS ::after for chevrons | 2026-01-17 | Cleaner DOM than inline span element for folder indicators |
 | StoredValue for action callback | 2026-01-17 | Leptos pattern to store optional callback for use in closures |
 | Effect-based action handling | 2026-01-17 | Pending action signal + Effect cleaner than inline processing |
+| Search scope Icons/List only | 2026-01-17 | Column view maintains hierarchical navigation, doesn't fit filter paradigm |
+| Path bar button elements | 2026-01-17 | Clickable segments using buttons for consistent macOS behavior |
 
 ## Open Issues
 
@@ -89,4 +91,4 @@ Progress: [#########.] 95%
 ---
 
 *State updated: 2026-01-17*
-*Phase 5 plan 05 completed: 2026-01-17*
+*Phase 5 plan 04 completed: 2026-01-17*
