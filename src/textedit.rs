@@ -21,6 +21,7 @@ pub fn TextEdit() -> impl IntoView {
     let (is_underline, set_is_underline) = signal(false);
     let (text_color, set_text_color) = signal("#000000".to_string());
     let (highlight_color, set_highlight_color) = signal("#ffff00".to_string());
+    let (alignment, set_alignment) = signal("left".to_string());
 
     // Web-safe fonts that work across browsers
     const FONTS: &[(&str, &str)] = &[
@@ -82,6 +83,21 @@ pub fn TextEdit() -> impl IntoView {
         let color = input.value();
         set_highlight_color.set(color.clone());
         execCommand("hiliteColor", false, &color);
+    };
+
+    let set_align = move |align: &'static str| {
+        move |e: MouseEvent| {
+            e.prevent_default(); // Prevent focus loss from contenteditable
+            let cmd = match align {
+                "left" => "justifyLeft",
+                "center" => "justifyCenter",
+                "right" => "justifyRight",
+                "justify" => "justifyFull",
+                _ => "justifyLeft",
+            };
+            execCommand(cmd, false, "");
+            set_alignment.set(align.to_string());
+        }
     };
 
     view! {
