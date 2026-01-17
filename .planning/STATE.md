@@ -2,9 +2,9 @@
 
 ## Current Position
 
-**Active Phase:** Phase 3 - Notes Creation (In Progress)
-**Last Completed:** 03-02-PLAN.md (Notes App CSS Styling)
-**Next Action:** Continue Phase 3 (Plan 03: Text formatting, Plan 04: CRUD)
+**Active Phase:** Phase 3 - Notes Creation (Complete)
+**Last Completed:** 03-04-PLAN.md (Notes CRUD Operations)
+**Next Action:** Start Phase 4 (TextEdit) or Phase 5 (Finder)
 
 ## Progress
 
@@ -12,27 +12,27 @@
 |-------|--------|-------|-----------|
 | 1 - Calculator | Complete | 2 | 2 |
 | 2 - Terminal | Complete | 4 | 4 |
-| 3 - Notes | In Progress | 4 | 2 |
+| 3 - Notes | Complete | 4 | 4 |
 | 4 - TextEdit | Not Started | 0 | - |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 50% complete (8/16 plans across phases)
+**Overall:** 62.5% complete (10/16 plans across phases)
 
-Progress: [█████.....] 50%
+Progress: [######....] 62.5%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed 03-02-PLAN.md (Notes App CSS Styling)
-- Added complete CSS for Notes three-column layout
-- Folder sidebar, notes list, and editor styling
-- Dark mode support for all Notes components
-- Scrollbar styling and action button preparation
+- Completed 03-04-PLAN.md (Notes CRUD Operations)
+- Added note create/delete/restore/permanent delete operations
+- Added folder create/rename/delete operations
+- Added UI with action buttons showing on hover
+- Search filtering via visible_notes Memo
 
 **Context for Next Session:**
-- Notes app has full CSS styling matching macOS Notes
-- Ready for Plan 03: Text formatting and checklists
-- Ready for Plan 04: CRUD operations
+- Notes app is fully functional with CRUD operations
+- State persists to localStorage
+- Ready for Phase 4 (TextEdit) or Phase 5 (Finder)
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -52,6 +52,8 @@ Progress: [█████.....] 50%
 | Skip command completion | 2026-01-17 | Tab completes file paths only, not command names (simpler implementation) |
 | Notes yellow selection | 2026-01-17 | #ffd52e for note selection matches macOS Notes app |
 | Notes blue folder selection | 2026-01-17 | #007aff for folder selection matches macOS standard |
+| Soft delete for notes | 2026-01-17 | Notes moved to Recently Deleted rather than immediate removal |
+| Folder deletion preserves notes | 2026-01-17 | Notes in deleted folder moved to All Notes (unfiled) |
 
 ## Open Issues
 
@@ -68,4 +70,4 @@ Progress: [█████.....] 50%
 ---
 
 *State updated: 2026-01-17*
-*Phase 3 plan 02 completed: 2026-01-17*
+*Phase 3 plan 04 completed: 2026-01-17*
