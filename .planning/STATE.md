@@ -3,8 +3,8 @@
 ## Current Position
 
 **Active Phase:** Phase 5 - Finder Polish (In Progress)
-**Last Completed:** Phase 5, Plan 02 - Finder List View
-**Next Action:** Execute Phase 5, Plan 03
+**Last Completed:** Phase 5, Plan 03 - Column View
+**Next Action:** Execute Phase 5, Plan 04
 
 ## Progress
 
@@ -14,25 +14,24 @@
 | 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Complete | 4 | 4 |
 | 4 - TextEdit | Complete | 3 | 3 |
-| 5 - Finder | In Progress | 6 | 2 |
+| 5 - Finder | In Progress | 6 | 3 |
 
-**Overall:** 79% complete (15/19 plans across phases)
+**Overall:** 84% complete (16/19 plans across phases)
 
-Progress: [########..] 79%
+Progress: [########..] 84%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed Phase 5 Plan 02 (Finder List View)
-- Added FileItem.size/modified fields from FileMetadata
-- Added format_date(), format_size(), get_file_kind() helpers
-- Implemented ListView with conditional rendering
-- Added list view CSS with header, rows, and column styling
+- Completed Phase 5 Plan 03 (Column View / Miller Columns)
+- Implemented ViewMode::Column case with hierarchical navigation
+- Added column view CSS with horizontal scroll and fixed-width columns
+- Chevron indicators for folders via CSS ::after
 
 **Context for Next Session:**
-- Finder List view is fully functional with Name, Date Modified, Size, Kind columns
-- Icons view and List view now work via view_mode conditional rendering
-- Column and Gallery views fall back to Icons view (not yet implemented)
+- Finder now has Icons, List, and Column views working
+- Gallery view still falls back to Icons view
+- Column view uses truncate+push pattern for navigation
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -66,6 +65,8 @@ Progress: [########..] 79%
 | js_sys::Date for formatting | 2026-01-17 | Reliable cross-browser date handling without extra dependencies |
 | Folders show "--" for size | 2026-01-17 | Matches macOS Finder behavior |
 | File kind from extension | 2026-01-17 | Common mappings with fallback to "{EXT} Document" |
+| Static class for column items | 2026-01-17 | Computed at render time, avoids reactive overhead for static values |
+| CSS ::after for chevrons | 2026-01-17 | Cleaner DOM than inline span element for folder indicators |
 
 ## Open Issues
 
@@ -85,4 +86,4 @@ Progress: [########..] 79%
 ---
 
 *State updated: 2026-01-17*
-*Phase 5 plan 02 completed: 2026-01-17*
+*Phase 5 plan 03 completed: 2026-01-17*
