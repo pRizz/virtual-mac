@@ -2,9 +2,9 @@
 
 ## Current Position
 
-**Active Phase:** Phase 3 - Notes Creation (Complete)
-**Last Completed:** 03-04-PLAN.md (Notes CRUD Operations)
-**Next Action:** Start Phase 4 (TextEdit) or Phase 5 (Finder)
+**Active Phase:** Phase 4 - TextEdit Polish (In Progress)
+**Last Completed:** 04-02-PLAN.md (Document Style & Colors)
+**Next Action:** Continue Phase 4 plans or start Phase 5 (Finder)
 
 ## Progress
 
@@ -13,26 +13,26 @@
 | 1 - Calculator | Complete | 2 | 2 |
 | 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Complete | 4 | 4 |
-| 4 - TextEdit | Not Started | 0 | - |
+| 4 - TextEdit | In Progress | 2 | 2 |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 62.5% complete (10/16 plans across phases)
+**Overall:** 75% complete (12/16 plans across phases)
 
-Progress: [######....] 62.5%
+Progress: [########..] 75%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed 03-04-PLAN.md (Notes CRUD Operations)
-- Added note create/delete/restore/permanent delete operations
-- Added folder create/rename/delete operations
-- Added UI with action buttons showing on hover
-- Search filtering via visible_notes Memo
+- Completed 04-02-PLAN.md (Document Style & Colors)
+- Added document-style wrapper (gray bg, white page with shadow)
+- Added text color picker (foreColor execCommand)
+- Added highlight color picker (hiliteColor execCommand)
+- Added macOS-style cursor and selection styling
 
 **Context for Next Session:**
-- Notes app is fully functional with CRUD operations
-- State persists to localStorage
-- Ready for Phase 4 (TextEdit) or Phase 5 (Finder)
+- TextEdit has document-style appearance
+- Color controls functional
+- Ready for additional formatting features or next phase
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -57,6 +57,9 @@ Progress: [######....] 62.5%
 | execCommand for formatting | 2026-01-17 | Browser-native rich text API, no extra dependencies |
 | insertHTML for checklists | 2026-01-17 | Custom checkbox structure with div/input/span |
 | Event delegation for checkboxes | 2026-01-17 | Efficient handling of dynamically inserted checkboxes |
+| Document max-width 8.5in | 2026-01-17 | Realistic page appearance with 1in padding |
+| Selection color #b4d5fe | 2026-01-17 | Matches macOS default selection blue |
+| Native color input | 2026-01-17 | Accessibility and browser compatibility over custom picker |
 
 ## Open Issues
 
@@ -64,6 +67,8 @@ Progress: [######....] 62.5%
 |-------|-------|-------------|
 | Window drag bounds | 2026-01-17 | Windows can be dragged above menu bar - top of windows should not go higher than bottom of menu bar |
 | Window title centering | 2026-01-17 | Window titles are centered relative to space between traffic lights and right edge, should be centered relative to full window width |
+| Clock format wrong | 2026-01-17 | Menu bar clock shows "2 PM:04" instead of "2:04 PM" - fix time format order |
+| Clock show seconds | 2026-01-17 | Always show seconds on the digital clock in the menu bar (e.g., "2:04:35 PM") |
 
 ## Todos
 
@@ -73,5 +78,4 @@ Progress: [######....] 62.5%
 ---
 
 *State updated: 2026-01-17*
-*Phase 3 plan 03 completed: 2026-01-17*
-*Phase 3 plan 04 completed: 2026-01-17*
+*Phase 4 plan 02 completed: 2026-01-17*

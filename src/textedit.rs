@@ -15,11 +15,26 @@ extern "C" {
 #[component]
 pub fn TextEdit() -> impl IntoView {
     let (font_size, set_font_size) = signal(16u32);
+    let (font_family, set_font_family) = signal("Helvetica Neue".to_string());
     let (is_bold, set_is_bold) = signal(false);
     let (is_italic, set_is_italic) = signal(false);
     let (is_underline, set_is_underline) = signal(false);
     let (text_color, set_text_color) = signal("#000000".to_string());
     let (highlight_color, set_highlight_color) = signal("#ffff00".to_string());
+
+    // Web-safe fonts that work across browsers
+    const FONTS: &[(&str, &str)] = &[
+        ("Helvetica Neue", "Helvetica Neue, Helvetica, Arial, sans-serif"),
+        ("Arial", "Arial, Helvetica, sans-serif"),
+        ("Times New Roman", "Times New Roman, Times, serif"),
+        ("Georgia", "Georgia, serif"),
+        ("Courier New", "Courier New, Courier, monospace"),
+        ("Verdana", "Verdana, Geneva, sans-serif"),
+        ("Trebuchet MS", "Trebuchet MS, sans-serif"),
+        ("Monaco", "Monaco, Consolas, monospace"),
+    ];
+
+    const FONT_SIZES: &[u32] = &[9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 64, 72];
 
     let toggle_bold = move |_: MouseEvent| {
         execCommand("bold", false, "");
@@ -36,23 +51,21 @@ pub fn TextEdit() -> impl IntoView {
         set_is_underline.update(|u| *u = !*u);
     };
 
-    let increase_font = move |_: MouseEvent| {
-        set_font_size.update(|s| {
-            if *s < 72 {
-                *s += 2;
-            }
-        });
-        let _size = font_size.get();
-        execCommand("fontSize", false, "7");
+    let on_font_change = move |e: web_sys::Event| {
+        let target = e.target().unwrap();
+        let select = target.dyn_into::<web_sys::HtmlSelectElement>().unwrap();
+        let value = select.value();
+        set_font_family.set(value.clone());
+        execCommand("fontName", false, &value);
     };
 
-    let decrease_font = move |_: MouseEvent| {
-        set_font_size.update(|s| {
-            if *s > 8 {
-                *s -= 2;
-            }
-        });
-        execCommand("fontSize", false, "1");
+    let on_size_change = move |e: web_sys::Event| {
+        let target = e.target().unwrap();
+        let select = target.dyn_into::<web_sys::HtmlSelectElement>().unwrap();
+        let value = select.value();
+        if let Ok(size) = value.parse::<u32>() {
+            set_font_size.set(size);
+        }
     };
 
     let on_text_color_change = move |e: web_sys::Event| {
@@ -99,21 +112,30 @@ pub fn TextEdit() -> impl IntoView {
                 </div>
                 <div class="textedit-toolbar-separator"></div>
                 <div class="textedit-toolbar-group">
-                    <button
-                        class="textedit-btn"
-                        on:click=decrease_font
-                        title="Decrease font size"
+                    <select
+                        class="textedit-select"
+                        on:change=on_font_change
                     >
-                        "A-"
-                    </button>
-                    <span class="textedit-font-size">{move || format!("{}px", font_size.get())}</span>
-                    <button
-                        class="textedit-btn"
-                        on:click=increase_font
-                        title="Increase font size"
+                        {FONTS.iter().map(|(name, _stack)| {
+                            let name_str = *name;
+                            let is_selected = move || font_family.get() == name_str;
+                            view! {
+                                <option value={name_str} selected=is_selected>{name_str}</option>
+                            }
+                        }).collect_view()}
+                    </select>
+                    <select
+                        class="textedit-select textedit-select-size"
+                        on:change=on_size_change
                     >
-                        "A+"
-                    </button>
+                        {FONT_SIZES.iter().map(|size| {
+                            let size_val = *size;
+                            let is_selected = move || font_size.get() == size_val;
+                            view! {
+                                <option value={size_val.to_string()} selected=is_selected>{size_val.to_string()}</option>
+                            }
+                        }).collect_view()}
+                    </select>
                 </div>
                 <div class="textedit-toolbar-separator"></div>
                 <div class="textedit-toolbar-group">
