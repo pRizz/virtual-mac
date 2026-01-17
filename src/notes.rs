@@ -644,6 +644,27 @@ fn NotesList(
     }
 }
 
+// Helper function to extract title from HTML content
+fn extract_title(content: &str) -> String {
+    content
+        .split("<br>")
+        .next()
+        .or_else(|| content.split("<div>").next())
+        .map(|s| {
+            // Strip HTML tags
+            let mut result = String::new();
+            let mut in_tag = false;
+            for c in s.chars() {
+                if c == '<' { in_tag = true; }
+                else if c == '>' { in_tag = false; }
+                else if !in_tag { result.push(c); }
+            }
+            result.trim().to_string()
+        })
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| "New Note".to_string())
+}
+
 #[component]
 fn NoteEditor(
     state: ReadSignal<NotesState>,
@@ -653,9 +674,9 @@ fn NoteEditor(
 
     let selected_note = Memo::new(move |_| {
         let st = state.get();
-        st.selected_note_id
-            .as_ref()
-            .and_then(|id| st.notes.iter().find(|n| &n.id == id).cloned())
+        st.selected_note_id.as_ref().and_then(|id| {
+            st.notes.iter().find(|n| &n.id == id).cloned()
+        })
     });
 
     // Load content into editor when selected note changes
@@ -664,13 +685,15 @@ fn NoteEditor(
             if let Some(el) = editor_ref.get() {
                 el.set_inner_html(&note.content);
             }
-        } else if let Some(el) = editor_ref.get() {
-            el.set_inner_html("");
+        } else {
+            if let Some(el) = editor_ref.get() {
+                el.set_inner_html("");
+            }
         }
     });
 
-    // Save content on blur
-    let on_blur = move |_| {
+    // Save content helper
+    let save_content = move || {
         if let Some(el) = editor_ref.get() {
             let content = el.inner_html();
             set_state.update(|s| {
@@ -679,27 +702,7 @@ fn NoteEditor(
                         note.content = content.clone();
                         note.updated_at = js_sys::Date::now();
                         // Update title from first line
-                        let title = content
-                            .split("<br>")
-                            .next()
-                            .or_else(|| content.split("<div>").next())
-                            .map(|s| {
-                                // Strip tags
-                                let mut result = String::new();
-                                let mut in_tag = false;
-                                for c in s.chars() {
-                                    if c == '<' {
-                                        in_tag = true;
-                                    } else if c == '>' {
-                                        in_tag = false;
-                                    } else if !in_tag {
-                                        result.push(c);
-                                    }
-                                }
-                                result.trim().to_string()
-                            })
-                            .filter(|s| !s.is_empty())
-                            .unwrap_or_else(|| "New Note".to_string());
+                        let title = extract_title(&content);
                         note.title = title;
                     }
                 }
@@ -707,22 +710,130 @@ fn NoteEditor(
         }
     };
 
+    // Save content on blur
+    let on_blur = move |_| {
+        save_content();
+    };
+
+    // Formatting handlers - refocus editor after each operation
+    let format_bold = move |_: leptos::ev::MouseEvent| {
+        execCommand("bold", false, "");
+        if let Some(el) = editor_ref.get() {
+            let _ = el.focus();
+        }
+    };
+
+    let format_italic = move |_: leptos::ev::MouseEvent| {
+        execCommand("italic", false, "");
+        if let Some(el) = editor_ref.get() {
+            let _ = el.focus();
+        }
+    };
+
+    let format_underline = move |_: leptos::ev::MouseEvent| {
+        execCommand("underline", false, "");
+        if let Some(el) = editor_ref.get() {
+            let _ = el.focus();
+        }
+    };
+
+    let format_strikethrough = move |_: leptos::ev::MouseEvent| {
+        execCommand("strikeThrough", false, "");
+        if let Some(el) = editor_ref.get() {
+            let _ = el.focus();
+        }
+    };
+
+    let insert_bullet_list = move |_: leptos::ev::MouseEvent| {
+        execCommand("insertUnorderedList", false, "");
+        if let Some(el) = editor_ref.get() {
+            let _ = el.focus();
+        }
+    };
+
+    let insert_numbered_list = move |_: leptos::ev::MouseEvent| {
+        execCommand("insertOrderedList", false, "");
+        if let Some(el) = editor_ref.get() {
+            let _ = el.focus();
+        }
+    };
+
+    // Insert checklist item using insertHTML
+    let insert_checklist = move |_: leptos::ev::MouseEvent| {
+        let checkbox_html = r#"<div class="note-checklist-item"><input type="checkbox" class="note-checkbox" /><span>&nbsp;</span></div>"#;
+        execCommand("insertHTML", false, checkbox_html);
+        if let Some(el) = editor_ref.get() {
+            let _ = el.focus();
+        }
+    };
+
     view! {
         <div class="notes-editor">
             <div class="notes-editor-toolbar">
-                // Placeholder toolbar - formatting buttons added in Plan 03
-                <div class="notes-toolbar-placeholder">"Formatting"</div>
+                <div class="notes-toolbar-group">
+                    <button
+                        class="notes-toolbar-btn"
+                        on:click=format_bold
+                        title="Bold (Cmd+B)"
+                    >
+                        <strong>"B"</strong>
+                    </button>
+                    <button
+                        class="notes-toolbar-btn"
+                        on:click=format_italic
+                        title="Italic (Cmd+I)"
+                    >
+                        <em>"I"</em>
+                    </button>
+                    <button
+                        class="notes-toolbar-btn"
+                        on:click=format_underline
+                        title="Underline (Cmd+U)"
+                    >
+                        <u>"U"</u>
+                    </button>
+                    <button
+                        class="notes-toolbar-btn"
+                        on:click=format_strikethrough
+                        title="Strikethrough"
+                    >
+                        <s>"S"</s>
+                    </button>
+                </div>
+
+                <div class="notes-toolbar-separator"></div>
+
+                <div class="notes-toolbar-group">
+                    <button
+                        class="notes-toolbar-btn"
+                        on:click=insert_bullet_list
+                        title="Bullet List"
+                    >
+                        "..."
+                    </button>
+                    <button
+                        class="notes-toolbar-btn"
+                        on:click=insert_numbered_list
+                        title="Numbered List"
+                    >
+                        "1."
+                    </button>
+                    <button
+                        class="notes-toolbar-btn"
+                        on:click=insert_checklist
+                        title="Checklist"
+                    >
+                        "[x]"
+                    </button>
+                </div>
             </div>
+
             <Show
                 when=move || selected_note.get().is_some()
-                fallback=|| {
-                    view! {
-                        <div class="notes-editor-empty">
-                            <div class="notes-editor-empty-text">
-                                "Select a note or create a new one"
-                            </div>
-                        </div>
-                    }
+                fallback=|| view! {
+                    <div class="notes-editor-empty">
+                        <div class="notes-editor-empty-text">"Select a note or create a new one"</div>
+                    </div>
                 }
             >
                 <div
