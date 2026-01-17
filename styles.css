@@ -1539,17 +1539,44 @@ html, body {
     text-align: center;
 }
 
-.textedit-content {
+/* Document wrapper - gray background, scrollable */
+.textedit-document-wrapper {
     flex: 1;
-    padding: 16px 20px;
     overflow-y: auto;
+    background: #e0e0e0;
+    padding: 24px;
+}
+
+/* Document page - white page with shadow */
+.textedit-document {
+    max-width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    background: white;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.12),
+        0 1px 2px rgba(0, 0, 0, 0.24);
+    padding: 1in;
     outline: none;
     line-height: 1.6;
     color: #1a1a1a;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.textedit-content:focus {
+.textedit-document:focus {
     outline: none;
+}
+
+[data-theme="dark"] .textedit-document-wrapper {
+    background: #3a3a3a;
+}
+
+[data-theme="dark"] .textedit-document {
+    background: #2d2d2d;
+    color: #e5e5e5;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .textedit-statusbar {

@@ -482,7 +482,7 @@ fn NotesList(
         #[cfg(target_arch = "wasm32")]
         {
             let date = js_sys::Date::new(&wasm_bindgen::JsValue::from_f64(timestamp));
-            let month = date.get_month() + 1.0;
+            let month = date.get_month() + 1;
             let day = date.get_date();
             format!("{}/{}", month as u32, day as u32)
         }

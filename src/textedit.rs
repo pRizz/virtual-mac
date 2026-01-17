@@ -6,6 +6,9 @@ use wasm_bindgen::prelude::*;
 extern "C" {
     #[wasm_bindgen(js_namespace = document)]
     fn execCommand(command: &str, show_ui: bool, value: &str) -> bool;
+
+    #[wasm_bindgen(js_namespace = document)]
+    fn queryCommandState(command: &str) -> bool;
 }
 
 #[component]
@@ -13,6 +16,7 @@ pub fn TextEdit() -> impl IntoView {
     let (font_size, set_font_size) = signal(16u32);
     let (is_bold, set_is_bold) = signal(false);
     let (is_italic, set_is_italic) = signal(false);
+    let (is_underline, set_is_underline) = signal(false);
 
     let toggle_bold = move |_: MouseEvent| {
         execCommand("bold", false, "");
@@ -22,6 +26,11 @@ pub fn TextEdit() -> impl IntoView {
     let toggle_italic = move |_: MouseEvent| {
         execCommand("italic", false, "");
         set_is_italic.update(|i| *i = !*i);
+    };
+
+    let toggle_underline = move |_: MouseEvent| {
+        execCommand("underline", false, "");
+        set_is_underline.update(|u| *u = !*u);
     };
 
     let increase_font = move |_: MouseEvent| {
@@ -61,6 +70,13 @@ pub fn TextEdit() -> impl IntoView {
                     >
                         <em>"I"</em>
                     </button>
+                    <button
+                        class=move || if is_underline.get() { "textedit-btn active" } else { "textedit-btn" }
+                        on:click=toggle_underline
+                        title="Underline"
+                    >
+                        <span style="text-decoration: underline">"U"</span>
+                    </button>
                 </div>
                 <div class="textedit-toolbar-separator"></div>
                 <div class="textedit-toolbar-group">
@@ -81,12 +97,14 @@ pub fn TextEdit() -> impl IntoView {
                     </button>
                 </div>
             </div>
-            <div
-                class="textedit-content"
-                contenteditable="true"
-                style=move || format!("font-size: {}px;", font_size.get())
-            >
-                "Start typing here..."
+            <div class="textedit-document-wrapper">
+                <div
+                    class="textedit-document"
+                    contenteditable="true"
+                    style=move || format!("font-size: {}px;", font_size.get())
+                >
+                    "Start typing here..."
+                </div>
             </div>
             <div class="textedit-statusbar">
                 <span>"TextEdit"</span>
