@@ -15,6 +15,7 @@ pub fn Calculator() -> impl IntoView {
     let (stored_value, set_stored_value) = signal(0.0f64);
     let (current_op, set_current_op) = signal(Operation::None);
     let (clear_on_next, set_clear_on_next) = signal(false);
+    let (active_operator, set_active_operator) = signal::<Option<Operation>>(None);
 
     let append_digit = move |digit: &str| {
         if clear_on_next.get() {
@@ -30,6 +31,7 @@ pub fn Calculator() -> impl IntoView {
                 set_display.set(format!("{}{}", current, digit));
             }
         }
+        set_active_operator.set(None);
     };
 
     let clear = move || {
@@ -37,6 +39,7 @@ pub fn Calculator() -> impl IntoView {
         set_stored_value.set(0.0);
         set_current_op.set(Operation::None);
         set_clear_on_next.set(false);
+        set_active_operator.set(None);
     };
 
     let negate = move || {
@@ -75,6 +78,7 @@ pub fn Calculator() -> impl IntoView {
             set_display.set(format_result(result));
             set_current_op.set(Operation::None);
             set_clear_on_next.set(true);
+            set_active_operator.set(None);
         }
     };
 
@@ -88,6 +92,7 @@ pub fn Calculator() -> impl IntoView {
             set_stored_value.set(display.get().parse().unwrap_or(0.0));
             set_current_op.set(op);
             set_clear_on_next.set(true);
+            set_active_operator.set(Some(op));
         }
     };
 
@@ -100,22 +105,34 @@ pub fn Calculator() -> impl IntoView {
                 <button class="calc-btn function" on:click=move |_| clear()>"AC"</button>
                 <button class="calc-btn function" on:click=move |_| negate()>"+/−"</button>
                 <button class="calc-btn function" on:click=move |_| percent()>"%"</button>
-                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Divide)>"÷"</button>
+                <button
+                    class=move || if active_operator.get() == Some(Operation::Divide) { "calc-btn operator active" } else { "calc-btn operator" }
+                    on:click=move |_| set_operation(Operation::Divide)
+                >"÷"</button>
 
                 <button class="calc-btn digit" on:click=move |_| append_digit("7")>"7"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("8")>"8"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("9")>"9"</button>
-                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Multiply)>"×"</button>
+                <button
+                    class=move || if active_operator.get() == Some(Operation::Multiply) { "calc-btn operator active" } else { "calc-btn operator" }
+                    on:click=move |_| set_operation(Operation::Multiply)
+                >"×"</button>
 
                 <button class="calc-btn digit" on:click=move |_| append_digit("4")>"4"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("5")>"5"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("6")>"6"</button>
-                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Subtract)>"−"</button>
+                <button
+                    class=move || if active_operator.get() == Some(Operation::Subtract) { "calc-btn operator active" } else { "calc-btn operator" }
+                    on:click=move |_| set_operation(Operation::Subtract)
+                >"−"</button>
 
                 <button class="calc-btn digit" on:click=move |_| append_digit("1")>"1"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("2")>"2"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit("3")>"3"</button>
-                <button class="calc-btn operator" on:click=move |_| set_operation(Operation::Add)>"+"</button>
+                <button
+                    class=move || if active_operator.get() == Some(Operation::Add) { "calc-btn operator active" } else { "calc-btn operator" }
+                    on:click=move |_| set_operation(Operation::Add)
+                >"+"</button>
 
                 <button class="calc-btn digit zero" on:click=move |_| append_digit("0")>"0"</button>
                 <button class="calc-btn digit" on:click=move |_| append_digit(".")>"."</button>
