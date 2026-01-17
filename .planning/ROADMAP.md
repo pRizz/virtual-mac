@@ -12,7 +12,7 @@ Five phases, one per application. Each phase brings an app to macOS-replica qual
 | 2 | Terminal Polish | Complete | REQ-002 |
 | 3 | Notes App Creation | Complete | REQ-003 |
 | 4 | TextEdit Polish | Complete | REQ-004 |
-| 5 | Finder Polish | Not Started | REQ-005 |
+| 5 | Finder Polish | Planned | REQ-005 |
 
 ## Phase Details
 
@@ -131,6 +131,16 @@ Plans:
 
 **Requirements Covered:** REQ-005 (all sub-requirements)
 
+**Plans:** 6 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — View mode infrastructure (ViewMode enum, wired toolbar buttons, white padding fix)
+- [ ] 05-02-PLAN.md — List view implementation with columns (Name, Date, Size, Kind)
+- [ ] 05-03-PLAN.md — Column view implementation (Miller columns navigation)
+- [ ] 05-04-PLAN.md — Search filtering and path bar with breadcrumb navigation
+- [ ] 05-05-PLAN.md — Context menu actions (New Folder, Rename, Move to Trash)
+- [ ] 05-06-PLAN.md — Sidebar polish (iCloud, Tags), status bar enhancements, visual verification
+
 **Key Deliverables:**
 - macOS Finder sidebar styling
 - Multiple view modes (icon, list, column)
@@ -163,3 +173,4 @@ Phases 1, 3, 4 can execute in any order. Phase 2 and 5 share filesystem concerns
 *Roadmap created: 2026-01-17*
 *Phase 3 planned: 2026-01-17*
 *Phase 4 planned: 2026-01-17*
+*Phase 5 planned: 2026-01-17*
