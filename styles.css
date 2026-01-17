@@ -962,6 +962,8 @@ html, body {
     justify-content: center;
     font-size: 11px;
     color: var(--finder-text-secondary);
+}
+
 /* Calculator App Styles - macOS Calculator clone */
 .calculator {
     width: 100%;
@@ -1041,17 +1043,17 @@ html, body {
 }
 
 .calc-btn.operator {
-    background: #ff9f0a;
+    background: #FF9500;
     color: white;
 }
 
 .calc-btn.operator:hover {
-    background: #ffb340;
+    background: #FFB340;
 }
 
 .calc-btn.operator.active {
     background: #FFFFFF;
-    color: #ff9f0a;
+    color: #FF9500;
 }
 
 .calc-btn.zero {
