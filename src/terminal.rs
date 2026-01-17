@@ -11,6 +11,12 @@ pub fn Terminal() -> impl IntoView {
     ]);
     let (input, set_input) = signal(String::new());
     let (cwd, set_cwd) = signal(String::from("/"));
+
+    // Command history for up/down arrow navigation
+    let (command_history, set_command_history) = signal::<Vec<String>>(Vec::new());
+    let (history_index, set_history_index) = signal::<Option<usize>>(None);
+    let (saved_input, set_saved_input) = signal::<String>(String::new());
+
     let fs = use_file_system();
     let input_ref: NodeRef<leptos::html::Input> = NodeRef::new();
 
@@ -25,15 +31,27 @@ pub fn Terminal() -> impl IntoView {
     };
 
     let execute_command = move |cmd: String| {
-        let parts: Vec<&str> = cmd.trim().split_whitespace().collect();
+        let trimmed = cmd.trim().to_string();
+        let parts: Vec<&str> = trimmed.split_whitespace().collect();
         if parts.is_empty() {
             return;
         }
 
+        // Add to command history for up/down navigation
+        set_command_history.update(|h| {
+            // Don't add duplicates of the last command
+            if h.last().map(|s| s.as_str()) != Some(&trimmed) {
+                h.push(trimmed.clone());
+            }
+        });
+        // Reset history navigation state
+        set_history_index.set(None);
+        set_saved_input.set(String::new());
+
         let command = parts[0];
         let args: Vec<&str> = parts[1..].to_vec();
 
-        // Add command to history
+        // Add command to display history
         set_history.update(|h| {
             h.push(format!("{}{}", prompt(), cmd));
         });
@@ -195,10 +213,56 @@ pub fn Terminal() -> impl IntoView {
     };
 
     let on_keydown = move |e: KeyboardEvent| {
-        if e.key() == "Enter" {
-            let cmd = input.get();
-            execute_command(cmd);
-            set_input.set(String::new());
+        match e.key().as_str() {
+            "ArrowUp" => {
+                e.prevent_default();
+                let hist = command_history.get();
+                if hist.is_empty() {
+                    return;
+                }
+
+                let new_index = match history_index.get() {
+                    None => {
+                        // First up arrow - save current input, go to last command
+                        set_saved_input.set(input.get());
+                        hist.len().saturating_sub(1)
+                    }
+                    Some(idx) if idx > 0 => idx - 1,
+                    Some(idx) => idx, // Already at oldest
+                };
+
+                set_history_index.set(Some(new_index));
+                if let Some(cmd) = hist.get(new_index) {
+                    set_input.set(cmd.clone());
+                }
+            }
+            "ArrowDown" => {
+                e.prevent_default();
+                let hist = command_history.get();
+
+                match history_index.get() {
+                    Some(idx) if idx + 1 < hist.len() => {
+                        // Move forward in history
+                        let new_idx = idx + 1;
+                        set_history_index.set(Some(new_idx));
+                        if let Some(cmd) = hist.get(new_idx) {
+                            set_input.set(cmd.clone());
+                        }
+                    }
+                    Some(_) => {
+                        // At newest history entry - return to saved input
+                        set_history_index.set(None);
+                        set_input.set(saved_input.get());
+                    }
+                    None => {} // Not navigating history, do nothing
+                }
+            }
+            "Enter" => {
+                let cmd = input.get();
+                execute_command(cmd);
+                set_input.set(String::new());
+            }
+            _ => {}
         }
     };
 
