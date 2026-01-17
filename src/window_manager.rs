@@ -195,6 +195,66 @@ pub fn WindowManager() -> impl IntoView {
         }
     });
 
+    // Watch for dock app open requests
+    Effect::new(move |_| {
+        if let Some(app_name) = system_state.open_app.get() {
+            // Reset the signal
+            system_state.open_app.set(None);
+
+            // Map app name to AppType
+            let app_type = match app_name.as_str() {
+                "Finder" => Some(AppType::Generic),
+                "Calculator" => Some(AppType::Calculator),
+                "Terminal" => Some(AppType::Terminal),
+                "TextEdit" => Some(AppType::TextEdit),
+                "Notes" => Some(AppType::Notes),
+                "System Settings" => Some(AppType::SystemSettings),
+                _ => None,
+            };
+
+            if let Some(target_type) = app_type {
+                // Check if app is already open
+                let existing = windows.get().iter().find(|w| w.app_type == target_type).map(|w| (w.id, w.is_minimized));
+
+                if let Some((window_id, is_minimized)) = existing {
+                    // Bring existing window to front
+                    let new_z = top_z_index.get() + 1;
+                    set_top_z_index.set(new_z);
+                    set_windows.update(|windows| {
+                        if let Some(w) = windows.iter_mut().find(|w| w.id == window_id) {
+                            w.z_index = new_z;
+                            if is_minimized {
+                                w.is_minimized = false;
+                            }
+                        }
+                    });
+                } else {
+                    // Create new window for this app
+                    let id = next_id.get();
+                    set_next_id.set(id + 1);
+                    let new_z = top_z_index.get() + 1;
+                    set_top_z_index.set(new_z);
+
+                    // Get default dimensions for each app
+                    let (title, x, y, w, h) = match target_type {
+                        AppType::Calculator => ("Calculator", 200.0, 150.0, 250.0, 420.0),
+                        AppType::Terminal => ("Terminal", 300.0, 120.0, 600.0, 400.0),
+                        AppType::TextEdit => ("TextEdit", 350.0, 200.0, 500.0, 400.0),
+                        AppType::Notes => ("Notes", 450.0, 220.0, 700.0, 500.0),
+                        AppType::SystemSettings => ("System Settings", 150.0, 100.0, 680.0, 500.0),
+                        AppType::Generic => ("Finder", 100.0, 80.0, 600.0, 400.0),
+                    };
+
+                    set_windows.update(|windows| {
+                        let mut new_window = WindowState::new_with_app(id, title, x, y, w, h, target_type);
+                        new_window.z_index = new_z;
+                        windows.push(new_window);
+                    });
+                }
+            }
+        }
+    });
+
     // Action trigger for keyboard shortcuts
     let (action_trigger, set_action_trigger) = signal(WindowAction::None);
 

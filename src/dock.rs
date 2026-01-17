@@ -4,6 +4,7 @@ use leptos::ev::MouseEvent;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use crate::context_menu::{ContextMenuState, ContextMenuType, show_context_menu};
+use crate::system_state::SystemState;
 
 /// Represents a dock item (app icon)
 #[derive(Clone, Debug)]
@@ -74,6 +75,11 @@ fn DockIcon(
         );
     };
 
+    let on_click = move |_: MouseEvent| {
+        let system_state = expect_context::<SystemState>();
+        system_state.request_open_app(item_name);
+    };
+
     view! {
         <div
             class="dock-item"
@@ -83,6 +89,7 @@ fn DockIcon(
                 scale.get(),
                 (scale.get() - 1.0) * -24.0
             )
+            on:click=on_click
             on:contextmenu=on_contextmenu
         >
             <div class="dock-icon-wrapper">

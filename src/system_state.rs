@@ -11,6 +11,8 @@ pub struct SystemState {
     pub active_modal: RwSignal<Option<ModalType>>,
     /// Whether System Settings should be opened
     pub open_system_settings: RwSignal<bool>,
+    /// App to open from dock click (app name)
+    pub open_app: RwSignal<Option<String>>,
 }
 
 /// Power state of the system
@@ -40,7 +42,12 @@ impl SystemState {
             power_state: RwSignal::new(PowerState::Running),
             active_modal: RwSignal::new(None),
             open_system_settings: RwSignal::new(false),
+            open_app: RwSignal::new(None),
         }
+    }
+
+    pub fn request_open_app(&self, app_name: &str) {
+        self.open_app.set(Some(app_name.to_string()));
     }
 
     pub fn lock_screen(&self) {
