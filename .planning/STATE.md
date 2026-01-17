@@ -54,6 +54,9 @@ Progress: [######....] 62.5%
 | Notes blue folder selection | 2026-01-17 | #007aff for folder selection matches macOS standard |
 | Soft delete for notes | 2026-01-17 | Notes moved to Recently Deleted rather than immediate removal |
 | Folder deletion preserves notes | 2026-01-17 | Notes in deleted folder moved to All Notes (unfiled) |
+| execCommand for formatting | 2026-01-17 | Browser-native rich text API, no extra dependencies |
+| insertHTML for checklists | 2026-01-17 | Custom checkbox structure with div/input/span |
+| Event delegation for checkboxes | 2026-01-17 | Efficient handling of dynamically inserted checkboxes |
 
 ## Open Issues
 
@@ -70,4 +73,5 @@ Progress: [######....] 62.5%
 ---
 
 *State updated: 2026-01-17*
+*Phase 3 plan 03 completed: 2026-01-17*
 *Phase 3 plan 04 completed: 2026-01-17*
