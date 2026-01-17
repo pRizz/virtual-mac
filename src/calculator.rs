@@ -1,4 +1,8 @@
 use leptos::prelude::*;
+#[allow(unused_imports)]
+use wasm_bindgen::prelude::*;
+#[allow(unused_imports)]
+use wasm_bindgen::JsCast;
 
 #[derive(Clone, Copy, PartialEq)]
 enum Operation {
@@ -95,6 +99,182 @@ pub fn Calculator() -> impl IntoView {
             set_active_operator.set(Some(op));
         }
     };
+
+    // Keyboard event listener for calculator shortcuts
+    Effect::new(move |_| {
+        #[cfg(target_arch = "wasm32")]
+        {
+            use wasm_bindgen::closure::Closure;
+
+            let closure = Closure::wrap(Box::new(move |evt: web_sys::KeyboardEvent| {
+                match evt.key().as_str() {
+                    "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "." => {
+                        let digit = evt.key();
+                        // Inline append_digit logic
+                        if clear_on_next.get() {
+                            set_display.set(digit.clone());
+                            set_clear_on_next.set(false);
+                        } else {
+                            let current = display.get();
+                            if current == "0" && digit != "." {
+                                set_display.set(digit);
+                            } else if digit == "." && current.contains('.') {
+                                // Don't add another decimal point
+                            } else {
+                                set_display.set(format!("{}{}", current, digit));
+                            }
+                        }
+                        set_active_operator.set(None);
+                    }
+                    "+" => {
+                        let current = display.get();
+                        if current.parse::<f64>().is_ok() {
+                            if current_op.get() != Operation::None && !clear_on_next.get() {
+                                // Trigger calculation first
+                                let current_val = current.parse::<f64>().unwrap_or(0.0);
+                                let stored = stored_value.get();
+                                let result = match current_op.get() {
+                                    Operation::None => current_val,
+                                    Operation::Add => stored + current_val,
+                                    Operation::Subtract => stored - current_val,
+                                    Operation::Multiply => stored * current_val,
+                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                };
+                                set_display.set(format_result(result));
+                            }
+                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_current_op.set(Operation::Add);
+                            set_clear_on_next.set(true);
+                            set_active_operator.set(Some(Operation::Add));
+                        }
+                    }
+                    "-" => {
+                        let current = display.get();
+                        if current.parse::<f64>().is_ok() {
+                            if current_op.get() != Operation::None && !clear_on_next.get() {
+                                let current_val = current.parse::<f64>().unwrap_or(0.0);
+                                let stored = stored_value.get();
+                                let result = match current_op.get() {
+                                    Operation::None => current_val,
+                                    Operation::Add => stored + current_val,
+                                    Operation::Subtract => stored - current_val,
+                                    Operation::Multiply => stored * current_val,
+                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                };
+                                set_display.set(format_result(result));
+                            }
+                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_current_op.set(Operation::Subtract);
+                            set_clear_on_next.set(true);
+                            set_active_operator.set(Some(Operation::Subtract));
+                        }
+                    }
+                    "*" => {
+                        let current = display.get();
+                        if current.parse::<f64>().is_ok() {
+                            if current_op.get() != Operation::None && !clear_on_next.get() {
+                                let current_val = current.parse::<f64>().unwrap_or(0.0);
+                                let stored = stored_value.get();
+                                let result = match current_op.get() {
+                                    Operation::None => current_val,
+                                    Operation::Add => stored + current_val,
+                                    Operation::Subtract => stored - current_val,
+                                    Operation::Multiply => stored * current_val,
+                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                };
+                                set_display.set(format_result(result));
+                            }
+                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_current_op.set(Operation::Multiply);
+                            set_clear_on_next.set(true);
+                            set_active_operator.set(Some(Operation::Multiply));
+                        }
+                    }
+                    "/" => {
+                        evt.prevent_default(); // Prevent browser quick-find
+                        let current = display.get();
+                        if current.parse::<f64>().is_ok() {
+                            if current_op.get() != Operation::None && !clear_on_next.get() {
+                                let current_val = current.parse::<f64>().unwrap_or(0.0);
+                                let stored = stored_value.get();
+                                let result = match current_op.get() {
+                                    Operation::None => current_val,
+                                    Operation::Add => stored + current_val,
+                                    Operation::Subtract => stored - current_val,
+                                    Operation::Multiply => stored * current_val,
+                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                };
+                                set_display.set(format_result(result));
+                            }
+                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_current_op.set(Operation::Divide);
+                            set_clear_on_next.set(true);
+                            set_active_operator.set(Some(Operation::Divide));
+                        }
+                    }
+                    "=" | "Enter" => {
+                        // do_calculate logic inline
+                        let current = display.get();
+                        if let Ok(current_val) = current.parse::<f64>() {
+                            let stored = stored_value.get();
+                            let result = match current_op.get() {
+                                Operation::None => current_val,
+                                Operation::Add => stored + current_val,
+                                Operation::Subtract => stored - current_val,
+                                Operation::Multiply => stored * current_val,
+                                Operation::Divide => {
+                                    if current_val != 0.0 {
+                                        stored / current_val
+                                    } else {
+                                        f64::NAN
+                                    }
+                                }
+                            };
+                            set_display.set(format_result(result));
+                            set_current_op.set(Operation::None);
+                            set_clear_on_next.set(true);
+                            set_active_operator.set(None);
+                        }
+                    }
+                    "Escape" | "c" | "C" => {
+                        // clear logic inline
+                        set_display.set(String::from("0"));
+                        set_stored_value.set(0.0);
+                        set_current_op.set(Operation::None);
+                        set_clear_on_next.set(false);
+                        set_active_operator.set(None);
+                    }
+                    "%" => {
+                        // percent logic inline
+                        let current = display.get();
+                        if let Ok(val) = current.parse::<f64>() {
+                            let result = val / 100.0;
+                            set_display.set(format_result(result));
+                        }
+                    }
+                    "Backspace" | "Delete" => {
+                        let current = display.get();
+                        if current.len() > 1 {
+                            set_display.set(current[..current.len()-1].to_string());
+                        } else {
+                            set_display.set(String::from("0"));
+                        }
+                    }
+                    _ => {}
+                }
+            }) as Box<dyn FnMut(_)>);
+
+            if let Some(window) = web_sys::window() {
+                if let Some(document) = window.document() {
+                    let _ = document.add_event_listener_with_callback(
+                        "keydown",
+                        closure.as_ref().unchecked_ref(),
+                    );
+                }
+            }
+            closure.forget();
+        }
+    });
 
     view! {
         <div class="calculator">
