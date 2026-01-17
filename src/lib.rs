@@ -15,6 +15,7 @@ mod system_settings;
 mod system_state;
 mod terminal;
 mod textedit;
+mod notes;
 pub mod theme;
 mod wallpaper;
 mod window_manager;

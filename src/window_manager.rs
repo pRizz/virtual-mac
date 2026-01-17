@@ -12,6 +12,7 @@ use crate::system_settings::SystemSettings;
 use crate::system_state::SystemState;
 use crate::terminal::Terminal;
 use crate::textedit::TextEdit;
+use crate::notes::Notes;
 
 /// Actions that can be triggered via keyboard shortcuts
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
@@ -42,6 +43,7 @@ pub enum AppType {
     SystemSettings,
     Terminal,
     TextEdit,
+    Notes,
 }
 
 /// Animation state for window minimize/restore
@@ -142,7 +144,7 @@ pub fn WindowManager() -> impl IntoView {
         WindowState::new_with_app(2, "Calculator", 200.0, 150.0, 250.0, 420.0, AppType::Calculator),
         WindowState::new_with_app(3, "Terminal", 300.0, 120.0, 600.0, 400.0, AppType::Terminal),
         WindowState::new_with_app(4, "TextEdit", 350.0, 200.0, 500.0, 400.0, AppType::TextEdit),
-        WindowState::new(5, "Notes", 450.0, 220.0, 400.0, 300.0),
+        WindowState::new_with_app(5, "Notes", 450.0, 220.0, 700.0, 500.0, AppType::Notes),
     ]);
 
     let (next_id, set_next_id) = signal(6usize);
@@ -687,6 +689,7 @@ pub fn WindowManager() -> impl IntoView {
                     let is_system_settings = app_type == AppType::SystemSettings;
                     let is_terminal = app_type == AppType::Terminal;
                     let is_textedit = app_type == AppType::TextEdit;
+                    let is_notes = app_type == AppType::Notes;
 
                     let content_class = if is_calculator {
                         "window-content calculator-content"
@@ -696,6 +699,8 @@ pub fn WindowManager() -> impl IntoView {
                         "window-content terminal-content"
                     } else if is_textedit {
                         "window-content textedit-content"
+                    } else if is_notes {
+                        "window-content notes-content"
                     } else {
                         "window-content"
                     };
@@ -745,6 +750,8 @@ pub fn WindowManager() -> impl IntoView {
                                     view! { <Terminal /> }.into_any()
                                 } else if is_textedit {
                                     view! { <TextEdit /> }.into_any()
+                                } else if is_notes {
+                                    view! { <Notes /> }.into_any()
                                 } else if title_for_content == "Finder" {
                                     view! { <Finder /> }.into_any()
                                 } else {
