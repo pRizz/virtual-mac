@@ -175,6 +175,37 @@ pub fn TextEdit() -> impl IntoView {
                         />
                     </div>
                 </div>
+                <div class="textedit-toolbar-separator"></div>
+                <div class="textedit-toolbar-group">
+                    <button
+                        class=move || if alignment.get() == "left" { "textedit-btn active" } else { "textedit-btn" }
+                        on:mousedown=set_align("left")
+                        title="Align Left"
+                    >
+                        <span class="textedit-align-icon textedit-align-left"></span>
+                    </button>
+                    <button
+                        class=move || if alignment.get() == "center" { "textedit-btn active" } else { "textedit-btn" }
+                        on:mousedown=set_align("center")
+                        title="Align Center"
+                    >
+                        <span class="textedit-align-icon textedit-align-center"></span>
+                    </button>
+                    <button
+                        class=move || if alignment.get() == "right" { "textedit-btn active" } else { "textedit-btn" }
+                        on:mousedown=set_align("right")
+                        title="Align Right"
+                    >
+                        <span class="textedit-align-icon textedit-align-right"></span>
+                    </button>
+                    <button
+                        class=move || if alignment.get() == "justify" { "textedit-btn active" } else { "textedit-btn" }
+                        on:mousedown=set_align("justify")
+                        title="Justify"
+                    >
+                        <span class="textedit-align-icon textedit-align-justify"></span>
+                    </button>
+                </div>
             </div>
             <div class="textedit-document-wrapper">
                 <div

@@ -1565,6 +1565,62 @@ html, body {
     width: 60px;
 }
 
+/* Alignment icon representations using CSS lines */
+.textedit-align-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 14px;
+    height: 12px;
+    gap: 2px;
+}
+
+.textedit-align-icon::before,
+.textedit-align-icon::after {
+    content: "";
+    display: block;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+}
+
+/* Left align: lines aligned left, different widths */
+.textedit-align-left::before {
+    width: 14px;
+    align-self: flex-start;
+}
+.textedit-align-left::after {
+    width: 10px;
+    align-self: flex-start;
+}
+
+/* Center align: lines centered */
+.textedit-align-center::before {
+    width: 14px;
+}
+.textedit-align-center::after {
+    width: 10px;
+}
+
+/* Right align: lines aligned right */
+.textedit-align-right::before {
+    width: 14px;
+    align-self: flex-end;
+}
+.textedit-align-right::after {
+    width: 10px;
+    align-self: flex-end;
+}
+
+/* Justify: all lines full width */
+.textedit-align-justify::before {
+    width: 14px;
+}
+.textedit-align-justify::after {
+    width: 14px;
+}
+
 /* Document wrapper - gray background, scrollable */
 .textedit-document-wrapper {
     flex: 1;
