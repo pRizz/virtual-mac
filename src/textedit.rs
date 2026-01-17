@@ -45,17 +45,17 @@ pub fn TextEdit() -> impl IntoView {
 
     let toggle_bold = move |_: MouseEvent| {
         execCommand("bold", false, "");
-        set_is_bold.update(|b| *b = !*b);
+        // State will be updated by selectionchange listener
     };
 
     let toggle_italic = move |_: MouseEvent| {
         execCommand("italic", false, "");
-        set_is_italic.update(|i| *i = !*i);
+        // State will be updated by selectionchange listener
     };
 
     let toggle_underline = move |_: MouseEvent| {
         execCommand("underline", false, "");
-        set_is_underline.update(|u| *u = !*u);
+        // State will be updated by selectionchange listener
     };
 
     let on_font_change = move |e: web_sys::Event| {
@@ -116,6 +116,24 @@ pub fn TextEdit() -> impl IntoView {
             set_word_count.set(words);
         }
     };
+
+    // Update formatting button states when selection changes
+    #[cfg(target_arch = "wasm32")]
+    {
+        let update_format_states = Closure::wrap(Box::new(move || {
+            set_is_bold.set(queryCommandState("bold"));
+            set_is_italic.set(queryCommandState("italic"));
+            set_is_underline.set(queryCommandState("underline"));
+        }) as Box<dyn Fn()>);
+
+        if let Some(document) = web_sys::window().and_then(|w| w.document()) {
+            let _ = document.add_event_listener_with_callback(
+                "selectionchange",
+                update_format_states.as_ref().unchecked_ref(),
+            );
+        }
+        update_format_states.forget();
+    }
 
     view! {
         <div class="textedit">
