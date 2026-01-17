@@ -84,6 +84,18 @@ pub fn Terminal() -> impl IntoView {
     let fs = use_file_system();
     let fs_for_keydown = fs.clone();
     let input_ref: NodeRef<leptos::html::Input> = NodeRef::new();
+    let output_ref: NodeRef<leptos::html::Div> = NodeRef::new();
+
+    // Auto-scroll to bottom when history changes
+    Effect::new(move |_| {
+        // Subscribe to history changes
+        let _ = history.get();
+        // Scroll to bottom
+        if let Some(el) = output_ref.get() {
+            let scroll_height = el.scroll_height();
+            el.set_scroll_top(scroll_height);
+        }
+    });
 
     let prompt = move || {
         let path = cwd.get();
@@ -407,7 +419,7 @@ pub fn Terminal() -> impl IntoView {
 
     view! {
         <div class="terminal" on:click=on_terminal_click>
-            <div class="terminal-output">
+            <div class="terminal-output" node_ref=output_ref>
                 <For
                     each=history_items
                     key=|(i, _)| *i
