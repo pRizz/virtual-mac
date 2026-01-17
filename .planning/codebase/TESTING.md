@@ -36,7 +36,7 @@ npm run test:report      # View HTML report
 ```
 e2e/
   page-objects/
-    index.ts           # Barrel export
+    index.ts               # Barrel export
     calculator.page.ts
     desktop.page.ts
     dock.page.ts
@@ -85,7 +85,7 @@ test.describe('Dock', () => {
 
 ## Page Object Pattern
 
-**Structure:**
+**Base Structure (example from `e2e/page-objects/dock.page.ts`):**
 ```typescript
 import { Page, Locator } from '@playwright/test';
 
@@ -94,12 +94,14 @@ export class DockPage {
   readonly dockContainer: Locator;
   readonly dock: Locator;
   readonly dockItems: Locator;
+  readonly dockSeparator: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.dockContainer = page.locator('.dock-container');
     this.dock = page.locator('.dock-container .dock');
     this.dockItems = page.locator('.dock-container .dock-item');
+    this.dockSeparator = page.locator('.dock-separator');
   }
 
   getDockItem(appName: string): Locator {
@@ -110,6 +112,27 @@ export class DockPage {
     const item = this.getDockItem(appName);
     await item.hover();
     return item;
+  }
+
+  async clickDockItem(appName: string) {
+    await this.getDockItem(appName).click();
+  }
+}
+```
+
+**Window-Scoped Page Objects (example from `e2e/page-objects/finder.page.ts`):**
+```typescript
+export class FinderPage {
+  readonly page: Page;
+  readonly finder: Locator;
+  readonly toolbar: Locator;
+  readonly sidebar: Locator;
+
+  constructor(page: Page, windowLocator: Locator) {
+    this.page = page;
+    this.finder = windowLocator.locator('.finder');
+    this.toolbar = this.finder.locator('.finder-toolbar');
+    this.sidebar = this.finder.locator('.finder-sidebar');
   }
 }
 ```
@@ -149,6 +172,9 @@ this.page.locator('.window').filter({
 
 // Contains text
 { hasText: 'Finder' }
+
+// Escape special characters for regex
+const escapedDigit = digit.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 ```
 
 ## Mocking
@@ -236,6 +262,19 @@ async getItemScale(appName: string): Promise<number> {
 }
 ```
 
+**Class State Checking:**
+```typescript
+async isWindowActive(windowLocator: Locator) {
+  return windowLocator.evaluate((el) => el.classList.contains('active'));
+}
+
+async isRunningIndicatorVisible(appName: string): Promise<boolean> {
+  const item = this.getDockItem(appName);
+  const indicator = item.locator('.dock-indicator');
+  return indicator.evaluate((el) => el.classList.contains('active'));
+}
+```
+
 **Mouse Interactions:**
 ```typescript
 async dragWindow(windowLocator: Locator, deltaX: number, deltaY: number) {
@@ -253,18 +292,108 @@ async dragWindow(windowLocator: Locator, deltaX: number, deltaY: number) {
 }
 ```
 
-**Keyboard Shortcuts:**
+**Resize Testing:**
 ```typescript
-test('Cmd+Q should close all windows', async ({ page }) => {
-  await page.keyboard.press('Meta+q');
-  await expect(finder).not.toBeVisible();
-});
+async resizeWindow(
+  windowLocator: Locator,
+  handle: string,
+  deltaX: number,
+  deltaY: number
+) {
+  const resizeHandle = this.getResizeHandle(windowLocator, handle);
+  const box = await resizeHandle.boundingBox();
+  if (!box) throw new Error('Resize handle not found');
+
+  await this.page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await this.page.mouse.down();
+  await this.page.mouse.move(box.x + deltaX, box.y + deltaY);
+  await this.page.mouse.up();
+}
+```
+
+**Selection Rectangle Drawing:**
+```typescript
+async drawSelectionRectangle(
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number
+) {
+  await this.desktop.hover({ position: { x: startX, y: startY } });
+  await this.page.mouse.down();
+  await this.page.mouse.move(endX, endY);
+  return this.selectionRect;
+}
 ```
 
 **Class Assertions:**
 ```typescript
 await expect(finder).toHaveClass(/maximized/);
 await expect(finder).not.toHaveClass(/maximized/);
+await expect(menuBar.appleMenu).toHaveClass(/active/);
+```
+
+**Bounding Box Assertions:**
+```typescript
+test('should display dock at bottom of screen', async () => {
+  const bounds = await dock.dock.boundingBox();
+  const viewportSize = await dock.page.viewportSize();
+
+  expect(bounds!.y + bounds!.height).toBeGreaterThan(viewportSize!.height - 100);
+});
+
+test('should display menu bar at top of screen', async () => {
+  const bounds = await menuBar.menuBar.boundingBox();
+  expect(bounds!.y).toBe(0);
+});
+```
+
+**Text Content Assertions:**
+```typescript
+test('should show live clock with time format', async () => {
+  const clockText = await menuBar.getClockText();
+  expect(clockText).toBeTruthy();
+  expect(clockText!.length).toBeGreaterThan(0);
+});
+
+test('should display item count', async () => {
+  const statusText = await finder.getStatusBarText();
+  expect(statusText).toMatch(/\d+ items?/);
+});
+```
+
+**Calculator Expression Helper:**
+```typescript
+async calculate(expression: string) {
+  const match = expression.match(/^(\d+(?:\.\d+)?)([\+\-\*\/×÷])(\d+(?:\.\d+)?)$/);
+  if (!match) throw new Error(`Invalid expression: ${expression}`);
+
+  const [, num1, op, num2] = match;
+
+  await this.pressClear();
+  for (const digit of num1) {
+    if (digit === '.') await this.pressDecimal();
+    else await this.pressDigit(digit);
+  }
+
+  const opMap: Record<string, string> = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+  await this.pressOperator(opMap[op] || op);
+
+  for (const digit of num2) {
+    if (digit === '.') await this.pressDecimal();
+    else await this.pressDigit(digit);
+  }
+
+  await this.pressEquals();
+}
+```
+
+**Bringing Window to Front (JavaScript evaluation):**
+```typescript
+await calcWindow.evaluate((el) => {
+  // Dispatch mousedown event to trigger bring_to_front
+  el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+});
 ```
 
 ## Playwright Configuration
@@ -298,15 +427,71 @@ export default defineConfig({
 });
 ```
 
-## Important Notes
+## Adding New Tests
 
-**E2E Test Moratorium:**
-Per `CLAUDE.md`, new E2E tests should NOT be added until the E2E test cleanup (vi-t5a) is complete. Focus on unit tests if coverage is needed.
+**When to Add Tests:**
+Per `CLAUDE.md`, new E2E tests should NOT be added until the E2E test cleanup (vi-t5a) is complete.
 
-**Test Execution:**
-- Tests require Trunk installed (`trunk serve`)
+**If Adding Tests (Post-Moratorium):**
+
+1. Create page object in `e2e/page-objects/{feature}.page.ts`:
+```typescript
+import { Page, Locator } from '@playwright/test';
+
+export class NewFeaturePage {
+  readonly page: Page;
+  readonly mainElement: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.mainElement = page.locator('.new-feature');
+  }
+
+  async someAction() {
+    // ...
+  }
+}
+```
+
+2. Export from `e2e/page-objects/index.ts`:
+```typescript
+export { NewFeaturePage } from './new-feature.page';
+```
+
+3. Create spec in `e2e/specs/{feature}.spec.ts`:
+```typescript
+import { test, expect } from '@playwright/test';
+import { NewFeaturePage, DesktopPage } from '../page-objects';
+
+test.describe('New Feature', () => {
+  let feature: NewFeaturePage;
+
+  test.beforeEach(async ({ page }) => {
+    const desktop = new DesktopPage(page);
+    await desktop.goto();
+    feature = new NewFeaturePage(page);
+  });
+
+  test('should do something', async () => {
+    // ...
+  });
+});
+```
+
+## Test Execution
+
+**Requirements:**
+- Node.js with npm
+- Trunk installed (`cargo install trunk`)
 - WASM compilation can be slow; webServer timeout set to 120s
+
+**CI Configuration:**
 - CI runs with single worker and 2 retries
+- `forbidOnly: true` prevents `.only` tests from passing CI
+
+**Artifacts:**
+- HTML report: `playwright-report/`
+- Test results: `test-results/`
 
 ---
 

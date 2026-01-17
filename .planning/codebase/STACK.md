@@ -5,21 +5,22 @@
 ## Languages
 
 **Primary:**
-- Rust 2021 Edition - Core application logic (all `src/*.rs` files)
+- Rust (edition 2021) - Core application logic, compiled to WebAssembly
+  - All source in `src/*.rs` (18 modules)
 
 **Secondary:**
-- TypeScript - E2E tests only (`e2e/**/*.ts`, `playwright.config.ts`)
-- CSS - Styling (`src/styles.css`, `styles.css`)
+- TypeScript 5.6 - E2E testing only (`e2e/**/*.ts`, `playwright.config.ts`)
+- CSS - Styling with CSS custom properties for theming (`src/styles.css`, `styles.css`)
 - HTML - Single entry point (`index.html`)
 
 ## Runtime
 
 **Environment:**
 - WebAssembly (wasm32-unknown-unknown target)
-- Runs entirely in browser - no server-side runtime
+- Browser-based execution - no server runtime
 
 **Package Manager:**
-- Cargo - Rust dependencies
+- Cargo - Rust dependencies (primary)
 - npm - E2E test dependencies only
 
 **Lockfiles:**
@@ -29,103 +30,122 @@
 ## Frameworks
 
 **Core:**
-- Leptos 0.7 - Reactive web framework for Rust with CSR (client-side rendering)
-  - Config: `Cargo.toml` features `["csr"]`
+- Leptos 0.7 (features: ["csr"]) - Reactive web framework for Rust
+  - Client-side rendering mode
+  - Signal-based reactivity (`RwSignal`, `ReadSignal`, `WriteSignal`)
+  - Component system with `#[component]` macro
+  - Context API (`provide_context`, `expect_context`)
 
 **Build/Dev:**
 - Trunk - WASM build tool and dev server
+  - Dev server at localhost:8080 with hot reload
   - Entry: `index.html` with `data-trunk` attributes
-  - Dev command: `trunk serve`
-  - Build command: `trunk build --release`
+  - wasm-opt optimization level 'z' (size)
 
 **Testing:**
-- Playwright 1.48.0 - E2E browser testing
+- Playwright 1.48 - E2E browser testing
   - Config: `playwright.config.ts`
-  - Test dir: `e2e/specs/`
+  - Test directory: `e2e/specs/`
+  - Page objects: `e2e/page-objects/`
 
 ## Key Dependencies
 
 **Critical (Cargo.toml):**
-- `leptos` 0.7 - Core reactive UI framework
-- `wasm-bindgen` 0.2 - Rust-to-JavaScript bindings
-- `web-sys` 0.3 - Web API bindings (DOM, events, IndexedDB, Storage)
-- `js-sys` 0.3 - JavaScript standard library bindings
-- `serde` 1.0 + `serde_json` 1.0 - Serialization for state persistence
-- `wasm-bindgen-futures` 0.4 - Async/await support in WASM
+- `leptos` 0.7 - Reactive UI framework
+- `wasm-bindgen` 0.2 - Rust/WASM to JavaScript interop
+- `web-sys` 0.3 - Browser API bindings with many features enabled
+- `js-sys` 0.3 - JavaScript standard library bindings (Date, etc.)
+- `wasm-bindgen-futures` 0.4 - Async/await support for WASM
+- `serde` 1.0 (features: ["derive"]) - Serialization framework
+- `serde_json` 1.0 - JSON serialization/deserialization
+- `console_error_panic_hook` 0.1 - Panic messages to browser console
 
 **web-sys Features Enabled:**
-- DOM: `Window`, `Document`, `Element`, `HtmlElement`, `DomRect`
+- DOM: `Window`, `Document`, `Element`, `HtmlElement`, `HtmlInputElement`, `DomRect`
 - Events: `MouseEvent`, `KeyboardEvent`, `Event`, `EventTarget`
 - Storage: `Storage` (localStorage)
-- IndexedDB: `IdbFactory`, `IdbDatabase`, `IdbObjectStore`, `IdbRequest`, `IdbOpenDbRequest`, `IdbTransaction`, `IdbTransactionMode`, `IdbCursor`, `IdbCursorDirection`, `IdbKeyRange`, `IdbIndex`
-- Input: `HtmlInputElement`
+- IndexedDB: Full suite (`IdbFactory`, `IdbDatabase`, `IdbObjectStore`, `IdbRequest`, `IdbOpenDbRequest`, `IdbTransaction`, `IdbTransactionMode`, `IdbCursor`, `IdbCursorDirection`, `IdbKeyRange`, `IdbIndex`)
 - Errors: `DomException`
 
 **Dev Dependencies (package.json):**
 - `@playwright/test` ^1.48.0 - E2E testing framework
 - `@types/node` ^22.0.0 - Node.js type definitions
-- `typescript` ^5.6.0 - TypeScript compiler for tests
+- `typescript` ^5.6.0 - TypeScript compiler
 
 ## Configuration
+
+**Trunk (index.html):**
+```html
+<link data-trunk rel="css" href="src/styles.css" />
+<link data-trunk rel="css" href="styles.css" />
+<link data-trunk rel="rust" data-wasm-opt="z" />
+```
+
+**Build Script (build.rs):**
+- Injects build timestamp as `BUILD_TIME` environment variable
+- Used for version display at runtime
 
 **TypeScript (tsconfig.json):**
 - Target: ES2022
 - Module: ESNext
+- Module resolution: bundler
 - Strict mode enabled
-- Only includes E2E test files
-
-**Trunk (index.html):**
-- CSS bundling via `data-trunk rel="css"`
-- Rust/WASM compilation via `data-trunk rel="rust"`
-- WASM optimization level: `z` (size-optimized)
-
-**Rust Build (build.rs):**
-- Injects build timestamp as `BUILD_TIME` environment variable
-- Used for version display in UI
+- Includes only E2E test files
 
 **Release Profile (Cargo.toml):**
-- LTO enabled for smaller binary
-- Optimization level: `z` (size-optimized)
+```toml
+[profile.release]
+lto = true        # Link-time optimization
+opt-level = 'z'   # Size optimization
+```
 
 ## Platform Requirements
 
 **Development:**
 - Rust stable toolchain
-- `wasm32-unknown-unknown` target: `rustup target add wasm32-unknown-unknown`
+- WASM target: `rustup target add wasm32-unknown-unknown`
 - Trunk: `cargo install trunk`
-- Node.js 20+ (for E2E tests only)
+- Node.js 20+ (E2E testing only)
 
 **Production:**
 - Static file hosting only
-- No backend server required
-- Deployed to GitHub Pages
+- No server-side runtime required
+- Modern browser with WebAssembly support
 
-**Browser Support:**
-- Modern browsers with WebAssembly support
-- Tested on: Chromium, Firefox, WebKit (via Playwright)
+**Deployment:**
+- GitHub Pages via GitHub Actions
+- Trunk builds to `dist/` directory
+- Public URL configured dynamically from repository name
 
 ## Build Commands
 
+**Development:**
 ```bash
-# Development server with hot reload
-trunk serve
+trunk serve              # Dev server at localhost:8080 with hot reload
+```
 
-# Production build
-trunk build --release
+**Production:**
+```bash
+trunk build --release    # Optimized build to dist/
+```
 
-# Run E2E tests
-npm test
-
-# View test report
-npm run test:report
+**Testing:**
+```bash
+npm test                 # Run Playwright E2E tests
+npm run test:headed      # E2E tests in visible browser
+npm run test:ui          # Playwright UI mode
+npm run test:debug       # Debug mode with Playwright Inspector
+npm run test:report      # View HTML test report
 ```
 
 ## Output
 
-**Build Output:**
-- Directory: `dist/`
-- Contains: HTML, CSS, WASM binary, JS glue code
-- All static assets, deployable to any static host
+**Build Output (`dist/`):**
+- HTML entry point
+- CSS bundles
+- WASM binary
+- JavaScript glue code
+- All static, deployable to any static host
 
 ---
 
