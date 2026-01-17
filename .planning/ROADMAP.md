@@ -11,7 +11,7 @@ Five phases, one per application. Each phase brings an app to macOS-replica qual
 | 1 | Calculator Polish | Complete | REQ-001 |
 | 2 | Terminal Polish | Complete | REQ-002 |
 | 3 | Notes App Creation | Complete | REQ-003 |
-| 4 | TextEdit Polish | Planned | REQ-004 |
+| 4 | TextEdit Polish | Complete | REQ-004 |
 | 5 | Finder Polish | Not Started | REQ-005 |
 
 ## Phase Details
@@ -107,9 +107,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md - Core toolbar with font family/size dropdowns, B/I/U buttons, alignment
-- [ ] 04-02-PLAN.md - Document appearance (white page on gray), text/highlight color pickers
-- [ ] 04-03-PLAN.md - Status bar with word count, toolbar polish, final visual verification
+- [x] 04-01-PLAN.md - Core toolbar with font family/size dropdowns, B/I/U buttons, alignment
+- [x] 04-02-PLAN.md - Document appearance (white page on gray), text/highlight color pickers
+- [x] 04-03-PLAN.md - Status bar with word count, toolbar polish, final visual verification
 
 **Key Deliverables:**
 - macOS TextEdit toolbar styling

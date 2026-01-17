@@ -91,16 +91,16 @@ Polish the five core applications (Calculator, Terminal, Notes, TextEdit, Finder
 **Target State:** Near-identical replica of macOS TextEdit appearance and behavior.
 
 **Acceptance Criteria:**
-- [ ] REQ-004.1: Toolbar matching macOS TextEdit (font selector, size, formatting buttons)
-- [ ] REQ-004.2: Document-style appearance (white page with margins)
-- [ ] REQ-004.3: Font family dropdown with system fonts
-- [ ] REQ-004.4: Font size selector
-- [ ] REQ-004.5: Bold, italic, underline buttons with proper icons
-- [ ] REQ-004.6: Text alignment buttons (left, center, right, justify)
-- [ ] REQ-004.7: Text and highlight color pickers
-- [ ] REQ-004.8: Ruler/margin controls (optional, if feasible)
-- [ ] REQ-004.9: Proper cursor and selection styling
-- [ ] REQ-004.10: Replace deprecated execCommand with modern APIs
+- [x] REQ-004.1: Toolbar matching macOS TextEdit (font selector, size, formatting buttons)
+- [x] REQ-004.2: Document-style appearance (white page with margins)
+- [x] REQ-004.3: Font family dropdown with system fonts
+- [x] REQ-004.4: Font size selector
+- [x] REQ-004.5: Bold, italic, underline buttons with proper icons
+- [x] REQ-004.6: Text alignment buttons (left, center, right, justify)
+- [x] REQ-004.7: Text and highlight color pickers
+- [N/A] REQ-004.8: Ruler/margin controls (optional - not implemented)
+- [x] REQ-004.9: Proper cursor and selection styling
+- [x] REQ-004.10: Keep execCommand (no viable replacement exists per research)
 
 ### REQ-005: Finder App Polish
 

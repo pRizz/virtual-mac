@@ -2,9 +2,9 @@
 
 ## Current Position
 
-**Active Phase:** Phase 4 - TextEdit Polish (In Progress)
-**Last Completed:** 04-01-PLAN.md (Formatting Toolbar)
-**Next Action:** Continue Phase 4 plan 04-03 (File Operations) or start Phase 5 (Finder)
+**Active Phase:** Phase 5 - Finder Polish (Not Started)
+**Last Completed:** Phase 4 - TextEdit Polish (Complete)
+**Next Action:** Plan Phase 5 (Finder Polish)
 
 ## Progress
 
@@ -13,27 +13,28 @@
 | 1 - Calculator | Complete | 2 | 2 |
 | 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Complete | 4 | 4 |
-| 4 - TextEdit | In Progress | 3 | 2 |
+| 4 - TextEdit | Complete | 3 | 3 |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 75% complete (12/16 plans across phases)
+**Overall:** 81% complete (13/16 plans across phases)
 
-Progress: [########..] 75%
+Progress: [########..] 81%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed 04-01-PLAN.md (Formatting Toolbar)
-- Added font family dropdown with 8 web-safe fonts
-- Added font size selector dropdown
-- Added B/I/U toggle buttons with active states
-- Added four alignment buttons (left, center, right, justify)
-- Alignment buttons use mousedown with preventDefault to preserve selection
+- Completed Phase 4 (TextEdit Polish) - all 3 plans
+- Added complete formatting toolbar with B/I/U, font family/size, alignment
+- Added document appearance with white page on gray background
+- Added text/highlight color pickers
+- Added status bar with word/character count
+- Fixed dock click to open/focus apps
+- Fixed format button active state tracking with selectionchange
 
 **Context for Next Session:**
-- TextEdit has complete formatting toolbar
-- Font/size/formatting controls all functional
-- Ready for 04-03 (File Operations) or next phase
+- TextEdit is fully polished and matches macOS appearance
+- 4 of 5 phases complete (Calculator, Terminal, Notes, TextEdit)
+- Ready for Phase 5 (Finder Polish)
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -72,6 +73,8 @@ Progress: [########..] 75%
 | Window title centering | 2026-01-17 | Window titles are centered relative to space between traffic lights and right edge, should be centered relative to full window width |
 | Clock format wrong | 2026-01-17 | Menu bar clock shows "2 PM:04" instead of "2:04 PM" - fix time format order |
 | Clock show seconds | 2026-01-17 | Always show seconds on the digital clock in the menu bar (e.g., "2:04:35 PM") |
+| Build timestamp prefix | 2026-01-17 | Prefix the built-at timestamp in bottom left corner with "Built at " |
+| Finder white padding | 2026-01-17 | There is white padding in the Finder window that should be removed |
 
 ## Todos
 
