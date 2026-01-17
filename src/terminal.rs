@@ -1,6 +1,70 @@
 use leptos::prelude::*;
 use leptos::ev::KeyboardEvent;
-use crate::file_system::{use_file_system, EntryType};
+use crate::file_system::{use_file_system, EntryType, VirtualFileSystem};
+
+/// Find file/directory completions for tab completion
+fn find_completions(fs: &VirtualFileSystem, partial: &str, cwd: &str) -> Vec<String> {
+    // Determine the directory to search and the prefix to match
+    let (search_dir, prefix) = if partial.contains('/') {
+        let last_slash = partial.rfind('/').unwrap();
+        let dir_part = &partial[..=last_slash];
+        let file_part = &partial[last_slash + 1..];
+
+        let resolved_dir = if dir_part.starts_with('/') {
+            dir_part.trim_end_matches('/').to_string()
+        } else {
+            let base = if cwd == "/" { String::new() } else { cwd.to_string() };
+            format!("{}/{}", base, dir_part.trim_end_matches('/'))
+        };
+
+        // Handle root directory specially
+        let resolved_dir = if resolved_dir.is_empty() { "/".to_string() } else { resolved_dir };
+
+        (resolved_dir, file_part.to_string())
+    } else {
+        (cwd.to_string(), partial.to_string())
+    };
+
+    // Get entries in the directory
+    let entries = fs.list_dir(&search_dir);
+
+    // Filter entries that start with prefix
+    entries
+        .iter()
+        .filter(|e| e.metadata.name.starts_with(&prefix))
+        .map(|e| {
+            if e.is_directory() {
+                format!("{}/", e.metadata.name)
+            } else {
+                e.metadata.name.clone()
+            }
+        })
+        .collect()
+}
+
+/// Find the common prefix among a list of strings
+fn find_common_prefix(strings: &[String]) -> String {
+    if strings.is_empty() {
+        return String::new();
+    }
+    if strings.len() == 1 {
+        return strings[0].clone();
+    }
+
+    let first = &strings[0];
+    let mut prefix_len = first.len();
+
+    for s in &strings[1..] {
+        prefix_len = first
+            .chars()
+            .zip(s.chars())
+            .take_while(|(a, b)| a == b)
+            .count()
+            .min(prefix_len);
+    }
+
+    first.chars().take(prefix_len).collect()
+}
 
 /// Terminal component with simulated shell
 #[component]
@@ -18,6 +82,7 @@ pub fn Terminal() -> impl IntoView {
     let (saved_input, set_saved_input) = signal::<String>(String::new());
 
     let fs = use_file_system();
+    let fs_for_keydown = fs.clone();
     let input_ref: NodeRef<leptos::html::Input> = NodeRef::new();
 
     let prompt = move || {
@@ -261,6 +326,58 @@ pub fn Terminal() -> impl IntoView {
                 let cmd = input.get();
                 execute_command(cmd);
                 set_input.set(String::new());
+            }
+            "Tab" => {
+                e.prevent_default();
+                let current_input = input.get();
+                let current_cwd = cwd.get();
+
+                // Find the word being completed (last space-separated token)
+                let parts: Vec<&str> = current_input.split_whitespace().collect();
+                if parts.is_empty() {
+                    return;
+                }
+
+                // Determine what we're completing
+                let (prefix, completing_word) = if current_input.ends_with(' ') {
+                    // User typed "cmd " - nothing to complete yet
+                    return;
+                } else if parts.len() == 1 {
+                    // Completing the command name - skip for now
+                    return;
+                } else {
+                    // Completing an argument (file path)
+                    let word = parts.last().unwrap();
+                    let prefix_end = current_input.rfind(word).unwrap();
+                    (current_input[..prefix_end].to_string(), *word)
+                };
+
+                let completions = find_completions(&fs_for_keydown, completing_word, &current_cwd);
+
+                match completions.len() {
+                    0 => {} // No completions - do nothing
+                    1 => {
+                        // Single completion - replace the word
+                        let completed = &completions[0];
+                        let new_input = format!("{}{}", prefix, completed);
+                        set_input.set(new_input);
+                    }
+                    _ => {
+                        // Multiple completions - find common prefix and show options
+                        let common = find_common_prefix(&completions);
+                        if common.len() > completing_word.len() {
+                            // Extend to common prefix
+                            let new_input = format!("{}{}", prefix, common);
+                            set_input.set(new_input);
+                        } else {
+                            // Show all options in output
+                            set_history.update(|h| {
+                                h.push(format!("{}{}", prompt(), current_input));
+                                h.push(completions.join("  "));
+                            });
+                        }
+                    }
+                }
             }
             _ => {}
         }
