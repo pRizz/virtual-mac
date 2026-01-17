@@ -3,36 +3,34 @@
 ## Current Position
 
 **Active Phase:** Phase 2 - Terminal Polish
-**Last Completed:** 02-01-PLAN.md (Terminal VirtualFileSystem Integration)
-**Next Action:** Execute remaining Terminal plans (02-03, 02-04) or move to Phase 3
+**Last Completed:** 02-03-PLAN.md (Command History and Tab Completion)
+**Next Action:** Execute 02-04-PLAN.md (Autocomplete) or move to Phase 3
 
 ## Progress
 
 | Phase | Status | Plans | Completed |
 |-------|--------|-------|-----------|
 | 1 - Calculator | Complete | 2 | 2 |
-| 2 - Terminal | In Progress | 4 | 2 |
+| 2 - Terminal | In Progress | 4 | 3 |
 | 3 - Notes | Not Started | 0 | - |
 | 4 - TextEdit | Not Started | 0 | - |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 40% complete (4/10 estimated plans across 5 phases)
+**Overall:** 50% complete (5/10 estimated plans across 5 phases)
 
-Progress: [####......] 40%
+Progress: [#####.....] 50%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Executed 02-01-PLAN.md (Terminal VirtualFileSystem Integration)
-- Removed FsNode in favor of shared VirtualFileSystem
-- Terminal and Finder now share file system state
-- Added mkdir, rm, touch commands
-- Updated prompt to macOS zsh format
+- Executed 02-03-PLAN.md (Command History and Tab Completion)
+- Added up/down arrow command history navigation
+- Added tab completion for file paths using VirtualFileSystem
+- Clone fs for separate closures to handle Rust move semantics
 
 **Context for Next Session:**
-- Terminal VirtualFileSystem integration complete
-- Terminal visual styling complete (02-02)
-- Remaining: 02-03 (Cursor/History), 02-04 (Autocomplete)
+- Terminal history navigation and tab completion complete
+- Remaining: 02-04 (Autocomplete) - may overlap with tab completion
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -48,6 +46,8 @@ Progress: [####......] 40%
 | Terminal Pro profile colors | 2026-01-17 | Black bg at 85% opacity, white text matches macOS Terminal default |
 | Terminal font SF Mono 11px | 2026-01-17 | Matches macOS Terminal Pro profile defaults |
 | Root path as home | 2026-01-17 | VirtualFileSystem uses / as root, displayed as ~ in Terminal prompt |
+| Clone fs for closures | 2026-01-17 | Rust move semantics require cloning VirtualFileSystem for multiple closures |
+| Skip command completion | 2026-01-17 | Tab completes file paths only, not command names (simpler implementation) |
 
 ## Open Issues
 
