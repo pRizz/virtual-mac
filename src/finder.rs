@@ -888,10 +888,21 @@ pub fn Finder() -> impl IntoView {
 
                     // Status bar
                     <div class="finder-statusbar">
-                        {move || {
-                            let count = filtered_files.get().len();
-                            format!("{} items", count)
-                        }}
+                        <div class="statusbar-left">
+                            {move || {
+                                let count = filtered_files.get().len();
+                                let selected = selected_items.get().len();
+
+                                if selected > 0 {
+                                    format!("{} of {} selected", selected, count)
+                                } else {
+                                    format!("{} items", count)
+                                }
+                            }}
+                        </div>
+                        <div class="statusbar-right">
+                            "128 GB available"
+                        </div>
                     </div>
                 </div>
             </div>

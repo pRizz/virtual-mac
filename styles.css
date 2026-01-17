@@ -995,7 +995,14 @@ html, body {
     border-top: 1px solid var(--finder-statusbar-border);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-size: 11px;
+    color: var(--finder-text-secondary);
+}
+
+.statusbar-left,
+.statusbar-right {
     font-size: 11px;
     color: var(--finder-text-secondary);
 }
