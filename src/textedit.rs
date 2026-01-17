@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use leptos::ev::MouseEvent;
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 
 #[wasm_bindgen]
 extern "C" {
@@ -17,6 +18,8 @@ pub fn TextEdit() -> impl IntoView {
     let (is_bold, set_is_bold) = signal(false);
     let (is_italic, set_is_italic) = signal(false);
     let (is_underline, set_is_underline) = signal(false);
+    let (text_color, set_text_color) = signal("#000000".to_string());
+    let (highlight_color, set_highlight_color) = signal("#ffff00".to_string());
 
     let toggle_bold = move |_: MouseEvent| {
         execCommand("bold", false, "");
@@ -50,6 +53,22 @@ pub fn TextEdit() -> impl IntoView {
             }
         });
         execCommand("fontSize", false, "1");
+    };
+
+    let on_text_color_change = move |e: web_sys::Event| {
+        let target = e.target().unwrap();
+        let input = target.dyn_into::<web_sys::HtmlInputElement>().unwrap();
+        let color = input.value();
+        set_text_color.set(color.clone());
+        execCommand("foreColor", false, &color);
+    };
+
+    let on_highlight_change = move |e: web_sys::Event| {
+        let target = e.target().unwrap();
+        let input = target.dyn_into::<web_sys::HtmlInputElement>().unwrap();
+        let color = input.value();
+        set_highlight_color.set(color.clone());
+        execCommand("hiliteColor", false, &color);
     };
 
     view! {
@@ -95,6 +114,28 @@ pub fn TextEdit() -> impl IntoView {
                     >
                         "A+"
                     </button>
+                </div>
+                <div class="textedit-toolbar-separator"></div>
+                <div class="textedit-toolbar-group">
+                    <div class="textedit-color-picker" title="Text Color">
+                        <span class="textedit-color-label">"A"</span>
+                        <input
+                            type="color"
+                            class="textedit-color-input"
+                            prop:value=move || text_color.get()
+                            on:input=on_text_color_change
+                        />
+                        <div class="textedit-color-swatch" style=move || format!("background: {};", text_color.get())></div>
+                    </div>
+                    <div class="textedit-color-picker" title="Highlight Color">
+                        <span class="textedit-color-label textedit-highlight-icon">"A"</span>
+                        <input
+                            type="color"
+                            class="textedit-color-input"
+                            prop:value=move || highlight_color.get()
+                            on:input=on_highlight_change
+                        />
+                    </div>
                 </div>
             </div>
             <div class="textedit-document-wrapper">
