@@ -9,7 +9,7 @@ Five phases, one per application. Each phase brings an app to macOS-replica qual
 | Phase | Name | Status | Requirements |
 |-------|------|--------|--------------|
 | 1 | Calculator Polish | Complete | REQ-001 |
-| 2 | Terminal Polish | Planned | REQ-002 |
+| 2 | Terminal Polish | ✓ Complete | REQ-002 |
 | 3 | Notes App Creation | Not Started | REQ-003 |
 | 4 | TextEdit Polish | Not Started | REQ-004 |
 | 5 | Finder Polish | Not Started | REQ-005 |
@@ -51,10 +51,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md - VirtualFileSystem integration (remove FsNode, use shared FS)
-- [ ] 02-02-PLAN.md - Visual styling (CSS) - dark background, monospace font, scrollbar
-- [ ] 02-03-PLAN.md - Command history navigation and tab completion
-- [ ] 02-04-PLAN.md - Clear command, Cmd+K shortcut, auto-scroll, final verification
+- [x] 02-01-PLAN.md - VirtualFileSystem integration (remove FsNode, use shared FS)
+- [x] 02-02-PLAN.md - Visual styling (CSS) - dark background, monospace font, scrollbar
+- [x] 02-03-PLAN.md - Command history navigation and tab completion
+- [x] 02-04-PLAN.md - Clear command, Cmd+K shortcut, auto-scroll, final verification
 
 **Key Deliverables:**
 - macOS Terminal visual styling

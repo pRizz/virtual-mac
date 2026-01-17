@@ -55,15 +55,15 @@ Polish the five core applications (Calculator, Terminal, Notes, TextEdit, Finder
 **Target State:** Near-identical replica of macOS Terminal appearance with simulated shell.
 
 **Acceptance Criteria:**
-- [ ] REQ-002.1: Terminal window styling (title bar with shell path, proper padding)
-- [ ] REQ-002.2: Monospace font matching macOS Terminal default (Menlo or SF Mono)
-- [ ] REQ-002.3: Color scheme matching macOS Terminal default profile
-- [ ] REQ-002.4: Command prompt styling (username@hostname format)
-- [ ] REQ-002.5: Command history navigation (up/down arrows)
-- [ ] REQ-002.6: Clear command and Cmd+K shortcut
-- [ ] REQ-002.7: Tab completion for file paths
-- [ ] REQ-002.8: Scrollable output with proper scrollbar styling
-- [ ] REQ-002.9: Integration with VirtualFileSystem (shared with Finder)
+- [x] REQ-002.1: Terminal window styling (title bar with shell path, proper padding)
+- [x] REQ-002.2: Monospace font matching macOS Terminal default (Menlo or SF Mono)
+- [x] REQ-002.3: Color scheme matching macOS Terminal default profile
+- [x] REQ-002.4: Command prompt styling (username@hostname format)
+- [x] REQ-002.5: Command history navigation (up/down arrows)
+- [x] REQ-002.6: Clear command and Cmd+K shortcut
+- [x] REQ-002.7: Tab completion for file paths
+- [x] REQ-002.8: Scrollable output with proper scrollbar styling
+- [x] REQ-002.9: Integration with VirtualFileSystem (shared with Finder)
 
 ### REQ-003: Notes App Polish
 

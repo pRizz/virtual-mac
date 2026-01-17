@@ -16,9 +16,9 @@
 | 4 - TextEdit | Not Started | 0 | - |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 60% complete (6/10 estimated plans across 5 phases)
+**Overall:** 40% complete (2/5 phases)
 
-Progress: [######....] 60%
+Progress: [████......] 40%
 
 ## Session Continuity
 
