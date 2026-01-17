@@ -1,0 +1,7 @@
+{
+  "workflow_mode": "yolo",
+  "planning_depth": "standard",
+  "execution_mode": "parallel",
+  "created": "2026-01-17",
+  "version": "1.0"
+}

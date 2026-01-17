@@ -1,0 +1,126 @@
+# Requirements - App Polish Milestone
+
+## Overview
+
+Polish the five core applications (Calculator, Terminal, Notes, TextEdit, Finder) to closely replicate the look and behavior of their real macOS counterparts, within browser constraints.
+
+## Scope
+
+### v1 (This Milestone)
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| REQ-001 | Calculator app matches macOS Calculator visually and functionally | High |
+| REQ-002 | Terminal app matches macOS Terminal visually with realistic shell simulation | High |
+| REQ-003 | Notes app matches macOS Notes with folders, formatting, and search | High |
+| REQ-004 | TextEdit app matches macOS TextEdit with toolbar and document feel | High |
+| REQ-005 | Finder app matches macOS Finder with polished sidebar, views, and toolbar | High |
+
+### v2 (Future)
+
+- Safari, Messages, Mail, Photos, Music, Calendar apps
+- Multi-window support for same app type
+- Drag-and-drop between apps
+- Clipboard integration between apps
+
+### Out of Scope
+
+- Real file system access (browser security prevents this)
+- Actual process execution in Terminal (simulated commands only)
+- iCloud sync for Notes (no backend)
+- System-level keyboard shortcuts that browsers intercept
+- Native app launching mechanisms
+
+## Detailed Requirements
+
+### REQ-001: Calculator App Polish
+
+**Current State:** Basic layout exists, functional but doesn't match macOS aesthetic.
+
+**Target State:** Near-identical replica of macOS Calculator (Basic mode).
+
+**Acceptance Criteria:**
+- [ ] REQ-001.1: Rounded button styling matching macOS Calculator
+- [ ] REQ-001.2: Correct color scheme (orange operators, dark gray numbers, light gray functions)
+- [ ] REQ-001.3: Proper button grid layout (4 columns, correct spacing)
+- [ ] REQ-001.4: Display matches macOS (right-aligned, proper font, number formatting)
+- [ ] REQ-001.5: Button press animations and hover states
+- [ ] REQ-001.6: Keyboard input support (0-9, +, -, *, /, =, Enter, Escape, Backspace)
+- [ ] REQ-001.7: Correct operator precedence and calculation behavior
+
+### REQ-002: Terminal App Polish
+
+**Current State:** Command simulation exists but UI is minimal.
+
+**Target State:** Near-identical replica of macOS Terminal appearance with simulated shell.
+
+**Acceptance Criteria:**
+- [ ] REQ-002.1: Terminal window styling (title bar with shell path, proper padding)
+- [ ] REQ-002.2: Monospace font matching macOS Terminal default (Menlo or SF Mono)
+- [ ] REQ-002.3: Color scheme matching macOS Terminal default profile
+- [ ] REQ-002.4: Command prompt styling (username@hostname format)
+- [ ] REQ-002.5: Command history navigation (up/down arrows)
+- [ ] REQ-002.6: Clear command and Cmd+K shortcut
+- [ ] REQ-002.7: Tab completion for file paths
+- [ ] REQ-002.8: Scrollable output with proper scrollbar styling
+- [ ] REQ-002.9: Integration with VirtualFileSystem (shared with Finder)
+
+### REQ-003: Notes App Polish
+
+**Current State:** May not exist yet.
+
+**Target State:** Near-identical replica of macOS Notes with core functionality.
+
+**Acceptance Criteria:**
+- [ ] REQ-003.1: Three-column layout (folders, notes list, note editor)
+- [ ] REQ-003.2: Folder sidebar with default folders (All Notes, Recently Deleted)
+- [ ] REQ-003.3: Notes list with title preview and date
+- [ ] REQ-003.4: Rich text editor with formatting toolbar
+- [ ] REQ-003.5: Bold, italic, underline, strikethrough formatting
+- [ ] REQ-003.6: Bullet and numbered lists
+- [ ] REQ-003.7: Checklist support with clickable checkboxes
+- [ ] REQ-003.8: Search functionality across all notes
+- [ ] REQ-003.9: Create, rename, delete notes
+- [ ] REQ-003.10: Create, rename, delete folders
+- [ ] REQ-003.11: Note persistence to localStorage
+
+### REQ-004: TextEdit App Polish
+
+**Current State:** Basic rich text editor, needs polish.
+
+**Target State:** Near-identical replica of macOS TextEdit appearance and behavior.
+
+**Acceptance Criteria:**
+- [ ] REQ-004.1: Toolbar matching macOS TextEdit (font selector, size, formatting buttons)
+- [ ] REQ-004.2: Document-style appearance (white page with margins)
+- [ ] REQ-004.3: Font family dropdown with system fonts
+- [ ] REQ-004.4: Font size selector
+- [ ] REQ-004.5: Bold, italic, underline buttons with proper icons
+- [ ] REQ-004.6: Text alignment buttons (left, center, right, justify)
+- [ ] REQ-004.7: Text and highlight color pickers
+- [ ] REQ-004.8: Ruler/margin controls (optional, if feasible)
+- [ ] REQ-004.9: Proper cursor and selection styling
+- [ ] REQ-004.10: Replace deprecated execCommand with modern APIs
+
+### REQ-005: Finder App Polish
+
+**Current State:** File browser works, needs sidebar/toolbar refinement.
+
+**Target State:** Near-identical replica of macOS Finder appearance and behavior.
+
+**Acceptance Criteria:**
+- [ ] REQ-005.1: Sidebar styling matching macOS (Favorites, iCloud, Locations sections)
+- [ ] REQ-005.2: Toolbar with back/forward, view mode buttons, search field
+- [ ] REQ-005.3: Icon view with proper grid spacing and icon sizes
+- [ ] REQ-005.4: List view with columns (Name, Date Modified, Size, Kind)
+- [ ] REQ-005.5: Column view navigation
+- [ ] REQ-005.6: Path bar at bottom showing current location
+- [ ] REQ-005.7: Status bar showing item count and available space
+- [ ] REQ-005.8: Functional search that filters current view
+- [ ] REQ-005.9: Context menu with working actions (New Folder, Get Info, etc.)
+- [ ] REQ-005.10: Double-click to open folders/files
+- [ ] REQ-005.11: File/folder icons matching macOS style
+
+---
+
+*Requirements defined: 2026-01-17*
