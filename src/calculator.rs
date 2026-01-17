@@ -282,7 +282,9 @@ pub fn Calculator() -> impl IntoView {
                 <span class="calc-display-text">{move || display.get()}</span>
             </div>
             <div class="calc-buttons">
-                <button class="calc-btn function" on:click=move |_| clear()>"AC"</button>
+                <button class="calc-btn function" on:click=move |_| clear()>
+                    {move || if current_op.get() != Operation::None || stored_value.get() != 0.0 { "C" } else { "AC" }}
+                </button>
                 <button class="calc-btn function" on:click=move |_| negate()>"+/−"</button>
                 <button class="calc-btn function" on:click=move |_| percent()>"%"</button>
                 <button
@@ -329,11 +331,29 @@ fn format_result(val: f64) -> String {
     if val.is_infinite() {
         return String::from("Error");
     }
-    // Remove trailing zeros for cleaner display
-    let s = format!("{}", val);
-    if s.contains('.') {
-        s.trim_end_matches('0').trim_end_matches('.').to_string()
+
+    // Check if it's effectively an integer
+    if val.fract() == 0.0 && val.abs() < 1e15 {
+        // Format integer with thousands separators
+        format_with_separators(val as i64)
     } else {
-        s
+        // Decimal number - limit precision and remove trailing zeros
+        let s = format!("{:.9}", val);
+        s.trim_end_matches('0').trim_end_matches('.').to_string()
     }
+}
+
+fn format_with_separators(n: i64) -> String {
+    let negative = n < 0;
+    let s = n.abs().to_string();
+    let chars: Vec<char> = s.chars().rev().collect();
+    let formatted: String = chars
+        .chunks(3)
+        .map(|chunk| chunk.iter().collect::<String>())
+        .collect::<Vec<String>>()
+        .join(",")
+        .chars()
+        .rev()
+        .collect();
+    if negative { format!("-{}", formatted) } else { formatted }
 }
