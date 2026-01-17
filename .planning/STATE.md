@@ -2,9 +2,9 @@
 
 ## Current Position
 
-**Active Phase:** Phase 2 - Terminal Polish (Complete)
-**Last Completed:** 02-04-PLAN.md (Clear Command and Auto-scroll)
-**Next Action:** Begin Phase 3 (Notes app) or other app polish
+**Active Phase:** Phase 3 - Notes Creation (In Progress)
+**Last Completed:** 03-02-PLAN.md (Notes App CSS Styling)
+**Next Action:** Continue Phase 3 (Plan 03: Text formatting, Plan 04: CRUD)
 
 ## Progress
 
@@ -12,26 +12,27 @@
 |-------|--------|-------|-----------|
 | 1 - Calculator | Complete | 2 | 2 |
 | 2 - Terminal | Complete | 4 | 4 |
-| 3 - Notes | Not Started | 0 | - |
+| 3 - Notes | In Progress | 4 | 2 |
 | 4 - TextEdit | Not Started | 0 | - |
 | 5 - Finder | Not Started | 0 | - |
 
-**Overall:** 40% complete (2/5 phases)
+**Overall:** 50% complete (8/16 plans across phases)
 
-Progress: [████......] 40%
+Progress: [█████.....] 50%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed 02-04-PLAN.md (Clear Command and Auto-scroll)
-- Added clear command and Cmd+K shortcut
-- Added auto-scroll to bottom on new output
-- Adjusted terminal opacity to 93% per user preference
-- Phase 2 Terminal Polish complete
+- Completed 03-02-PLAN.md (Notes App CSS Styling)
+- Added complete CSS for Notes three-column layout
+- Folder sidebar, notes list, and editor styling
+- Dark mode support for all Notes components
+- Scrollbar styling and action button preparation
 
 **Context for Next Session:**
-- Terminal polish complete with all REQ-002 criteria verified
-- Phase 2 complete - ready for Phase 3 (Notes) or other app polish
+- Notes app has full CSS styling matching macOS Notes
+- Ready for Plan 03: Text formatting and checklists
+- Ready for Plan 04: CRUD operations
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -49,6 +50,8 @@ Progress: [████......] 40%
 | Root path as home | 2026-01-17 | VirtualFileSystem uses / as root, displayed as ~ in Terminal prompt |
 | Clone fs for closures | 2026-01-17 | Rust move semantics require cloning VirtualFileSystem for multiple closures |
 | Skip command completion | 2026-01-17 | Tab completes file paths only, not command names (simpler implementation) |
+| Notes yellow selection | 2026-01-17 | #ffd52e for note selection matches macOS Notes app |
+| Notes blue folder selection | 2026-01-17 | #007aff for folder selection matches macOS standard |
 
 ## Open Issues
 
@@ -65,4 +68,4 @@ Progress: [████......] 40%
 ---
 
 *State updated: 2026-01-17*
-*Phase 2 completed: 2026-01-17*
+*Phase 3 plan 02 completed: 2026-01-17*
