@@ -648,9 +648,13 @@ pub fn WindowManager() -> impl IntoView {
                     let window_id = window.id;
                     let is_active = move || active_window_id() == Some(window_id);
 
+                    let app_type_for_class = window.app_type.clone();
                     let class_str = move || {
                         let win = windows.get().iter().find(|w| w.id == window_id).cloned();
                         let mut classes = vec!["window"];
+                        if app_type_for_class == AppType::Terminal {
+                            classes.push("terminal-window");
+                        }
                         if let Some(w) = &win {
                             if is_active() { classes.push("active"); }
                             if w.is_minimized { classes.push("minimized"); }
