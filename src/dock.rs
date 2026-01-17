@@ -47,6 +47,9 @@ fn DockIcon(
     let item_icon_class = item.icon_class;
     let item_is_running = item.is_running;
 
+    // Capture system_state at component creation time, not in event handler
+    let system_state = expect_context::<SystemState>();
+
     // Calculate position-based scale when mouse moves
     Effect::new(move |_| {
         let mx = mouse_x.get();
@@ -76,7 +79,6 @@ fn DockIcon(
     };
 
     let on_click = move |_: MouseEvent| {
-        let system_state = expect_context::<SystemState>();
         system_state.request_open_app(item_name);
     };
 

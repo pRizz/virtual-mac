@@ -550,7 +550,7 @@ pub fn WindowManager() -> impl IntoView {
     #[cfg(target_arch = "wasm32")]
     {
         let doc_mousemove_handler = Closure::wrap(Box::new(move |e: web_sys::MouseEvent| {
-            let op = drag_op.get();
+            let op = drag_op.get_untracked();
             match op {
                 DragOperation::None => {}
                 DragOperation::Move { window_id, start_x, start_y, window_start_x, window_start_y } => {
