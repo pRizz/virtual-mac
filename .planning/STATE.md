@@ -3,8 +3,8 @@
 ## Current Position
 
 **Active Phase:** Phase 5 - Finder Polish (In Progress)
-**Last Completed:** Phase 5, Plan 01 - View Mode State & Padding Fix
-**Next Action:** Execute Phase 5, Plan 02
+**Last Completed:** Phase 5, Plan 02 - Finder List View
+**Next Action:** Execute Phase 5, Plan 03
 
 ## Progress
 
@@ -14,26 +14,25 @@
 | 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Complete | 4 | 4 |
 | 4 - TextEdit | Complete | 3 | 3 |
-| 5 - Finder | In Progress | 6 | 1 |
+| 5 - Finder | In Progress | 6 | 2 |
 
-**Overall:** 74% complete (14/19 plans across phases)
+**Overall:** 79% complete (15/19 plans across phases)
 
-Progress: [#######...] 74%
+Progress: [########..] 79%
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed Phase 5 Plan 01 (View Mode State & Padding Fix)
-- Added ViewMode enum with Icons, List, Column, Gallery variants
-- Wired toolbar view buttons with dynamic active class
-- Added AppType::Finder variant to window_manager
-- Fixed white padding bug with finder-content CSS override
+- Completed Phase 5 Plan 02 (Finder List View)
+- Added FileItem.size/modified fields from FileMetadata
+- Added format_date(), format_size(), get_file_kind() helpers
+- Implemented ListView with conditional rendering
+- Added list view CSS with header, rows, and column styling
 
 **Context for Next Session:**
-- Finder view mode buttons now toggle active state on click
-- Column view infrastructure (column_paths signal) is prepared
-- White padding bug is fixed
-- Ready for Plan 02 (Icon view enhancements)
+- Finder List view is fully functional with Name, Date Modified, Size, Kind columns
+- Icons view and List view now work via view_mode conditional rendering
+- Column and Gallery views fall back to Icons view (not yet implemented)
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -64,6 +63,9 @@ Progress: [#######...] 74%
 | mousedown for alignment buttons | 2026-01-17 | Prevents contenteditable focus loss when clicking toolbar buttons |
 | CSS font-size vs execCommand | 2026-01-17 | execCommand fontSize only takes 1-7, use CSS for actual pixel sizes |
 | AppType::Finder variant | 2026-01-17 | Dedicated app type for Finder instead of Generic, follows established pattern |
+| js_sys::Date for formatting | 2026-01-17 | Reliable cross-browser date handling without extra dependencies |
+| Folders show "--" for size | 2026-01-17 | Matches macOS Finder behavior |
+| File kind from extension | 2026-01-17 | Common mappings with fallback to "{EXT} Document" |
 
 ## Open Issues
 
@@ -83,4 +85,4 @@ Progress: [#######...] 74%
 ---
 
 *State updated: 2026-01-17*
-*Phase 5 plan 01 completed: 2026-01-17*
+*Phase 5 plan 02 completed: 2026-01-17*
