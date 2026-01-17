@@ -3,8 +3,8 @@
 ## Current Position
 
 **Active Phase:** Phase 4 - TextEdit Polish (In Progress)
-**Last Completed:** 04-02-PLAN.md (Document Style & Colors)
-**Next Action:** Continue Phase 4 plans or start Phase 5 (Finder)
+**Last Completed:** 04-01-PLAN.md (Formatting Toolbar)
+**Next Action:** Continue Phase 4 plan 04-03 (File Operations) or start Phase 5 (Finder)
 
 ## Progress
 
@@ -13,7 +13,7 @@
 | 1 - Calculator | Complete | 2 | 2 |
 | 2 - Terminal | Complete | 4 | 4 |
 | 3 - Notes | Complete | 4 | 4 |
-| 4 - TextEdit | In Progress | 2 | 2 |
+| 4 - TextEdit | In Progress | 3 | 2 |
 | 5 - Finder | Not Started | 0 | - |
 
 **Overall:** 75% complete (12/16 plans across phases)
@@ -23,16 +23,17 @@ Progress: [########..] 75%
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed 04-02-PLAN.md (Document Style & Colors)
-- Added document-style wrapper (gray bg, white page with shadow)
-- Added text color picker (foreColor execCommand)
-- Added highlight color picker (hiliteColor execCommand)
-- Added macOS-style cursor and selection styling
+- Completed 04-01-PLAN.md (Formatting Toolbar)
+- Added font family dropdown with 8 web-safe fonts
+- Added font size selector dropdown
+- Added B/I/U toggle buttons with active states
+- Added four alignment buttons (left, center, right, justify)
+- Alignment buttons use mousedown with preventDefault to preserve selection
 
 **Context for Next Session:**
-- TextEdit has document-style appearance
-- Color controls functional
-- Ready for additional formatting features or next phase
+- TextEdit has complete formatting toolbar
+- Font/size/formatting controls all functional
+- Ready for 04-03 (File Operations) or next phase
 - YOLO mode enabled - auto-approve most decisions
 
 ## Key Decisions
@@ -60,6 +61,8 @@ Progress: [########..] 75%
 | Document max-width 8.5in | 2026-01-17 | Realistic page appearance with 1in padding |
 | Selection color #b4d5fe | 2026-01-17 | Matches macOS default selection blue |
 | Native color input | 2026-01-17 | Accessibility and browser compatibility over custom picker |
+| mousedown for alignment buttons | 2026-01-17 | Prevents contenteditable focus loss when clicking toolbar buttons |
+| CSS font-size vs execCommand | 2026-01-17 | execCommand fontSize only takes 1-7, use CSS for actual pixel sizes |
 
 ## Open Issues
 
@@ -78,4 +81,4 @@ Progress: [########..] 75%
 ---
 
 *State updated: 2026-01-17*
-*Phase 4 plan 02 completed: 2026-01-17*
+*Phase 4 plan 01 completed: 2026-01-17*
