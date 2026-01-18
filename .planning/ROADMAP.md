@@ -11,6 +11,11 @@
 
 **Requirements:** FIX-001, FIX-002, FIX-003
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — Fix drag bounds, title centering, and Finder AppType
+
 **Key Deliverables:**
 - Window drag bounds enforcement (prevent dragging above menu bar)
 - Window title properly centered relative to full width
