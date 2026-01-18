@@ -484,6 +484,7 @@ fn get_current_time() -> String {
         let date = js_sys::Date::new_0();
         let hours = date.get_hours();
         let minutes = date.get_minutes();
+        let seconds = date.get_seconds();
         let period = if hours >= 12 { "PM" } else { "AM" };
         let display_hours = if hours == 0 {
             12
@@ -492,12 +493,18 @@ fn get_current_time() -> String {
         } else {
             hours
         };
-        format!("{} {:02} {}", get_day_abbrev(&date), display_hours, period)
-            + &format!(":{:02}", minutes)
+        format!(
+            "{} {}:{:02}:{:02} {}",
+            get_day_abbrev(&date),
+            display_hours,
+            minutes,
+            seconds,
+            period
+        )
     }
     #[cfg(not(target_arch = "wasm32"))]
     {
-        "Wed 12:00 PM".to_string()
+        "Wed 12:00:00 PM".to_string()
     }
 }
 
