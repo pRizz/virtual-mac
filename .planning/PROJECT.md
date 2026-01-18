@@ -8,26 +8,26 @@ A browser-based macOS desktop simulation built with Rust/WebAssembly and Leptos.
 
 The applications feel like real macOS apps — users familiar with macOS immediately recognize the UI and behavior, creating an authentic desktop experience in the browser.
 
-## Current Milestone: v1.1 System Polish
+## Latest Milestone: v1.1 System Polish (Shipped)
 
 **Goal:** Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes.
 
-**Target fixes:**
-- Window drag bounds (prevent dragging above menu bar)
-- Window title centering (center relative to full width)
-- Initial Finder window AppType bug
-- Dock icon sizes (uniform sizing)
-- Finder white padding/border
-- Calculator content clipping
-- Build timestamp "Built at " prefix
-- Clock format fix ("2:04 PM" not "2 PM:04")
-- Clock show seconds
+**Delivered:**
+- Window drag bounds enforcement (25px menu bar)
+- Window title centering (relative to full width)
+- Initial Finder window uses correct AppType
+- Uniform dock icon sizing with rounded corners
+- Finder window without white padding
+- Calculator properly sized with uniform buttons and thousand separators
+- Clock format fixed ("H:MM:SS AM/PM")
+- Build timestamp with "Built at " prefix
 
-## Current State (v1.0 Shipped)
+## Current State (v1.1 Shipped)
 
 **Tech stack:** Rust 2021 + Leptos 0.7 (CSR) + WebAssembly
-**Codebase:** 9,646 lines (Rust + CSS)
+**Codebase:** ~11,500 lines (Rust + CSS)
 **Apps shipped:** Calculator, Terminal, Notes, TextEdit, Finder
+**Milestones shipped:** v1.0 App Polish, v1.1 System Polish
 
 ## Requirements
 
@@ -90,4 +90,4 @@ These capabilities exist and are working:
 | YOLO workflow mode | Faster iteration with fewer confirmations | ✓ Good |
 
 ---
-*Last updated: 2026-01-17 after v1.0 milestone*
+*Last updated: 2026-01-18 after v1.1 milestone*
