@@ -5,68 +5,65 @@
 See: .planning/PROJECT.md (updated 2026-01-17)
 
 **Core value:** Authentic macOS desktop experience in the browser
-**Current focus:** Planning next milestone
+**Current focus:** v1.1 System Polish — fix bugs and rough edges
 
 ## Current Position
 
-**Milestone:** v1.0 App Polish — SHIPPED
-**Phase:** 5 of 5 (Complete)
-**Plan:** All complete
-**Status:** Ready for next milestone
-**Last activity:** 2026-01-17 — v1.0 milestone complete
+**Milestone:** v1.1 System Polish
+**Phase:** Not started
+**Plan:** None yet
+**Status:** Ready to plan Phase 1
+**Last activity:** 2026-01-17 — v1.1 milestone initialized
 
-Progress: [##########] 100%
+Progress: [          ] 0%
 
 ## Milestones
 
 | Version | Name | Status | Shipped |
 |---------|------|--------|---------|
 | v1.0 | App Polish | ✅ Shipped | 2026-01-17 |
-| v2.0 | TBD | 📋 Not started | - |
+| v1.1 | System Polish | 🔄 In Progress | - |
 
 ## Session Continuity
 
 **Last Session:** 2026-01-17
-- Completed all 5 phases of App Polish milestone
-- Audited milestone (passed with tech debt)
-- Archived milestone to .planning/milestones/
+- Completed v1.0 milestone and archived
+- Created v1.1 milestone for system polish
+- Defined 9 requirements across 3 phases
 
 **Context for Next Session:**
-- v1.0 milestone shipped and archived
-- ROADMAP.md and REQUIREMENTS.md deleted (fresh for next milestone)
-- Ready to start /gsd:new-milestone for v2.0
-- Tech debt items tracked in todos
+- v1.1 roadmap ready with 3 phases
+- Phase 1: Window System Fixes (drag bounds, title centering, Finder AppType)
+- Phase 2: UI Polish Fixes (dock icons, Finder padding, Calculator clipping)
+- Phase 3: Clock & Display Fixes (format, seconds, build timestamp)
 
 ## Key Decisions
-
-Archived to .planning/milestones/v1.0-ROADMAP.md
 
 See PROJECT.md for cumulative decision log.
 
 ## Open Issues
 
-| Issue | Found | Description |
-|-------|-------|-------------|
-| Initial Finder AppType | 2026-01-17 | First Finder window uses AppType::Generic instead of AppType::Finder |
-| Dock icon sizes | 2026-01-17 | Terminal and other icons not uniformly sized |
-| Finder white padding | 2026-01-17 | White padding/border visible in Finder window |
-| Calculator clipping | 2026-01-17 | Calculator window may clip content |
-| Window drag bounds | 2026-01-17 | Windows can be dragged above menu bar |
-| Window title centering | 2026-01-17 | Titles centered relative to traffic lights, not window |
-| Clock format | 2026-01-17 | Shows "2 PM:04" instead of "2:04 PM" |
-| Clock seconds | 2026-01-17 | Should show seconds in menu bar clock |
-| Build timestamp | 2026-01-17 | Prefix with "Built at " |
+All tracked as v1.1 requirements:
+- FIX-001: Window drag bounds
+- FIX-002: Window title centering
+- FIX-003: Initial Finder AppType
+- FIX-004: Dock icon sizes
+- FIX-005: Finder white padding
+- FIX-006: Calculator clipping
+- FIX-007: Build timestamp prefix
+- FIX-008: Clock format
+- FIX-009: Clock seconds
 
 ## Todos
 
 **Pending:** 3 (in .planning/todos/pending/)
-- Fix dock icon sizes to be uniform
-- Remove white padding/border in Finder window
-- Fix calculator window content clipping
+- Fix dock icon sizes to be uniform (→ FIX-004)
+- Remove white padding/border in Finder window (→ FIX-005)
+- Fix calculator window content clipping (→ FIX-006)
 
 **Completed:** 0
 
 ---
 
 *State updated: 2026-01-17*
-*v1.0 milestone shipped: 2026-01-17*
+*v1.1 milestone initialized: 2026-01-17*

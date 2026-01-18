@@ -8,6 +8,21 @@ A browser-based macOS desktop simulation built with Rust/WebAssembly and Leptos.
 
 The applications feel like real macOS apps — users familiar with macOS immediately recognize the UI and behavior, creating an authentic desktop experience in the browser.
 
+## Current Milestone: v1.1 System Polish
+
+**Goal:** Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes.
+
+**Target fixes:**
+- Window drag bounds (prevent dragging above menu bar)
+- Window title centering (center relative to full width)
+- Initial Finder window AppType bug
+- Dock icon sizes (uniform sizing)
+- Finder white padding/border
+- Calculator content clipping
+- Build timestamp "Built at " prefix
+- Clock format fix ("2:04 PM" not "2 PM:04")
+- Clock show seconds
+
 ## Current State (v1.0 Shipped)
 
 **Tech stack:** Rust 2021 + Leptos 0.7 (CSR) + WebAssembly
