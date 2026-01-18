@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use leptos::ev::MouseEvent;
+use serde::{Deserialize, Serialize};
 
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::closure::Closure;
@@ -11,6 +12,7 @@ const MENU_BAR_HEIGHT: f64 = 25.0;
 
 use crate::finder::Finder;
 use crate::calculator::Calculator;
+use crate::notification::NotificationState;
 use crate::system_settings::SystemSettings;
 use crate::system_state::SystemState;
 use crate::terminal::Terminal;
@@ -39,7 +41,7 @@ pub struct WindowManagerContext {
 pub type WindowId = usize;
 
 /// Type of application in a window
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum AppType {
     Calculator,
     SystemSettings,
@@ -95,6 +97,131 @@ impl WindowState {
             animation: AnimationState::None,
         }
     }
+
+    /// Convert to persistable form
+    fn to_persisted(&self) -> PersistedWindow {
+        PersistedWindow {
+            app_type: self.app_type.clone(),
+            x: self.x,
+            y: self.y,
+            width: self.width,
+            height: self.height,
+            z_index: self.z_index,
+            is_minimized: self.is_minimized,
+            is_maximized: self.is_maximized,
+            pre_maximize: self.pre_maximize,
+        }
+    }
+
+    /// Create from persisted form
+    fn from_persisted(persisted: &PersistedWindow, id: WindowId) -> Self {
+        let title = match &persisted.app_type {
+            AppType::Calculator => "Calculator",
+            AppType::SystemSettings => "System Settings",
+            AppType::Terminal => "Terminal",
+            AppType::TextEdit => "TextEdit",
+            AppType::Notes => "Notes",
+            AppType::Finder => "Finder",
+        };
+        Self {
+            id,
+            title: title.to_string(),
+            x: persisted.x,
+            y: persisted.y,
+            width: persisted.width,
+            height: persisted.height,
+            z_index: persisted.z_index,
+            is_minimized: persisted.is_minimized,
+            is_maximized: persisted.is_maximized,
+            pre_maximize: persisted.pre_maximize,
+            app_type: persisted.app_type.clone(),
+            animation: AnimationState::None,
+        }
+    }
+}
+
+/// Persisted window state (excludes animation state)
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct PersistedWindow {
+    app_type: AppType,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    z_index: i32,
+    is_minimized: bool,
+    is_maximized: bool,
+    pre_maximize: Option<(f64, f64, f64, f64)>,
+}
+
+/// Full desktop state for persistence
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct PersistedDesktopState {
+    schema_version: u32,
+    windows: Vec<PersistedWindow>,
+    next_window_id: usize,
+    top_z_index: i32,
+}
+
+const CURRENT_SCHEMA_VERSION: u32 = 1;
+const STORAGE_KEY: &str = "virtualmac_desktop";
+
+/// Save desktop state to localStorage
+#[allow(unused_variables)]
+fn save_desktop_state(windows: &[WindowState], next_id: usize, top_z: i32) {
+    #[cfg(target_arch = "wasm32")]
+    {
+        let state = PersistedDesktopState {
+            schema_version: CURRENT_SCHEMA_VERSION,
+            windows: windows.iter().map(|w| w.to_persisted()).collect(),
+            next_window_id: next_id,
+            top_z_index: top_z,
+        };
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(json) = serde_json::to_string(&state) {
+                    let _ = storage.set_item(STORAGE_KEY, &json);
+                }
+            }
+        }
+    }
+}
+
+/// Load desktop state from localStorage
+/// Returns (windows, next_id, top_z, schema_mismatch)
+fn load_desktop_state() -> Option<(Vec<WindowState>, usize, i32, bool)> {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(Some(json)) = storage.get_item(STORAGE_KEY) {
+                    if let Ok(state) = serde_json::from_str::<PersistedDesktopState>(&json) {
+                        let schema_mismatch = state.schema_version != CURRENT_SCHEMA_VERSION;
+                        let windows: Vec<WindowState> = state.windows
+                            .iter()
+                            .enumerate()
+                            .map(|(i, pw)| WindowState::from_persisted(pw, i + 1))
+                            .collect();
+                        return Some((windows, state.next_window_id, state.top_z_index, schema_mismatch));
+                    }
+                }
+            }
+        }
+    }
+    None
+}
+
+/// Clear desktop state from localStorage
+#[allow(dead_code)]
+fn clear_desktop_state() {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                let _ = storage.remove_item(STORAGE_KEY);
+            }
+        }
+    }
 }
 
 /// Drag/resize operation state
@@ -119,22 +246,66 @@ enum ResizeDirection {
     N, S, E, W, NE, NW, SE, SW,
 }
 
-/// Desktop component that contains the window manager
-#[component]
-pub fn WindowManager() -> impl IntoView {
-    let system_state = expect_context::<SystemState>();
-
-    // Global state for all windows
-    let (windows, set_windows) = signal(vec![
+/// Default windows when no persisted state exists
+fn default_windows() -> Vec<WindowState> {
+    vec![
         WindowState::new_with_app(1, "Finder", 100.0, 80.0, 600.0, 400.0, AppType::Finder),
         WindowState::new_with_app(2, "Terminal", 255.0, 165.0, 600.0, 400.0, AppType::Terminal),
         WindowState::new_with_app(3, "TextEdit", 1200.0, 150.0, 500.0, 400.0, AppType::TextEdit),
         WindowState::new_with_app(4, "Calculator", 900.0, 100.0, 280.0, 540.0, AppType::Calculator),
-    ]);
+    ]
+}
 
-    let (next_id, set_next_id) = signal(5usize);
+/// Desktop component that contains the window manager
+#[component]
+pub fn WindowManager() -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
+    let notification_state = expect_context::<NotificationState>();
+
+    // Load persisted state or use defaults
+    let (initial_windows, initial_next_id, initial_top_z, schema_mismatch) =
+        load_desktop_state().unwrap_or_else(|| {
+            let defaults = default_windows();
+            let count = defaults.len();
+            (defaults, count + 1, count as i32, false)
+        });
+
+    // Show notification if schema changed (desktop was reset due to update)
+    if schema_mismatch {
+        notification_state.show(
+            "Desktop Updated",
+            "An update has reset some desktop settings. Your files and apps are safe.",
+        );
+    }
+
+    // Global state for all windows
+    let (windows, set_windows) = signal(initial_windows);
+    let (next_id, set_next_id) = signal(initial_next_id);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
-    let (top_z_index, set_top_z_index) = signal(4i32);
+    let (top_z_index, set_top_z_index) = signal(initial_top_z);
+
+    // Save state when windows change (debounced via effect)
+    Effect::new(move |_| {
+        let current_windows = windows.get();
+        let current_next_id = next_id.get();
+        let current_top_z = top_z_index.get();
+        save_desktop_state(&current_windows, current_next_id, current_top_z);
+    });
+
+    // Watch for desktop reset request
+    Effect::new(move |_| {
+        if system_state.reset_desktop.get() {
+            system_state.reset_desktop.set(false);
+            // Clear persisted state
+            clear_desktop_state();
+            // Reset to defaults
+            let defaults = default_windows();
+            let count = defaults.len();
+            set_windows.set(defaults);
+            set_next_id.set(count + 1);
+            set_top_z_index.set(count as i32);
+        }
+    });
 
     // Watch for System Settings open request
     Effect::new(move |_| {

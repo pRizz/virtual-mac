@@ -13,6 +13,8 @@ pub struct SystemState {
     pub open_system_settings: RwSignal<bool>,
     /// App to open from dock click (app name)
     pub open_app: RwSignal<Option<String>>,
+    /// Whether a desktop reset was requested
+    pub reset_desktop: RwSignal<bool>,
 }
 
 /// Power state of the system
@@ -33,6 +35,7 @@ pub enum ModalType {
     RestartConfirm,
     LogOutConfirm,
     ForceQuit,
+    ResetDesktopConfirm,
 }
 
 impl SystemState {
@@ -43,6 +46,7 @@ impl SystemState {
             active_modal: RwSignal::new(None),
             open_system_settings: RwSignal::new(false),
             open_app: RwSignal::new(None),
+            reset_desktop: RwSignal::new(false),
         }
     }
 

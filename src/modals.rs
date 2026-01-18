@@ -17,6 +17,7 @@ pub fn ModalOverlay() -> impl IntoView {
                         Some(ModalType::RestartConfirm) => view! { <RestartModal /> }.into_any(),
                         Some(ModalType::LogOutConfirm) => view! { <LogOutModal /> }.into_any(),
                         Some(ModalType::ForceQuit) => view! { <ForceQuitModal /> }.into_any(),
+                        Some(ModalType::ResetDesktopConfirm) => view! { <ResetDesktopModal /> }.into_any(),
                         None => view! {}.into_any(),
                     }}
                 </div>
@@ -179,6 +180,33 @@ fn ForceQuitModal() -> impl IntoView {
                     "Cancel"
                 </button>
                 <button class="modal-button primary disabled">"Force Quit"</button>
+            </div>
+        </div>
+    }
+}
+
+/// Reset Desktop confirmation modal
+#[component]
+fn ResetDesktopModal() -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
+
+    let on_reset = move |_| {
+        system_state.close_modal();
+        system_state.reset_desktop.set(true);
+    };
+
+    view! {
+        <div class="modal confirm-modal">
+            <div class="confirm-icon reset-icon"></div>
+            <div class="confirm-title">"Reset Desktop to Default?"</div>
+            <div class="confirm-message">"This will close all windows and restore the desktop to its default layout. Your files and settings will not be affected."</div>
+            <div class="confirm-buttons">
+                <button class="modal-button secondary" on:click=move |_| system_state.close_modal()>
+                    "Cancel"
+                </button>
+                <button class="modal-button primary" on:click=on_reset>
+                    "Reset Desktop"
+                </button>
             </div>
         </div>
     }

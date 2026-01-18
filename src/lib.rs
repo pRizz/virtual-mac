@@ -10,6 +10,7 @@ pub mod file_system;
 mod finder;
 mod menu_bar;
 mod modals;
+mod notification;
 mod spotlight;
 mod system_settings;
 mod system_state;
@@ -27,6 +28,7 @@ use dock::Dock;
 use file_system::FileSystemProvider;
 use menu_bar::MenuBar;
 use modals::{LockScreen, ModalOverlay, PowerOverlay};
+use notification::{NotificationContainer, NotificationState};
 use spotlight::Spotlight;
 use system_state::SystemState;
 use theme::ThemeProvider;
@@ -41,6 +43,10 @@ fn App() -> impl IntoView {
     // Provide system state context for all child components
     let system_state = SystemState::new();
     provide_context(system_state);
+
+    // Provide notification state context
+    let notification_state = NotificationState::new();
+    provide_context(notification_state);
 
     // Provide wallpaper context
     provide_wallpaper_context();
@@ -58,6 +64,7 @@ fn App() -> impl IntoView {
                 <ModalOverlay />
                 <LockScreen />
                 <PowerOverlay />
+                <NotificationContainer />
             </FileSystemProvider>
         </ThemeProvider>
     }

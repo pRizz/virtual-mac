@@ -67,6 +67,10 @@ pub fn MenuBar() -> impl IntoView {
         set_active_menu.set(None);
         system_state.show_modal(ModalType::LogOutConfirm);
     });
+    let on_reset_desktop = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.show_modal(ModalType::ResetDesktopConfirm);
+    });
 
     view! {
         <div class="menu-bar" on:mouseleave=close_menu>
@@ -84,6 +88,8 @@ pub fn MenuBar() -> impl IntoView {
                     <DropdownItem label="App Store..." />
                     <DropdownSeparator />
                     <DropdownItem label="Recent Items" />
+                    <DropdownSeparator />
+                    <DropdownItem label="Reset Desktop..." on_click=on_reset_desktop />
                     <DropdownSeparator />
                     <DropdownItem label="Force Quit..." shortcut="⌥⌘⎋" on_click=on_force_quit />
                     <DropdownSeparator />
