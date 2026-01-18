@@ -211,6 +211,8 @@ body {
     font-size: 13px;
     font-weight: 500;
     padding: 0 10px;
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
 }
 
 /* Battery */
