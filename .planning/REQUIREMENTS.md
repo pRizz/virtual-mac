@@ -10,9 +10,9 @@ Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes
 
 | ID | Requirement | Priority | Status |
 |----|-------------|----------|--------|
-| FIX-001 | Window drag bounds — prevent dragging windows above menu bar | High | Pending |
-| FIX-002 | Window title centering — center relative to full window width | Medium | Pending |
-| FIX-003 | Initial Finder AppType — use AppType::Finder instead of Generic | Medium | Pending |
+| FIX-001 | Window drag bounds — prevent dragging windows above menu bar | High | Complete |
+| FIX-002 | Window title centering — center relative to full window width | Medium | Complete |
+| FIX-003 | Initial Finder AppType — use AppType::Finder instead of Generic | Medium | Complete |
 | FIX-004 | Dock icon sizes — uniform sizing for all dock icons | Medium | Pending |
 | FIX-005 | Finder white padding — remove white padding/border in Finder window | Medium | Pending |
 | FIX-006 | Calculator clipping — fix content clipping in Calculator window | Medium | Pending |
@@ -28,29 +28,29 @@ Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes
 
 ## Detailed Requirements
 
-### FIX-001: Window Drag Bounds
+### FIX-001: Window Drag Bounds ✅
 
 **Problem:** Windows can be dragged above the menu bar, making them difficult to access.
 
 **Acceptance Criteria:**
-- [ ] FIX-001.1: Window title bar cannot be dragged above menu bar height
-- [ ] FIX-001.2: Window remains accessible after drag operation
+- [x] FIX-001.1: Window title bar cannot be dragged above menu bar height
+- [x] FIX-001.2: Window remains accessible after drag operation
 
-### FIX-002: Window Title Centering
+### FIX-002: Window Title Centering ✅
 
 **Problem:** Window titles are centered relative to traffic light buttons, not the full window width.
 
 **Acceptance Criteria:**
-- [ ] FIX-002.1: Title text centered relative to full window width
-- [ ] FIX-002.2: Title remains centered at various window widths
+- [x] FIX-002.1: Title text centered relative to full window width
+- [x] FIX-002.2: Title remains centered at various window widths
 
-### FIX-003: Initial Finder AppType
+### FIX-003: Initial Finder AppType ✅
 
 **Problem:** First Finder window opened uses `AppType::Generic` instead of `AppType::Finder`, causing incorrect behavior.
 
 **Acceptance Criteria:**
-- [ ] FIX-003.1: Initial Finder window uses `AppType::Finder`
-- [ ] FIX-003.2: Finder window has correct title bar and behavior
+- [x] FIX-003.1: Initial Finder window uses `AppType::Finder`
+- [x] FIX-003.2: Finder window has correct title bar and behavior
 
 ### FIX-004: Dock Icon Sizes
 

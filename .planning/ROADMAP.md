@@ -12,9 +12,10 @@
 **Requirements:** FIX-001, FIX-002, FIX-003
 
 **Plans:** 1 plan
+**Status:** Complete
 
 Plans:
-- [ ] 01-01-PLAN.md — Fix drag bounds, title centering, and Finder AppType
+- [x] 01-01-PLAN.md — Fix drag bounds, title centering, and Finder AppType
 
 **Key Deliverables:**
 - Window drag bounds enforcement (prevent dragging above menu bar)
@@ -68,7 +69,7 @@ Plans:
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 1 | Window System Fixes | FIX-001, FIX-002, FIX-003 | Pending |
+| 1 | Window System Fixes | FIX-001, FIX-002, FIX-003 | ✅ Complete |
 | 2 | UI Polish Fixes | FIX-004, FIX-005, FIX-006 | Pending |
 | 3 | Clock & Display Fixes | FIX-007, FIX-008, FIX-009 | Pending |
 
