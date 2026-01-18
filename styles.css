@@ -523,28 +523,41 @@ html, body {
     align-items: center;
 }
 
-/* Dock icon base styles */
+/* Dock icon base styles - fixed size rounded square background */
 .dock-icon {
+    /* Fixed size - never shrinks */
     width: 48px;
     height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    max-width: 48px;
+    max-height: 48px;
+
+    /* Rounded square background */
     border-radius: 11px;
+
+    /* Content floats in center */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+
+    /* Default text styling for emoji/characters */
+    font-size: 28px;
     line-height: 1;
     text-align: center;
-    vertical-align: middle;
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
     color: white;
+
+    /* Positioning and effects */
     position: relative;
     overflow: hidden;
     transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow:
         0 2px 8px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    background-size: cover;
-    background-position: center;
+
+    /* Default gray background - overridden per icon */
+    background: linear-gradient(180deg, #8e8e93 0%, #636366 100%);
 }
 
 /* Icon reflection */
@@ -610,7 +623,6 @@ html, body {
 /* App icon backgrounds - macOS style gradients */
 .dock-icon.finder {
     background: linear-gradient(180deg, #4da6ff 0%, #1a8cff 50%, #0066cc 100%);
-    font-size: 28px;
 }
 
 .dock-icon.safari {
@@ -648,10 +660,10 @@ html, body {
 }
 
 .dock-icon.terminal {
-    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
-    font-size: 28px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #333333 100%);
     font-family: "SF Mono", Menlo, Monaco, monospace;
     font-weight: bold;
+    font-size: 18px;
 }
 
 .dock-icon.trash {
@@ -1360,9 +1372,9 @@ html, body {
 .dock-icon.calculator {
     background: linear-gradient(180deg, #ff9500 0%, #ff6b00 100%);
     color: white;
-    font-size: 32px;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
     font-weight: 300;
+    font-size: 28px;
 }
 
 /* ============================================
@@ -2143,12 +2155,12 @@ html, body {
 
 /* Dock TextEdit icon */
 .dock-icon.textedit {
-    background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%);
+    background: linear-gradient(180deg, #fff 0%, #e8e8e8 100%);
     color: #333;
-    font-size: 28px;
     font-family: "Times New Roman", Georgia, serif;
     font-weight: bold;
     font-style: italic;
+    font-size: 26px;
 }
 
 /* Wallpaper Picker Styles */
