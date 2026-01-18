@@ -123,7 +123,7 @@ pub fn Desktop(
             </Show>
             <div class="build-info">
                 <span class="build-version">"v"{env!("CARGO_PKG_VERSION")}</span>
-                <span class="build-time">{env!("BUILD_TIME")}</span>
+                <span class="build-time">"Built at "{env!("BUILD_TIME")}</span>
             </div>
         </div>
     }
