@@ -1308,7 +1308,10 @@ html, body {
 .calc-btn {
     border: none;
     border-radius: 50%;
-    aspect-ratio: 1;
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
     font-size: 28px;
     font-weight: 400;
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
@@ -1357,11 +1360,13 @@ html, body {
 
 .calc-btn.zero {
     grid-column: span 2;
-    border-radius: 40px;
-    aspect-ratio: auto;
-    min-height: 60px;
+    border-radius: 28px;
+    width: auto;
+    min-width: 124px;
+    height: 56px;
+    min-height: 56px;
     justify-content: flex-start;
-    padding-left: 28px;
+    padding-left: 24px;
 }
 
 /* Calculator window specific overrides */
