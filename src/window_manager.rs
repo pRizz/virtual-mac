@@ -41,7 +41,6 @@ pub type WindowId = usize;
 /// Type of application in a window
 #[derive(Clone, Debug, PartialEq)]
 pub enum AppType {
-    Generic,
     Calculator,
     SystemSettings,
     Terminal,
@@ -80,23 +79,6 @@ pub struct WindowState {
 }
 
 impl WindowState {
-    pub fn new(id: WindowId, title: &str, x: f64, y: f64, width: f64, height: f64) -> Self {
-        Self {
-            id,
-            title: title.to_string(),
-            x,
-            y,
-            width,
-            height,
-            z_index: id as i32,
-            is_minimized: false,
-            is_maximized: false,
-            pre_maximize: None,
-            app_type: AppType::Generic,
-            animation: AnimationState::None,
-        }
-    }
-
     pub fn new_with_app(id: WindowId, title: &str, x: f64, y: f64, width: f64, height: f64, app_type: AppType) -> Self {
         Self {
             id,
@@ -247,7 +229,6 @@ pub fn WindowManager() -> impl IntoView {
                         AppType::Notes => ("Notes", 450.0, 220.0, 700.0, 500.0),
                         AppType::SystemSettings => ("System Settings", 150.0, 100.0, 680.0, 500.0),
                         AppType::Finder => ("Finder", 100.0, 80.0, 600.0, 400.0),
-                        AppType::Generic => ("Window", 100.0, 80.0, 600.0, 400.0),
                     };
 
                     set_windows.update(|windows| {
