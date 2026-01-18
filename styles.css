@@ -538,6 +538,7 @@ html, body {
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
     color: white;
     position: relative;
+    overflow: hidden;
     transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow:
         0 2px 8px rgba(0, 0, 0, 0.3),
@@ -608,8 +609,8 @@ html, body {
 
 /* App icon backgrounds - macOS style gradients */
 .dock-icon.finder {
-    background: linear-gradient(135deg, #4facfe 0%, #00c6fb 100%);
-    font-size: 36px;
+    background: linear-gradient(180deg, #4da6ff 0%, #1a8cff 50%, #0066cc 100%);
+    font-size: 28px;
 }
 
 .dock-icon.safari {
@@ -1357,8 +1358,11 @@ html, body {
 
 /* Dock calculator icon */
 .dock-icon.calculator {
-    background: linear-gradient(135deg, #1c1c1c 0%, #3a3a3a 100%);
-    font-size: 36px;
+    background: linear-gradient(180deg, #ff9500 0%, #ff6b00 100%);
+    color: white;
+    font-size: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-weight: 300;
 }
 
 /* ============================================
@@ -2139,9 +2143,12 @@ html, body {
 
 /* Dock TextEdit icon */
 .dock-icon.textedit {
-    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%);
     color: #333;
-    font-size: 36px;
+    font-size: 28px;
+    font-family: "Times New Roman", Georgia, serif;
+    font-weight: bold;
+    font-style: italic;
 }
 
 /* Wallpaper Picker Styles */

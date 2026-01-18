@@ -172,7 +172,7 @@ pub fn Dock(
 
     // App dock items
     let apps = vec![
-        DockItem::new("Finder", "🔍", "finder", true),
+        DockItem::new("Finder", "📂", "finder", true),
         DockItem::new("Safari", "🧭", "safari", true),
         DockItem::new("Messages", "💬", "messages", false),
         DockItem::new("Mail", "✉️", "mail", true),
@@ -180,8 +180,8 @@ pub fn Dock(
         DockItem::new("Music", "🎵", "music", false),
         DockItem::new("Notes", "📝", "notes", true),
         DockItem::new("Calendar", "📅", "calendar", false),
-        DockItem::new("TextEdit", "📄", "textedit", true),
-        DockItem::new("Calculator", "🧮", "calculator", true),
+        DockItem::new("TextEdit", "T", "textedit", true),
+        DockItem::new("Calculator", "=", "calculator", true),
         DockItem::new("System Settings", "⚙️", "settings", false),
         DockItem::new("Terminal", ">_", "terminal", true),
     ];
