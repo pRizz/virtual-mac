@@ -1,6 +1,6 @@
 ---
 created: 2026-01-18T05:30
-title: Implement About VirtualMac menu item with 1:1 macOS styling
+title: Implement About VirtualMac menu item with system info and credits
 area: ui
 files:
   - src/menu_bar.rs
@@ -11,28 +11,20 @@ files:
 
 ## Problem
 
-The "About This Mac" menu item shows generic macOS info. Need a custom "About VirtualMac" option that:
-1. Displays a 1:1 macOS-inspired about screen (matching the reference screenshot)
-2. Shows relevant project information
-3. Credits that it was vibe coded by Peter Ryszkiewicz
-4. Credits assistance from GSD, Ralph, Cursor, and Claude Code
+The "About This Mac" menu item in the Apple menu (top-left) shows generic macOS info. Need to rename it to "About VirtualMac" and show project-specific info with credits.
 
 ## Solution
 
-1. Reference the screenshot at `inspiration-screenshots/about-this-app-screen.png`
-   - Centered app icon at top
-   - App name below icon
-   - Version number
-   - Credits/copyright text
+1. Rename "About This Mac" menu item to "About VirtualMac"
 
-2. Create an AboutVirtualMac modal with matching styling:
-   - VirtualMac logo/icon
-   - "VirtualMac" title
-   - Version info
-   - "Vibe coded by Peter Ryszkiewicz"
-   - "With assistance from GSD, Ralph, Cursor, and Claude Code"
+2. Update the AboutThisMac modal to show:
+   - Keep the macOS-inspired system info layout (Chip, Memory, etc.)
+   - Add "VirtualMac" branding at top
+   - Add credits section:
+     - "Vibe coded by Peter Ryszkiewicz"
+     - "With assistance from GSD, Ralph, Cursor, and Claude Code"
 
-3. Either replace the current AboutThisMac modal or add as a separate menu item
+3. Reference `inspiration-screenshots/about-this-app-screen.png` for styling
 
 ## Reference
 
