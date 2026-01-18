@@ -16,9 +16,9 @@ Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes
 | FIX-004 | Dock icon sizes — uniform sizing for all dock icons | Medium | Complete |
 | FIX-005 | Finder white padding — remove white padding/border in Finder window | Medium | Complete |
 | FIX-006 | Calculator clipping — fix content clipping in Calculator window | Medium | Complete |
-| FIX-007 | Build timestamp prefix — add "Built at " prefix to version display | Low | Pending |
-| FIX-008 | Clock format — display as "2:04 PM" not "2 PM:04" | High | Pending |
-| FIX-009 | Clock seconds — show seconds in menu bar clock | Low | Pending |
+| FIX-007 | Build timestamp prefix — add "Built at " prefix to version display | Low | Complete |
+| FIX-008 | Clock format — display as "2:04 PM" not "2 PM:04" | High | Complete |
+| FIX-009 | Clock seconds — show seconds in menu bar clock | Low | Complete |
 
 ### Out of Scope
 
@@ -77,28 +77,28 @@ Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes
 - [x] FIX-006.2: Display area not clipped
 - [x] FIX-006.3: Window properly sized for content
 
-### FIX-007: Build Timestamp Prefix
+### FIX-007: Build Timestamp Prefix ✅
 
 **Problem:** Build version display lacks "Built at " prefix.
 
 **Acceptance Criteria:**
-- [ ] FIX-007.1: Version display shows "Built at {timestamp}"
+- [x] FIX-007.1: Version display shows "Built at {timestamp}"
 
-### FIX-008: Clock Format
+### FIX-008: Clock Format ✅
 
 **Problem:** Clock shows "2 PM:04" instead of "2:04 PM".
 
 **Acceptance Criteria:**
-- [ ] FIX-008.1: Time displays as "H:MM AM/PM" format
-- [ ] FIX-008.2: Minutes always two digits
+- [x] FIX-008.1: Time displays as "H:MM AM/PM" format
+- [x] FIX-008.2: Minutes always two digits
 
-### FIX-009: Clock Seconds
+### FIX-009: Clock Seconds ✅
 
 **Problem:** Menu bar clock does not show seconds.
 
 **Acceptance Criteria:**
-- [ ] FIX-009.1: Clock displays seconds (H:MM:SS format)
-- [ ] FIX-009.2: Updates every second
+- [x] FIX-009.1: Clock displays seconds (H:MM:SS format)
+- [x] FIX-009.2: Updates every second
 
 ---
 
