@@ -35,6 +35,11 @@ Plans:
 
 **Requirements:** FIX-004, FIX-005, FIX-006
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — Fix dock icon sizing, Finder padding, and Calculator clipping
+
 **Key Deliverables:**
 - Uniform dock icon sizes
 - Clean Finder window without white padding
@@ -69,8 +74,8 @@ Plans:
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 1 | Window System Fixes | FIX-001, FIX-002, FIX-003 | ✅ Complete |
-| 2 | UI Polish Fixes | FIX-004, FIX-005, FIX-006 | Pending |
+| 1 | Window System Fixes | FIX-001, FIX-002, FIX-003 | Complete |
+| 2 | UI Polish Fixes | FIX-004, FIX-005, FIX-006 | Planned |
 | 3 | Clock & Display Fixes | FIX-007, FIX-008, FIX-009 | Pending |
 
 ---
