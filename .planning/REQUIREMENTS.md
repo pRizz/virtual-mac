@@ -13,9 +13,9 @@ Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes
 | FIX-001 | Window drag bounds — prevent dragging windows above menu bar | High | Complete |
 | FIX-002 | Window title centering — center relative to full window width | Medium | Complete |
 | FIX-003 | Initial Finder AppType — use AppType::Finder instead of Generic | Medium | Complete |
-| FIX-004 | Dock icon sizes — uniform sizing for all dock icons | Medium | Pending |
-| FIX-005 | Finder white padding — remove white padding/border in Finder window | Medium | Pending |
-| FIX-006 | Calculator clipping — fix content clipping in Calculator window | Medium | Pending |
+| FIX-004 | Dock icon sizes — uniform sizing for all dock icons | Medium | Complete |
+| FIX-005 | Finder white padding — remove white padding/border in Finder window | Medium | Complete |
+| FIX-006 | Calculator clipping — fix content clipping in Calculator window | Medium | Complete |
 | FIX-007 | Build timestamp prefix — add "Built at " prefix to version display | Low | Pending |
 | FIX-008 | Clock format — display as "2:04 PM" not "2 PM:04" | High | Pending |
 | FIX-009 | Clock seconds — show seconds in menu bar clock | Low | Pending |
@@ -52,30 +52,30 @@ Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes
 - [x] FIX-003.1: Initial Finder window uses `AppType::Finder`
 - [x] FIX-003.2: Finder window has correct title bar and behavior
 
-### FIX-004: Dock Icon Sizes
+### FIX-004: Dock Icon Sizes ✅
 
 **Problem:** Terminal and other app icons in dock are not uniformly sized.
 
 **Acceptance Criteria:**
-- [ ] FIX-004.1: All dock icons have consistent base size
-- [ ] FIX-004.2: Magnification effect applies uniformly
+- [x] FIX-004.1: All dock icons have consistent base size
+- [x] FIX-004.2: Magnification effect applies uniformly
 
-### FIX-005: Finder White Padding
+### FIX-005: Finder White Padding ✅
 
 **Problem:** White padding/border visible inside Finder window.
 
 **Acceptance Criteria:**
-- [ ] FIX-005.1: No white padding/border in Finder content area
-- [ ] FIX-005.2: Finder background matches macOS Finder appearance
+- [x] FIX-005.1: No white padding/border in Finder content area
+- [x] FIX-005.2: Finder background matches macOS Finder appearance
 
-### FIX-006: Calculator Clipping
+### FIX-006: Calculator Clipping ✅
 
 **Problem:** Calculator window may clip its content.
 
 **Acceptance Criteria:**
-- [ ] FIX-006.1: All calculator buttons fully visible
-- [ ] FIX-006.2: Display area not clipped
-- [ ] FIX-006.3: Window properly sized for content
+- [x] FIX-006.1: All calculator buttons fully visible
+- [x] FIX-006.2: Display area not clipped
+- [x] FIX-006.3: Window properly sized for content
 
 ### FIX-007: Build Timestamp Prefix
 
