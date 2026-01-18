@@ -128,7 +128,7 @@ pub fn WindowManager() -> impl IntoView {
     let (windows, set_windows) = signal(vec![
         WindowState::new_with_app(1, "Finder", 100.0, 80.0, 600.0, 400.0, AppType::Finder),
         WindowState::new_with_app(2, "Terminal", 300.0, 120.0, 600.0, 400.0, AppType::Terminal),
-        WindowState::new_with_app(3, "TextEdit", 350.0, 200.0, 500.0, 400.0, AppType::TextEdit),
+        WindowState::new_with_app(3, "TextEdit", 1200.0, 150.0, 500.0, 400.0, AppType::TextEdit),
         WindowState::new_with_app(4, "Calculator", 900.0, 100.0, 280.0, 540.0, AppType::Calculator),
     ]);
 
