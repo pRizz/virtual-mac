@@ -533,8 +533,10 @@ html, body {
     max-width: 48px;
     max-height: 48px;
 
-    /* Rounded square background */
+    /* Rounded square background with forced clipping */
     border-radius: 11px;
+    -webkit-border-radius: 11px;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
 
     /* Content floats in center */
     display: flex;
@@ -623,9 +625,6 @@ html, body {
 /* App icon backgrounds - macOS style gradients */
 .dock-icon.finder {
     background: linear-gradient(180deg, #4da6ff 0%, #1a8cff 50%, #0066cc 100%);
-    border-radius: 11px;
-    -webkit-border-radius: 11px;
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .dock-icon.safari {
