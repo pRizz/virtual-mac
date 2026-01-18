@@ -44,6 +44,17 @@ test.describe('Window Manager', () => {
       expect(newPos!.x).toBeGreaterThan(initialPos!.x);
       expect(newPos!.y).toBeGreaterThan(initialPos!.y);
     });
+
+    test('should not allow dragging window above menu bar', async () => {
+      const MENU_BAR_HEIGHT = 25;
+      const finder = windowManager.getWindow('Finder');
+
+      // Try to drag window far above the menu bar
+      await windowManager.dragWindow(finder, 0, -500);
+
+      const newPos = await windowManager.getWindowPosition(finder);
+      expect(newPos!.y).toBeGreaterThanOrEqual(MENU_BAR_HEIGHT);
+    });
   });
 
   test.describe('Window Resizing', () => {
