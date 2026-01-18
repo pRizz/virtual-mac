@@ -105,8 +105,14 @@ body {
 }
 
 .apple-logo {
-    font-size: 14px;
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.apple-logo svg {
+    width: 14px;
+    height: 17px;
 }
 
 /* App Name - Bold */
