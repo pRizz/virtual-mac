@@ -6,6 +6,9 @@ use wasm_bindgen::closure::Closure;
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::JsCast;
 
+/// Menu bar height in pixels (matches CSS --menubar-height)
+const MENU_BAR_HEIGHT: f64 = 25.0;
+
 use crate::finder::Finder;
 use crate::calculator::Calculator;
 use crate::system_settings::SystemSettings;
@@ -475,7 +478,7 @@ pub fn WindowManager() -> impl IntoView {
                 set_windows.update(|windows| {
                     if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
                         win.x = (window_start_x + dx).max(0.0);
-                        win.y = (window_start_y + dy).max(0.0);
+                        win.y = (window_start_y + dy).max(MENU_BAR_HEIGHT);
                     }
                 });
             }
@@ -561,7 +564,7 @@ pub fn WindowManager() -> impl IntoView {
                     set_windows.update(|windows| {
                         if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
                             win.x = (window_start_x + dx).max(0.0);
-                            win.y = (window_start_y + dy).max(0.0);
+                            win.y = (window_start_y + dy).max(MENU_BAR_HEIGHT);
                         }
                     });
                 }
