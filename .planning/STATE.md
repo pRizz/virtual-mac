@@ -63,7 +63,7 @@ All v1.1 requirements completed:
 
 ## Todos
 
-**Pending:** 0 (in .planning/todos/pending/)
+**Pending:** 1 (in .planning/todos/pending/)
 
 **Completed:** 6
 - Fix dock icon sizes to be uniform (FIX-004) - 02-01
