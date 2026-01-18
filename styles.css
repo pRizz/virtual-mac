@@ -623,6 +623,9 @@ html, body {
 /* App icon backgrounds - macOS style gradients */
 .dock-icon.finder {
     background: linear-gradient(180deg, #4da6ff 0%, #1a8cff 50%, #0066cc 100%);
+    border-radius: 11px;
+    -webkit-border-radius: 11px;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .dock-icon.safari {
