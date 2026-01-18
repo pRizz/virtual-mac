@@ -183,6 +183,7 @@ html, body {
     user-select: none;
     cursor: grab;
     border-radius: 10px 10px 0 0;
+    position: relative;
 }
 
 .window-titlebar:active {
@@ -270,7 +271,9 @@ html, body {
 
 /* Window title */
 .window-title {
-    flex: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
     text-align: center;
     font-size: 13px;
     font-weight: 500;
@@ -278,7 +281,7 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin: 0 8px;
+    pointer-events: none;
 }
 
 .window.active .window-title {
