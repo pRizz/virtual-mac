@@ -609,6 +609,7 @@ html, body {
 /* App icon backgrounds - macOS style gradients */
 .dock-icon.finder {
     background: linear-gradient(135deg, #4facfe 0%, #00c6fb 100%);
+    font-size: 36px;
 }
 
 .dock-icon.safari {
@@ -647,6 +648,9 @@ html, body {
 
 .dock-icon.terminal {
     background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+    font-size: 28px;
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-weight: bold;
 }
 
 .dock-icon.trash {
@@ -1354,6 +1358,7 @@ html, body {
 /* Dock calculator icon */
 .dock-icon.calculator {
     background: linear-gradient(135deg, #1c1c1c 0%, #3a3a3a 100%);
+    font-size: 36px;
 }
 
 /* ============================================
@@ -2136,6 +2141,7 @@ html, body {
 .dock-icon.textedit {
     background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
     color: #333;
+    font-size: 36px;
 }
 
 /* Wallpaper Picker Styles */

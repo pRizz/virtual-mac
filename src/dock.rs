@@ -183,7 +183,7 @@ pub fn Dock(
         DockItem::new("TextEdit", "📄", "textedit", true),
         DockItem::new("Calculator", "🧮", "calculator", true),
         DockItem::new("System Settings", "⚙️", "settings", false),
-        DockItem::new("Terminal", "⌨", "terminal", true),
+        DockItem::new("Terminal", ">_", "terminal", true),
     ];
 
     let num_apps = apps.len();
