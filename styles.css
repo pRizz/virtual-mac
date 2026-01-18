@@ -1306,19 +1306,23 @@ html, body {
 }
 
 .calc-btn {
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     width: 56px;
     height: 56px;
     min-width: 56px;
     min-height: 56px;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 400;
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    line-height: 1;
+    padding: 0;
+    box-sizing: border-box;
     transition: filter 0.1s;
 }
 
@@ -1366,7 +1370,7 @@ html, body {
     height: 56px;
     min-height: 56px;
     justify-content: flex-start;
-    padding-left: 24px;
+    padding-left: 22px;
 }
 
 /* Calculator window specific overrides */

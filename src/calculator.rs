@@ -26,13 +26,14 @@ pub fn Calculator() -> impl IntoView {
             set_display.set(digit.to_string());
             set_clear_on_next.set(false);
         } else {
-            let current = display.get();
+            let current = strip_separators(&display.get());
             if current == "0" && digit != "." {
                 set_display.set(digit.to_string());
             } else if digit == "." && current.contains('.') {
                 // Don't add another decimal point
             } else {
-                set_display.set(format!("{}{}", current, digit));
+                let new_value = format!("{}{}", current, digit);
+                set_display.set(format_display_with_separators(&new_value));
             }
         }
         set_active_operator.set(None);
@@ -47,7 +48,7 @@ pub fn Calculator() -> impl IntoView {
     };
 
     let negate = move || {
-        let current = display.get();
+        let current = strip_separators(&display.get());
         if let Ok(val) = current.parse::<f64>() {
             let negated = -val;
             set_display.set(format_result(negated));
@@ -55,7 +56,7 @@ pub fn Calculator() -> impl IntoView {
     };
 
     let percent = move || {
-        let current = display.get();
+        let current = strip_separators(&display.get());
         if let Ok(val) = current.parse::<f64>() {
             let result = val / 100.0;
             set_display.set(format_result(result));
@@ -63,7 +64,7 @@ pub fn Calculator() -> impl IntoView {
     };
 
     let do_calculate = move || {
-        let current = display.get();
+        let current = strip_separators(&display.get());
         if let Ok(current_val) = current.parse::<f64>() {
             let stored = stored_value.get();
             let result = match current_op.get() {
@@ -87,13 +88,13 @@ pub fn Calculator() -> impl IntoView {
     };
 
     let set_operation = move |op: Operation| {
-        let current = display.get();
+        let current = strip_separators(&display.get());
         if let Ok(_val) = current.parse::<f64>() {
             // If there's a pending operation, calculate first
             if current_op.get() != Operation::None && !clear_on_next.get() {
                 do_calculate();
             }
-            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
             set_current_op.set(op);
             set_clear_on_next.set(true);
             set_active_operator.set(Some(op));
@@ -133,19 +134,20 @@ pub fn Calculator() -> impl IntoView {
                             set_display.set(digit.clone());
                             set_clear_on_next.set(false);
                         } else {
-                            let current = display.get();
+                            let current = strip_separators(&display.get());
                             if current == "0" && digit != "." {
                                 set_display.set(digit);
                             } else if digit == "." && current.contains('.') {
                                 // Don't add another decimal point
                             } else {
-                                set_display.set(format!("{}{}", current, digit));
+                                let new_value = format!("{}{}", current, digit);
+                                set_display.set(format_display_with_separators(&new_value));
                             }
                         }
                         set_active_operator.set(None);
                     }
                     "+" => {
-                        let current = display.get();
+                        let current = strip_separators(&display.get());
                         if current.parse::<f64>().is_ok() {
                             if current_op.get() != Operation::None && !clear_on_next.get() {
                                 // Trigger calculation first
@@ -160,14 +162,14 @@ pub fn Calculator() -> impl IntoView {
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Add);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Add));
                         }
                     }
                     "-" => {
-                        let current = display.get();
+                        let current = strip_separators(&display.get());
                         if current.parse::<f64>().is_ok() {
                             if current_op.get() != Operation::None && !clear_on_next.get() {
                                 let current_val = current.parse::<f64>().unwrap_or(0.0);
@@ -181,14 +183,14 @@ pub fn Calculator() -> impl IntoView {
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Subtract);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Subtract));
                         }
                     }
                     "*" => {
-                        let current = display.get();
+                        let current = strip_separators(&display.get());
                         if current.parse::<f64>().is_ok() {
                             if current_op.get() != Operation::None && !clear_on_next.get() {
                                 let current_val = current.parse::<f64>().unwrap_or(0.0);
@@ -202,7 +204,7 @@ pub fn Calculator() -> impl IntoView {
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Multiply);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Multiply));
@@ -210,7 +212,7 @@ pub fn Calculator() -> impl IntoView {
                     }
                     "/" => {
                         evt.prevent_default(); // Prevent browser quick-find
-                        let current = display.get();
+                        let current = strip_separators(&display.get());
                         if current.parse::<f64>().is_ok() {
                             if current_op.get() != Operation::None && !clear_on_next.get() {
                                 let current_val = current.parse::<f64>().unwrap_or(0.0);
@@ -224,7 +226,7 @@ pub fn Calculator() -> impl IntoView {
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(display.get().parse().unwrap_or(0.0));
+                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Divide);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Divide));
@@ -232,7 +234,7 @@ pub fn Calculator() -> impl IntoView {
                     }
                     "=" | "Enter" => {
                         // do_calculate logic inline
-                        let current = display.get();
+                        let current = strip_separators(&display.get());
                         if let Ok(current_val) = current.parse::<f64>() {
                             let stored = stored_value.get();
                             let result = match current_op.get() {
@@ -264,16 +266,17 @@ pub fn Calculator() -> impl IntoView {
                     }
                     "%" => {
                         // percent logic inline
-                        let current = display.get();
+                        let current = strip_separators(&display.get());
                         if let Ok(val) = current.parse::<f64>() {
                             let result = val / 100.0;
                             set_display.set(format_result(result));
                         }
                     }
                     "Backspace" | "Delete" => {
-                        let current = display.get();
+                        let current = strip_separators(&display.get());
                         if current.len() > 1 {
-                            set_display.set(current[..current.len()-1].to_string());
+                            let new_value = current[..current.len()-1].to_string();
+                            set_display.set(format_display_with_separators(&new_value));
                         } else {
                             set_display.set(String::from("0"));
                         }
@@ -374,4 +377,48 @@ fn format_with_separators(n: i64) -> String {
         .rev()
         .collect();
     if negative { format!("-{}", formatted) } else { formatted }
+}
+
+/// Format a display string with thousand separators while preserving decimal part
+fn format_display_with_separators(s: &str) -> String {
+    // Handle empty or just "0"
+    if s.is_empty() || s == "0" {
+        return s.to_string();
+    }
+
+    // Split on decimal point
+    let parts: Vec<&str> = s.split('.').collect();
+    let integer_part = parts[0].replace(",", ""); // Remove existing commas
+    let decimal_part = parts.get(1);
+
+    // Format integer part with separators
+    let negative = integer_part.starts_with('-');
+    let digits: String = if negative { integer_part[1..].to_string() } else { integer_part.clone() };
+
+    if digits.is_empty() {
+        return s.to_string();
+    }
+
+    let chars: Vec<char> = digits.chars().rev().collect();
+    let formatted: String = chars
+        .chunks(3)
+        .map(|chunk| chunk.iter().collect::<String>())
+        .collect::<Vec<String>>()
+        .join(",")
+        .chars()
+        .rev()
+        .collect();
+
+    let formatted_integer = if negative { format!("-{}", formatted) } else { formatted };
+
+    // Recombine with decimal part if present
+    match decimal_part {
+        Some(dec) => format!("{}.{}", formatted_integer, dec),
+        None => formatted_integer,
+    }
+}
+
+/// Strip commas from display string for parsing
+fn strip_separators(s: &str) -> String {
+    s.replace(",", "")
 }
