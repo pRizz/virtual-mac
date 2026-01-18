@@ -736,7 +736,7 @@ html, body {
     flex-direction: column;
     height: 100%;
     background: var(--finder-bg);
-    border-radius: 0 0 10px 10px;
+    border-radius: 0;
     overflow: hidden;
 }
 
