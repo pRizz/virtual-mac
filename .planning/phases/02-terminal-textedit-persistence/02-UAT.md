@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 02-terminal-textedit-persistence
 source: [02-01-SUMMARY.md, 02-02-SUMMARY.md]
 started: 2026-01-19T18:45:00Z
@@ -59,7 +59,10 @@ skipped: 0
   reason: "User reported: The buttons reflect that those settings persisted, but when I actually start typing, the modified font family does not seem to be applied to my new text"
   severity: major
   test: 5
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "execCommand('fontName') not called on component mount - signal restored but editing context not initialized"
+  artifacts:
+    - path: "src/textedit.rs"
+      issue: "Content restoration Effect (line 113) restores HTML but doesn't call execCommand to apply font"
+  missing:
+    - "Add Effect after content restoration to call execCommand('fontName', false, &font_family) on mount"
+  debug_session: ".planning/debug/textedit-font-persistence.md"
