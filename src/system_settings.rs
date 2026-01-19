@@ -1,5 +1,5 @@
-use leptos::prelude::*;
 use crate::wallpaper::{use_wallpaper_context, WALLPAPERS};
+use leptos::prelude::*;
 
 /// System Settings app content
 #[component]

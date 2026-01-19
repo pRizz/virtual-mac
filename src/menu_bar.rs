@@ -360,9 +360,7 @@ fn DarkModeIcon() -> impl IntoView {
 }
 
 #[component]
-fn ControlCenter(
-    is_open: ReadSignal<bool>,
-) -> impl IntoView {
+fn ControlCenter(is_open: ReadSignal<bool>) -> impl IntoView {
     let (wifi_on, set_wifi_on) = signal(true);
     let (bluetooth_on, set_bluetooth_on) = signal(true);
     let (airdrop_on, set_airdrop_on) = signal(false);

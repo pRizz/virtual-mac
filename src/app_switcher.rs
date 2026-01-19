@@ -12,14 +12,38 @@ pub struct SwitchableApp {
 impl SwitchableApp {
     fn all() -> Vec<Self> {
         vec![
-            SwitchableApp { name: "Finder".to_string(), icon: "\u{1F4C1}" },
-            SwitchableApp { name: "Calculator".to_string(), icon: "\u{1F5A9}" },
-            SwitchableApp { name: "Notes".to_string(), icon: "\u{1F4DD}" },
-            SwitchableApp { name: "Safari".to_string(), icon: "\u{1F310}" },
-            SwitchableApp { name: "Messages".to_string(), icon: "\u{1F4AC}" },
-            SwitchableApp { name: "Mail".to_string(), icon: "\u{2709}" },
-            SwitchableApp { name: "Photos".to_string(), icon: "\u{1F5BC}" },
-            SwitchableApp { name: "Music".to_string(), icon: "\u{1F3B5}" },
+            SwitchableApp {
+                name: "Finder".to_string(),
+                icon: "\u{1F4C1}",
+            },
+            SwitchableApp {
+                name: "Calculator".to_string(),
+                icon: "\u{1F5A9}",
+            },
+            SwitchableApp {
+                name: "Notes".to_string(),
+                icon: "\u{1F4DD}",
+            },
+            SwitchableApp {
+                name: "Safari".to_string(),
+                icon: "\u{1F310}",
+            },
+            SwitchableApp {
+                name: "Messages".to_string(),
+                icon: "\u{1F4AC}",
+            },
+            SwitchableApp {
+                name: "Mail".to_string(),
+                icon: "\u{2709}",
+            },
+            SwitchableApp {
+                name: "Photos".to_string(),
+                icon: "\u{1F5BC}",
+            },
+            SwitchableApp {
+                name: "Music".to_string(),
+                icon: "\u{1F3B5}",
+            },
         ]
     }
 }
@@ -84,9 +108,12 @@ pub fn AppSwitcher() -> impl IntoView {
 
         let keyup_closure = Closure::wrap(Box::new(move |e: KeyboardEvent| {
             // When Cmd/Ctrl is released while switcher is visible, select the app
-            if (e.code() == "MetaLeft" || e.code() == "MetaRight" ||
-                e.code() == "ControlLeft" || e.code() == "ControlRight") &&
-               is_visible.get() && cmd_held.get()
+            if (e.code() == "MetaLeft"
+                || e.code() == "MetaRight"
+                || e.code() == "ControlLeft"
+                || e.code() == "ControlRight")
+                && is_visible.get()
+                && cmd_held.get()
             {
                 // Selection happens - close the switcher
                 set_is_visible.set(false);

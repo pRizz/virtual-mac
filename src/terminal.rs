@@ -1,7 +1,7 @@
-use leptos::prelude::*;
-use leptos::ev::KeyboardEvent;
 use crate::file_system::{use_file_system, EntryType, VirtualFileSystem};
 use crate::system_state::SystemState;
+use leptos::ev::KeyboardEvent;
+use leptos::prelude::*;
 
 /// Find file/directory completions for tab completion
 fn find_completions(fs: &VirtualFileSystem, partial: &str, cwd: &str) -> Vec<String> {
@@ -14,12 +14,20 @@ fn find_completions(fs: &VirtualFileSystem, partial: &str, cwd: &str) -> Vec<Str
         let resolved_dir = if dir_part.starts_with('/') {
             dir_part.trim_end_matches('/').to_string()
         } else {
-            let base = if cwd == "/" { String::new() } else { cwd.to_string() };
+            let base = if cwd == "/" {
+                String::new()
+            } else {
+                cwd.to_string()
+            };
             format!("{}/{}", base, dir_part.trim_end_matches('/'))
         };
 
         // Handle root directory specially
-        let resolved_dir = if resolved_dir.is_empty() { "/".to_string() } else { resolved_dir };
+        let resolved_dir = if resolved_dir.is_empty() {
+            "/".to_string()
+        } else {
+            resolved_dir
+        };
 
         (resolved_dir, file_part.to_string())
     } else {
@@ -157,7 +165,7 @@ pub fn Terminal() -> impl IntoView {
             } else if target == ".." {
                 let parts: Vec<&str> = cwd_path.split('/').collect();
                 if parts.len() > 2 {
-                    parts[..parts.len()-1].join("/")
+                    parts[..parts.len() - 1].join("/")
                 } else {
                     "/".to_string()
                 }
@@ -420,9 +428,7 @@ pub fn Terminal() -> impl IntoView {
         set_input.set(value);
     };
 
-    let history_items = move || {
-        history.get().into_iter().enumerate().collect::<Vec<_>>()
-    };
+    let history_items = move || history.get().into_iter().enumerate().collect::<Vec<_>>();
 
     let on_terminal_click = move |_| {
         if let Some(input_el) = input_ref.get() {
@@ -462,7 +468,9 @@ fn get_current_date() -> String {
     {
         let date = js_sys::Date::new_0();
         let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        let months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ];
 
         format!(
             "{} {} {:2} {:02}:{:02}:{:02} UTC {}",

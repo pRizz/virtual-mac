@@ -20,27 +20,91 @@ pub enum SearchResultKind {
 impl SearchResult {
     fn applications() -> Vec<Self> {
         vec![
-            SearchResult { name: "Finder".to_string(), kind: SearchResultKind::Application, icon: "\u{1F4C1}" },
-            SearchResult { name: "Calculator".to_string(), kind: SearchResultKind::Application, icon: "\u{1F5A9}" },
-            SearchResult { name: "Notes".to_string(), kind: SearchResultKind::Application, icon: "\u{1F4DD}" },
-            SearchResult { name: "Safari".to_string(), kind: SearchResultKind::Application, icon: "\u{1F310}" },
-            SearchResult { name: "Messages".to_string(), kind: SearchResultKind::Application, icon: "\u{1F4AC}" },
-            SearchResult { name: "Mail".to_string(), kind: SearchResultKind::Application, icon: "\u{2709}" },
-            SearchResult { name: "Photos".to_string(), kind: SearchResultKind::Application, icon: "\u{1F5BC}" },
-            SearchResult { name: "Music".to_string(), kind: SearchResultKind::Application, icon: "\u{1F3B5}" },
-            SearchResult { name: "Calendar".to_string(), kind: SearchResultKind::Application, icon: "\u{1F4C5}" },
-            SearchResult { name: "Settings".to_string(), kind: SearchResultKind::Application, icon: "\u{2699}" },
-            SearchResult { name: "Terminal".to_string(), kind: SearchResultKind::Application, icon: "\u{1F4BB}" },
+            SearchResult {
+                name: "Finder".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F4C1}",
+            },
+            SearchResult {
+                name: "Calculator".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F5A9}",
+            },
+            SearchResult {
+                name: "Notes".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F4DD}",
+            },
+            SearchResult {
+                name: "Safari".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F310}",
+            },
+            SearchResult {
+                name: "Messages".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F4AC}",
+            },
+            SearchResult {
+                name: "Mail".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{2709}",
+            },
+            SearchResult {
+                name: "Photos".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F5BC}",
+            },
+            SearchResult {
+                name: "Music".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F3B5}",
+            },
+            SearchResult {
+                name: "Calendar".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F4C5}",
+            },
+            SearchResult {
+                name: "Settings".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{2699}",
+            },
+            SearchResult {
+                name: "Terminal".to_string(),
+                kind: SearchResultKind::Application,
+                icon: "\u{1F4BB}",
+            },
         ]
     }
 
     fn documents() -> Vec<Self> {
         vec![
-            SearchResult { name: "Documents".to_string(), kind: SearchResultKind::Folder, icon: "\u{1F4C2}" },
-            SearchResult { name: "Downloads".to_string(), kind: SearchResultKind::Folder, icon: "\u{1F4E5}" },
-            SearchResult { name: "Desktop".to_string(), kind: SearchResultKind::Folder, icon: "\u{1F5A5}" },
-            SearchResult { name: "README.md".to_string(), kind: SearchResultKind::Document, icon: "\u{1F4C4}" },
-            SearchResult { name: "notes.txt".to_string(), kind: SearchResultKind::Document, icon: "\u{1F4C4}" },
+            SearchResult {
+                name: "Documents".to_string(),
+                kind: SearchResultKind::Folder,
+                icon: "\u{1F4C2}",
+            },
+            SearchResult {
+                name: "Downloads".to_string(),
+                kind: SearchResultKind::Folder,
+                icon: "\u{1F4E5}",
+            },
+            SearchResult {
+                name: "Desktop".to_string(),
+                kind: SearchResultKind::Folder,
+                icon: "\u{1F5A5}",
+            },
+            SearchResult {
+                name: "README.md".to_string(),
+                kind: SearchResultKind::Document,
+                icon: "\u{1F4C4}",
+            },
+            SearchResult {
+                name: "notes.txt".to_string(),
+                kind: SearchResultKind::Document,
+                icon: "\u{1F4C4}",
+            },
         ]
     }
 
@@ -104,13 +168,17 @@ pub fn Spotlight() -> impl IntoView {
                         e.prevent_default();
                         let max = results_vec.len().saturating_sub(1);
                         set_selected_index.update(|i| {
-                            if *i < max { *i += 1; }
+                            if *i < max {
+                                *i += 1;
+                            }
                         });
                     }
                     "ArrowUp" => {
                         e.prevent_default();
                         set_selected_index.update(|i| {
-                            if *i > 0 { *i -= 1; }
+                            if *i > 0 {
+                                *i -= 1;
+                            }
                         });
                     }
                     "Enter" => {

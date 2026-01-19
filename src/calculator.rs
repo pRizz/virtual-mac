@@ -158,11 +158,18 @@ pub fn Calculator() -> impl IntoView {
                                     Operation::Add => stored + current_val,
                                     Operation::Subtract => stored - current_val,
                                     Operation::Multiply => stored * current_val,
-                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                    Operation::Divide => {
+                                        if current_val != 0.0 {
+                                            stored / current_val
+                                        } else {
+                                            f64::NAN
+                                        }
+                                    }
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
+                            set_stored_value
+                                .set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Add);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Add));
@@ -179,11 +186,18 @@ pub fn Calculator() -> impl IntoView {
                                     Operation::Add => stored + current_val,
                                     Operation::Subtract => stored - current_val,
                                     Operation::Multiply => stored * current_val,
-                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                    Operation::Divide => {
+                                        if current_val != 0.0 {
+                                            stored / current_val
+                                        } else {
+                                            f64::NAN
+                                        }
+                                    }
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
+                            set_stored_value
+                                .set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Subtract);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Subtract));
@@ -200,11 +214,18 @@ pub fn Calculator() -> impl IntoView {
                                     Operation::Add => stored + current_val,
                                     Operation::Subtract => stored - current_val,
                                     Operation::Multiply => stored * current_val,
-                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                    Operation::Divide => {
+                                        if current_val != 0.0 {
+                                            stored / current_val
+                                        } else {
+                                            f64::NAN
+                                        }
+                                    }
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
+                            set_stored_value
+                                .set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Multiply);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Multiply));
@@ -222,11 +243,18 @@ pub fn Calculator() -> impl IntoView {
                                     Operation::Add => stored + current_val,
                                     Operation::Subtract => stored - current_val,
                                     Operation::Multiply => stored * current_val,
-                                    Operation::Divide => if current_val != 0.0 { stored / current_val } else { f64::NAN },
+                                    Operation::Divide => {
+                                        if current_val != 0.0 {
+                                            stored / current_val
+                                        } else {
+                                            f64::NAN
+                                        }
+                                    }
                                 };
                                 set_display.set(format_result(result));
                             }
-                            set_stored_value.set(strip_separators(&display.get()).parse().unwrap_or(0.0));
+                            set_stored_value
+                                .set(strip_separators(&display.get()).parse().unwrap_or(0.0));
                             set_current_op.set(Operation::Divide);
                             set_clear_on_next.set(true);
                             set_active_operator.set(Some(Operation::Divide));
@@ -275,7 +303,7 @@ pub fn Calculator() -> impl IntoView {
                     "Backspace" | "Delete" => {
                         let current = strip_separators(&display.get());
                         if current.len() > 1 {
-                            let new_value = current[..current.len()-1].to_string();
+                            let new_value = current[..current.len() - 1].to_string();
                             set_display.set(format_display_with_separators(&new_value));
                         } else {
                             set_display.set(String::from("0"));
@@ -376,7 +404,11 @@ fn format_with_separators(n: i64) -> String {
         .chars()
         .rev()
         .collect();
-    if negative { format!("-{}", formatted) } else { formatted }
+    if negative {
+        format!("-{}", formatted)
+    } else {
+        formatted
+    }
 }
 
 /// Format a display string with thousand separators while preserving decimal part
@@ -393,7 +425,11 @@ fn format_display_with_separators(s: &str) -> String {
 
     // Format integer part with separators
     let negative = integer_part.starts_with('-');
-    let digits: String = if negative { integer_part[1..].to_string() } else { integer_part.clone() };
+    let digits: String = if negative {
+        integer_part[1..].to_string()
+    } else {
+        integer_part.clone()
+    };
 
     if digits.is_empty() {
         return s.to_string();
@@ -409,7 +445,11 @@ fn format_display_with_separators(s: &str) -> String {
         .rev()
         .collect();
 
-    let formatted_integer = if negative { format!("-{}", formatted) } else { formatted };
+    let formatted_integer = if negative {
+        format!("-{}", formatted)
+    } else {
+        formatted
+    };
 
     // Recombine with decimal part if present
     match decimal_part {

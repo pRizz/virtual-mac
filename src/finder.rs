@@ -148,23 +148,57 @@ pub fn Finder() -> impl IntoView {
 
     // Sidebar favorites with their corresponding paths
     let sidebar_favorites = vec![
-        SidebarItem { name: "AirDrop", icon: "📡", path: None },
-        SidebarItem { name: "Recents", icon: "🕐", path: None },
-        SidebarItem { name: "Applications", icon: "📲", path: Some("/Applications") },
-        SidebarItem { name: "Desktop", icon: "🖥", path: Some("/Desktop") },
-        SidebarItem { name: "Documents", icon: "📄", path: Some("/Documents") },
-        SidebarItem { name: "Downloads", icon: "📥", path: Some("/Downloads") },
+        SidebarItem {
+            name: "AirDrop",
+            icon: "📡",
+            path: None,
+        },
+        SidebarItem {
+            name: "Recents",
+            icon: "🕐",
+            path: None,
+        },
+        SidebarItem {
+            name: "Applications",
+            icon: "📲",
+            path: Some("/Applications"),
+        },
+        SidebarItem {
+            name: "Desktop",
+            icon: "🖥",
+            path: Some("/Desktop"),
+        },
+        SidebarItem {
+            name: "Documents",
+            icon: "📄",
+            path: Some("/Documents"),
+        },
+        SidebarItem {
+            name: "Downloads",
+            icon: "📥",
+            path: Some("/Downloads"),
+        },
     ];
 
     // Sidebar iCloud items
-    let sidebar_icloud = vec![
-        SidebarItem { name: "iCloud Drive", icon: "☁️", path: Some("/") },
-    ];
+    let sidebar_icloud = vec![SidebarItem {
+        name: "iCloud Drive",
+        icon: "☁️",
+        path: Some("/"),
+    }];
 
     // Sidebar locations
     let sidebar_locations = vec![
-        SidebarItem { name: "Macintosh HD", icon: "💾", path: Some("/") },
-        SidebarItem { name: "Network", icon: "🌐", path: None },
+        SidebarItem {
+            name: "Macintosh HD",
+            icon: "💾",
+            path: Some("/"),
+        },
+        SidebarItem {
+            name: "Network",
+            icon: "🌐",
+            path: None,
+        },
     ];
 
     // Sidebar tags (visual only - no functionality)
@@ -228,12 +262,11 @@ pub fn Finder() -> impl IntoView {
         let _ = fs.version.get();
 
         match selected_sidebar.get() {
-            "Recents" => {
-                fs.get_recents(10)
-                    .into_iter()
-                    .map(|e| FileItem::from_entry(&e))
-                    .collect()
-            }
+            "Recents" => fs
+                .get_recents(10)
+                .into_iter()
+                .map(|e| FileItem::from_entry(&e))
+                .collect(),
             "AirDrop" | "Network" => Vec::new(),
             _ => {
                 let path = current_path.get();

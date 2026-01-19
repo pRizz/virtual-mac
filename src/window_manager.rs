@@ -1,5 +1,5 @@
-use leptos::prelude::*;
 use leptos::ev::MouseEvent;
+use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[cfg(target_arch = "wasm32")]
@@ -10,14 +10,14 @@ use wasm_bindgen::JsCast;
 /// Menu bar height in pixels (matches CSS --menubar-height)
 const MENU_BAR_HEIGHT: f64 = 25.0;
 
-use crate::finder::Finder;
 use crate::calculator::Calculator;
+use crate::finder::Finder;
+use crate::notes::Notes;
 use crate::notification::NotificationState;
 use crate::system_settings::SystemSettings;
 use crate::system_state::{MinimizedWindow, SystemState};
 use crate::terminal::Terminal;
 use crate::textedit::TextEdit;
-use crate::notes::Notes;
 
 /// Actions that can be triggered via keyboard shortcuts
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
@@ -109,7 +109,15 @@ pub struct WindowState {
 }
 
 impl WindowState {
-    pub fn new_with_app(id: WindowId, title: &str, x: f64, y: f64, width: f64, height: f64, app_type: AppType) -> Self {
+    pub fn new_with_app(
+        id: WindowId,
+        title: &str,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        app_type: AppType,
+    ) -> Self {
         Self {
             id,
             title: title.to_string(),
@@ -227,12 +235,18 @@ fn load_desktop_state() -> Option<(Vec<WindowState>, usize, i32, bool)> {
                 if let Ok(Some(json)) = storage.get_item(STORAGE_KEY) {
                     if let Ok(state) = serde_json::from_str::<PersistedDesktopState>(&json) {
                         let schema_mismatch = state.schema_version != CURRENT_SCHEMA_VERSION;
-                        let windows: Vec<WindowState> = state.windows
+                        let windows: Vec<WindowState> = state
+                            .windows
                             .iter()
                             .enumerate()
                             .map(|(i, pw)| WindowState::from_persisted(pw, i + 1))
                             .collect();
-                        return Some((windows, state.next_window_id, state.top_z_index, schema_mismatch));
+                        return Some((
+                            windows,
+                            state.next_window_id,
+                            state.top_z_index,
+                            schema_mismatch,
+                        ));
                     }
                 }
             }
@@ -258,7 +272,13 @@ fn clear_desktop_state() {
 #[derive(Clone, Debug, PartialEq)]
 enum DragOperation {
     None,
-    Move { window_id: WindowId, start_x: f64, start_y: f64, window_start_x: f64, window_start_y: f64 },
+    Move {
+        window_id: WindowId,
+        start_x: f64,
+        start_y: f64,
+        window_start_x: f64,
+        window_start_y: f64,
+    },
     Resize {
         window_id: WindowId,
         direction: ResizeDirection,
@@ -267,13 +287,20 @@ enum DragOperation {
         window_start_x: f64,
         window_start_y: f64,
         window_start_width: f64,
-        window_start_height: f64
+        window_start_height: f64,
     },
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 enum ResizeDirection {
-    N, S, E, W, NE, NW, SE, SW,
+    N,
+    S,
+    E,
+    W,
+    NE,
+    NW,
+    SE,
+    SW,
 }
 
 /// Default windows when no persisted state exists
@@ -281,8 +308,24 @@ fn default_windows() -> Vec<WindowState> {
     vec![
         WindowState::new_with_app(1, "Finder", 100.0, 80.0, 600.0, 400.0, AppType::Finder),
         WindowState::new_with_app(2, "Terminal", 255.0, 165.0, 600.0, 400.0, AppType::Terminal),
-        WindowState::new_with_app(3, "TextEdit", 1200.0, 150.0, 500.0, 400.0, AppType::TextEdit),
-        WindowState::new_with_app(4, "Calculator", 900.0, 100.0, 280.0, 540.0, AppType::Calculator),
+        WindowState::new_with_app(
+            3,
+            "TextEdit",
+            1200.0,
+            150.0,
+            500.0,
+            400.0,
+            AppType::TextEdit,
+        ),
+        WindowState::new_with_app(
+            4,
+            "Calculator",
+            900.0,
+            100.0,
+            280.0,
+            540.0,
+            AppType::Calculator,
+        ),
     ]
 }
 
@@ -293,8 +336,8 @@ pub fn WindowManager() -> impl IntoView {
     let notification_state = expect_context::<NotificationState>();
 
     // Load persisted state or use defaults
-    let (initial_windows, initial_next_id, initial_top_z, schema_mismatch) =
-        load_desktop_state().unwrap_or_else(|| {
+    let (initial_windows, initial_next_id, initial_top_z, schema_mismatch) = load_desktop_state()
+        .unwrap_or_else(|| {
             let defaults = default_windows();
             let count = defaults.len();
             (defaults, count + 1, count as i32, false)
@@ -374,10 +417,17 @@ pub fn WindowManager() -> impl IntoView {
             system_state.open_system_settings.set(false);
 
             // Check if System Settings is already open
-            let already_open = windows.get().iter().any(|w| w.app_type == AppType::SystemSettings);
+            let already_open = windows
+                .get()
+                .iter()
+                .any(|w| w.app_type == AppType::SystemSettings);
             if already_open {
                 // Bring existing window to front
-                if let Some(win) = windows.get().iter().find(|w| w.app_type == AppType::SystemSettings) {
+                if let Some(win) = windows
+                    .get()
+                    .iter()
+                    .find(|w| w.app_type == AppType::SystemSettings)
+                {
                     let window_id = win.id;
                     let new_z = top_z_index.get() + 1;
                     set_top_z_index.set(new_z);
@@ -430,7 +480,11 @@ pub fn WindowManager() -> impl IntoView {
 
             if let Some(target_type) = app_type {
                 // Check if app is already open
-                let existing = windows.get().iter().find(|w| w.app_type == target_type).map(|w| (w.id, w.is_minimized));
+                let existing = windows
+                    .get()
+                    .iter()
+                    .find(|w| w.app_type == target_type)
+                    .map(|w| (w.id, w.is_minimized));
 
                 if let Some((window_id, is_minimized)) = existing {
                     // Bring existing window to front
@@ -462,7 +516,8 @@ pub fn WindowManager() -> impl IntoView {
                     };
 
                     set_windows.update(|windows| {
-                        let mut new_window = WindowState::new_with_app(id, title, x, y, w, h, target_type);
+                        let mut new_window =
+                            WindowState::new_with_app(id, title, x, y, w, h, target_type);
                         new_window.z_index = new_z;
                         windows.push(new_window);
                     });
@@ -559,7 +614,9 @@ pub fn WindowManager() -> impl IntoView {
                 // This will be the first item
                 12.0 + item_width + 12.0 // padding + item + padding
             } else {
-                12.0 + (minimized_count as f64 + 1.0) * item_width + (minimized_count as f64) * item_gap + 12.0
+                12.0 + (minimized_count as f64 + 1.0) * item_width
+                    + (minimized_count as f64) * item_gap
+                    + 12.0
             };
 
             // The dock wrapper centers both docks together
@@ -567,7 +624,11 @@ pub fn WindowManager() -> impl IntoView {
             let dock_start_x = (screen_width - total_width) / 2.0;
 
             // Position of the new item in the minimized dock
-            dock_start_x + main_dock_width + minimized_dock_start_offset + (minimized_count as f64 * (item_width + item_gap)) + item_width / 2.0
+            dock_start_x
+                + main_dock_width
+                + minimized_dock_start_offset
+                + (minimized_count as f64 * (item_width + item_gap))
+                + item_width / 2.0
         };
         #[cfg(not(target_arch = "wasm32"))]
         let target_x = 960.0; // Default center for non-wasm
@@ -645,11 +706,16 @@ pub fn WindowManager() -> impl IntoView {
                 .unwrap_or(1920.0);
 
             // Find the index of this window in the minimized windows list
-            let minimized_windows: Vec<_> = windows.get().iter()
+            let minimized_windows: Vec<_> = windows
+                .get()
+                .iter()
                 .filter(|w| w.is_minimized)
                 .map(|w| w.id)
                 .collect();
-            let item_index = minimized_windows.iter().position(|&id| id == window_id).unwrap_or(0);
+            let item_index = minimized_windows
+                .iter()
+                .position(|&id| id == window_id)
+                .unwrap_or(0);
             let minimized_count = minimized_windows.len();
 
             // Main dock is approximately 930px wide
@@ -659,14 +725,21 @@ pub fn WindowManager() -> impl IntoView {
             let item_gap = 6.0;
 
             // Calculate minimized dock width
-            let minimized_dock_width = 12.0 + (minimized_count as f64) * item_width + ((minimized_count - 1).max(0) as f64) * item_gap + 12.0;
+            let minimized_dock_width = 12.0
+                + (minimized_count as f64) * item_width
+                + ((minimized_count - 1).max(0) as f64) * item_gap
+                + 12.0;
 
             // The dock wrapper centers both docks together
             let total_width = main_dock_width + 16.0 + minimized_dock_width;
             let dock_start_x = (screen_width - total_width) / 2.0;
 
             // Position of this item in the minimized dock
-            dock_start_x + main_dock_width + minimized_dock_start_offset + (item_index as f64 * (item_width + item_gap)) + item_width / 2.0
+            dock_start_x
+                + main_dock_width
+                + minimized_dock_start_offset
+                + (item_index as f64 * (item_width + item_gap))
+                + item_width / 2.0
         };
         #[cfg(not(target_arch = "wasm32"))]
         let source_x = 960.0;
@@ -766,17 +839,32 @@ pub fn WindowManager() -> impl IntoView {
         let op = drag_op.get();
         match op {
             DragOperation::None => {}
-            DragOperation::Move { window_id, start_x, start_y, window_start_x, window_start_y } => {
+            DragOperation::Move {
+                window_id,
+                start_x,
+                start_y,
+                window_start_x,
+                window_start_y,
+            } => {
                 let dx = e.client_x() as f64 - start_x;
                 let dy = e.client_y() as f64 - start_y;
                 set_windows.update(|windows| {
                     if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
-                        win.x = (window_start_x + dx).max(0.0);
+                        win.x = window_start_x + dx;
                         win.y = (window_start_y + dy).max(MENU_BAR_HEIGHT);
                     }
                 });
             }
-            DragOperation::Resize { window_id, direction, start_x, start_y, window_start_x, window_start_y, window_start_width, window_start_height } => {
+            DragOperation::Resize {
+                window_id,
+                direction,
+                start_x,
+                start_y,
+                window_start_x,
+                window_start_y,
+                window_start_width,
+                window_start_height,
+            } => {
                 let dx = e.client_x() as f64 - start_x;
                 let dy = e.client_y() as f64 - start_y;
 
@@ -852,17 +940,32 @@ pub fn WindowManager() -> impl IntoView {
             let op = drag_op.get_untracked();
             match op {
                 DragOperation::None => {}
-                DragOperation::Move { window_id, start_x, start_y, window_start_x, window_start_y } => {
+                DragOperation::Move {
+                    window_id,
+                    start_x,
+                    start_y,
+                    window_start_x,
+                    window_start_y,
+                } => {
                     let dx = e.client_x() as f64 - start_x;
                     let dy = e.client_y() as f64 - start_y;
                     set_windows.update(|windows| {
                         if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
-                            win.x = (window_start_x + dx).max(0.0);
+                            win.x = window_start_x + dx;
                             win.y = (window_start_y + dy).max(MENU_BAR_HEIGHT);
                         }
                     });
                 }
-                DragOperation::Resize { window_id, direction, start_x, start_y, window_start_x, window_start_y, window_start_width, window_start_height } => {
+                DragOperation::Resize {
+                    window_id,
+                    direction,
+                    start_x,
+                    start_y,
+                    window_start_x,
+                    window_start_y,
+                    window_start_width,
+                    window_start_height,
+                } => {
                     let dx = e.client_x() as f64 - start_x;
                     let dy = e.client_y() as f64 - start_y;
 
@@ -950,7 +1053,9 @@ pub fn WindowManager() -> impl IntoView {
 
     // Get the active (top z-index non-minimized) window
     let active_window_id = move || {
-        windows.get().iter()
+        windows
+            .get()
+            .iter()
             .filter(|w| !w.is_minimized)
             .max_by_key(|w| w.z_index)
             .map(|w| w.id)
@@ -1139,4 +1244,3 @@ pub fn WindowManager() -> impl IntoView {
         </div>
     }
 }
-

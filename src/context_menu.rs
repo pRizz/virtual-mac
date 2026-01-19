@@ -105,10 +105,7 @@ fn get_menu_items(menu_type: &ContextMenuType) -> Vec<ContextMenuItem> {
             ContextMenuItem::new("Share..."),
         ],
         ContextMenuType::DockItem { name } => {
-            let is_running = matches!(
-                name.as_str(),
-                "Finder" | "Safari" | "Mail" | "Terminal"
-            );
+            let is_running = matches!(name.as_str(), "Finder" | "Safari" | "Mail" | "Terminal");
             let mut items = vec![
                 ContextMenuItem::new("Options"),
                 ContextMenuItem::separator(),

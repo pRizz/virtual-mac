@@ -1,6 +1,6 @@
-use leptos::prelude::*;
 use leptos::ev::MouseEvent;
 use leptos::html::Div;
+use leptos::prelude::*;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -31,7 +31,10 @@ pub fn TextEdit() -> impl IntoView {
 
     // Web-safe fonts that work across browsers
     const FONTS: &[(&str, &str)] = &[
-        ("Helvetica Neue", "Helvetica Neue, Helvetica, Arial, sans-serif"),
+        (
+            "Helvetica Neue",
+            "Helvetica Neue, Helvetica, Arial, sans-serif",
+        ),
         ("Arial", "Arial, Helvetica, sans-serif"),
         ("Times New Roman", "Times New Roman, Times, serif"),
         ("Georgia", "Georgia, serif"),

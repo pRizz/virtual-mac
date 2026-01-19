@@ -1,6 +1,6 @@
+use crate::context_menu::{show_context_menu, ContextMenuState, ContextMenuType};
+use crate::wallpaper::{get_wallpaper_gradient, use_wallpaper_context};
 use leptos::prelude::*;
-use crate::context_menu::{ContextMenuState, ContextMenuType, show_context_menu};
-use crate::wallpaper::{use_wallpaper_context, get_wallpaper_gradient};
 
 #[derive(Clone, Copy, Default)]
 struct SelectionRect {
@@ -30,9 +30,7 @@ impl SelectionRect {
 }
 
 #[component]
-pub fn Desktop(
-    context_menu_state: WriteSignal<ContextMenuState>,
-) -> impl IntoView {
+pub fn Desktop(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView {
     let wallpaper_ctx = use_wallpaper_context();
     let (selection, set_selection) = signal(SelectionRect::default());
 
@@ -122,8 +120,9 @@ pub fn Desktop(
                 />
             </Show>
             <div class="build-info">
-                <span class="build-version">"v"{env!("CARGO_PKG_VERSION")}</span>
-                <span class="build-time">"Built at "{env!("BUILD_TIME")}</span>
+                <span class="attribution">"Vibe coded by Peter Ryszkiewicz"</span>
+                <span class="attribution">"with Claude Code, GSD, Cursor, and Ralph"</span>
+                <span class="build-version">"v"{env!("CARGO_PKG_VERSION")}" · Built at "{env!("BUILD_TIME")}</span>
             </div>
         </div>
     }

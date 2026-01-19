@@ -101,10 +101,22 @@ impl VirtualFileSystem {
 
         // Root directories
         entries.insert("/".to_string(), FileEntry::new_directory("/", ""));
-        entries.insert("/Applications".to_string(), FileEntry::new_directory("/Applications", "Applications"));
-        entries.insert("/Desktop".to_string(), FileEntry::new_directory("/Desktop", "Desktop"));
-        entries.insert("/Documents".to_string(), FileEntry::new_directory("/Documents", "Documents"));
-        entries.insert("/Downloads".to_string(), FileEntry::new_directory("/Downloads", "Downloads"));
+        entries.insert(
+            "/Applications".to_string(),
+            FileEntry::new_directory("/Applications", "Applications"),
+        );
+        entries.insert(
+            "/Desktop".to_string(),
+            FileEntry::new_directory("/Desktop", "Desktop"),
+        );
+        entries.insert(
+            "/Documents".to_string(),
+            FileEntry::new_directory("/Documents", "Documents"),
+        );
+        entries.insert(
+            "/Downloads".to_string(),
+            FileEntry::new_directory("/Downloads", "Downloads"),
+        );
 
         // Applications
         let apps = vec![
@@ -390,7 +402,9 @@ impl VirtualFileSystem {
             if let Some(window) = web_sys::window() {
                 if let Ok(Some(storage)) = window.local_storage() {
                     if let Ok(Some(json)) = storage.get_item("virtualmac_fs") {
-                        if let Ok(entries) = serde_json::from_str::<HashMap<String, FileEntry>>(&json) {
+                        if let Ok(entries) =
+                            serde_json::from_str::<HashMap<String, FileEntry>>(&json)
+                        {
                             self.entries.set(entries);
                             self.initialized.set(true);
                             self.bump_version();
@@ -406,13 +420,12 @@ impl VirtualFileSystem {
     /// Get recent files (most recently modified)
     pub fn get_recents(&self, limit: usize) -> Vec<FileEntry> {
         let entries = self.entries.get();
-        let mut files: Vec<_> = entries
-            .values()
-            .filter(|e| e.is_file())
-            .cloned()
-            .collect();
+        let mut files: Vec<_> = entries.values().filter(|e| e.is_file()).cloned().collect();
         files.sort_by(|a, b| {
-            b.metadata.modified.partial_cmp(&a.metadata.modified).unwrap_or(std::cmp::Ordering::Equal)
+            b.metadata
+                .modified
+                .partial_cmp(&a.metadata.modified)
+                .unwrap_or(std::cmp::Ordering::Equal)
         });
         files.truncate(limit);
         files

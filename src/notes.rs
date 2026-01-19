@@ -1,5 +1,5 @@
-use leptos::prelude::*;
 use leptos::html;
+use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
@@ -148,7 +148,10 @@ pub fn Notes() -> impl IntoView {
     // Create new note handler
     let create_note = move |_| {
         let now = js_sys::Date::now();
-        let folder_id = state.get().selected_folder_id.clone()
+        let folder_id = state
+            .get()
+            .selected_folder_id
+            .clone()
             .unwrap_or_else(|| "all-notes".to_string());
 
         // Don't create notes in Recently Deleted
@@ -655,9 +658,13 @@ fn extract_title(content: &str) -> String {
             let mut result = String::new();
             let mut in_tag = false;
             for c in s.chars() {
-                if c == '<' { in_tag = true; }
-                else if c == '>' { in_tag = false; }
-                else if !in_tag { result.push(c); }
+                if c == '<' {
+                    in_tag = true;
+                } else if c == '>' {
+                    in_tag = false;
+                } else if !in_tag {
+                    result.push(c);
+                }
             }
             result.trim().to_string()
         })
@@ -666,17 +673,14 @@ fn extract_title(content: &str) -> String {
 }
 
 #[component]
-fn NoteEditor(
-    state: ReadSignal<NotesState>,
-    set_state: WriteSignal<NotesState>,
-) -> impl IntoView {
+fn NoteEditor(state: ReadSignal<NotesState>, set_state: WriteSignal<NotesState>) -> impl IntoView {
     let editor_ref: NodeRef<html::Div> = NodeRef::new();
 
     let selected_note = Memo::new(move |_| {
         let st = state.get();
-        st.selected_note_id.as_ref().and_then(|id| {
-            st.notes.iter().find(|n| &n.id == id).cloned()
-        })
+        st.selected_note_id
+            .as_ref()
+            .and_then(|id| st.notes.iter().find(|n| &n.id == id).cloned())
     });
 
     // Load content into editor when selected note changes
@@ -706,26 +710,31 @@ fn NoteEditor(
                 let el_clone = el.clone();
                 let set_state_clone = set_state;
 
-                let handler = wasm_bindgen::closure::Closure::wrap(Box::new(move |e: web_sys::Event| {
-                    if let Some(target) = e.target() {
-                        if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
-                            if input.class_list().contains("note-checkbox") {
-                                // Checkbox was clicked, save the state
-                                let content = el_clone.inner_html();
-                                set_state_clone.update(|s| {
-                                    if let Some(note_id) = &s.selected_note_id {
-                                        if let Some(note) = s.notes.iter_mut().find(|n| &n.id == note_id) {
-                                            note.content = content.clone();
-                                            note.updated_at = js_sys::Date::now();
+                let handler =
+                    wasm_bindgen::closure::Closure::wrap(Box::new(move |e: web_sys::Event| {
+                        if let Some(target) = e.target() {
+                            if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
+                                if input.class_list().contains("note-checkbox") {
+                                    // Checkbox was clicked, save the state
+                                    let content = el_clone.inner_html();
+                                    set_state_clone.update(|s| {
+                                        if let Some(note_id) = &s.selected_note_id {
+                                            if let Some(note) =
+                                                s.notes.iter_mut().find(|n| &n.id == note_id)
+                                            {
+                                                note.content = content.clone();
+                                                note.updated_at = js_sys::Date::now();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
                         }
-                    }
-                }) as Box<dyn Fn(web_sys::Event)>);
+                    })
+                        as Box<dyn Fn(web_sys::Event)>);
 
-                let _ = el.add_event_listener_with_callback("click", handler.as_ref().unchecked_ref());
+                let _ =
+                    el.add_event_listener_with_callback("click", handler.as_ref().unchecked_ref());
                 handler.forget(); // Keep the closure alive
             }
         }

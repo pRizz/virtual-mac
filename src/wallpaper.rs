@@ -88,7 +88,10 @@ pub struct WallpaperContext {
 /// Provide wallpaper context to the application
 pub fn provide_wallpaper_context() -> WallpaperContext {
     let (current, set_current) = signal(WALLPAPERS[0].id);
-    let ctx = WallpaperContext { current, set_current };
+    let ctx = WallpaperContext {
+        current,
+        set_current,
+    };
     provide_context(ctx);
     ctx
 }

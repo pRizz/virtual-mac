@@ -62,7 +62,8 @@ impl NotificationState {
     /// Dismiss a notification by ID
     #[allow(dead_code)]
     pub fn dismiss(&self, id: usize) {
-        self.notifications.update(|n| n.retain(|notif| notif.id != id));
+        self.notifications
+            .update(|n| n.retain(|notif| notif.id != id));
     }
 }
 
@@ -102,11 +103,7 @@ pub fn NotificationContainer() -> impl IntoView {
 
 /// Individual notification component
 #[component]
-fn NotificationItem(
-    id: usize,
-    title: String,
-    message: String,
-) -> impl IntoView {
+fn NotificationItem(id: usize, title: String, message: String) -> impl IntoView {
     let notification_state = expect_context::<NotificationState>();
 
     let on_dismiss = move |_| {

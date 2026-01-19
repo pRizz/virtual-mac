@@ -1,10 +1,10 @@
-use leptos::prelude::*;
+use crate::context_menu::{show_context_menu, ContextMenuState, ContextMenuType};
+use crate::system_state::{MinimizedWindow, SystemState};
 use leptos::ev::MouseEvent;
+use leptos::prelude::*;
 #[allow(unused_imports)]
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
-use crate::context_menu::{ContextMenuState, ContextMenuType, show_context_menu};
-use crate::system_state::{MinimizedWindow, SystemState};
 
 /// Represents a dock item (app icon)
 #[derive(Clone, Debug)]
@@ -16,8 +16,18 @@ struct DockItem {
 }
 
 impl DockItem {
-    fn new(name: &'static str, icon: &'static str, icon_class: &'static str, is_running: bool) -> Self {
-        Self { name, icon, icon_class, is_running }
+    fn new(
+        name: &'static str,
+        icon: &'static str,
+        icon_class: &'static str,
+        is_running: bool,
+    ) -> Self {
+        Self {
+            name,
+            icon,
+            icon_class,
+            is_running,
+        }
     }
 }
 
@@ -74,7 +84,9 @@ fn DockIcon(
             context_menu_state,
             x,
             y,
-            ContextMenuType::DockItem { name: item_name.to_string() },
+            ContextMenuType::DockItem {
+                name: item_name.to_string(),
+            },
         );
     };
 
@@ -164,9 +176,7 @@ fn TrashIcon(
 
 /// Minimized window dock item component
 #[component]
-fn MinimizedDockItem(
-    window: MinimizedWindow,
-) -> impl IntoView {
+fn MinimizedDockItem(window: MinimizedWindow) -> impl IntoView {
     let system_state = expect_context::<SystemState>();
     let window_id = window.id;
     let icon = window.icon.clone();
@@ -194,9 +204,7 @@ fn MinimizedDockItem(
 
 /// Main dock component
 #[component]
-pub fn Dock(
-    context_menu_state: WriteSignal<ContextMenuState>,
-) -> impl IntoView {
+pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView {
     let system_state = expect_context::<SystemState>();
     let (mouse_x, set_mouse_x) = signal(0.0);
     let (is_hovering, set_is_hovering) = signal(false);
@@ -228,7 +236,9 @@ pub fn Dock(
             context_menu_state,
             x,
             y,
-            ContextMenuType::DockItem { name: "Downloads".to_string() },
+            ContextMenuType::DockItem {
+                name: "Downloads".to_string(),
+            },
         );
     };
 
