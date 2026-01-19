@@ -28,6 +28,8 @@ pub struct SystemState {
     pub active_app: RwSignal<String>,
     /// Minimized windows for dock display
     pub minimized_windows: RwSignal<Vec<MinimizedWindow>>,
+    /// Open windows for dock running indicators
+    pub open_windows: RwSignal<Vec<String>>,
     /// Request to restore a minimized window by ID
     pub restore_window_id: RwSignal<Option<usize>>,
 }
@@ -64,6 +66,7 @@ impl SystemState {
             reset_desktop: RwSignal::new(false),
             active_app: RwSignal::new("Finder".to_string()), // Default to Finder like real macOS
             minimized_windows: RwSignal::new(Vec::new()),
+            open_windows: RwSignal::new(Vec::new()),
             restore_window_id: RwSignal::new(None),
         }
     }

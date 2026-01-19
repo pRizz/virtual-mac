@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 **Milestone:** v2.0 Persistence & Polish
-**Phase:** 2 of 5 (02-terminal-textedit-persistence)
-**Plan:** 3 of 3 complete (including gap closure)
-**Status:** Phase complete, UAT passed (7/7)
+**Phase:** 3 of 5 (03-dock-state)
+**Plan:** 1 of 1 complete
+**Status:** Phase complete
 **Started:** 2026-01-19
-**Last activity:** 2026-01-19 - Completed 02-03-PLAN.md (gap closure)
+**Last activity:** 2026-01-19 - Completed 03-01-PLAN.md
 
-Progress: [####------] 40% (2 of 5 phases complete)
+Progress: [######----] 60% (3 of 5 phases complete)
 
 ## Milestones
 
@@ -29,15 +29,15 @@ Progress: [####------] 40% (2 of 5 phases complete)
 ## Session Continuity
 
 **Last Session:** 2026-01-19
-- Completed Phase 02 gap closure (02-03-PLAN.md)
-- Fixed TextEdit toolbar settings not applying to new text after restore
-- Added Effect to call execCommand for fontName, fontSize, alignment on mount
-- UAT complete: 7/7 tests passing for Phase 2
+- Completed Phase 03 dock state persistence (03-01-PLAN.md)
+- Added DockState persistence under virtualmac_dock
+- Running indicators now derive from open windows
+- Dock order renders from persisted pinned list
 
 **Context for Next Session:**
-- Phase 2 fully complete (Terminal & TextEdit persistence, UAT passed)
-- Continue with Phase 3 (Dock State) or other v2.0 tasks
-- Calculator, Terminal, TextEdit all have working persistence
+- Phase 3 complete (dock persistence and indicators)
+- Continue with Phase 4 (Notification Polish) or Phase 5 (About VirtualMac)
+- Persistence patterns now cover Calculator, Terminal, TextEdit, Dock
 
 ## Key Decisions
 
@@ -49,6 +49,7 @@ Progress: [####------] 40% (2 of 5 phases complete)
 | 2026-01-19 | Output history NOT persisted | Matches real Terminal behavior - only commands persist |
 | 2026-01-19 | Memory-only persistence | Display, stored_value, current_op are transient; only memory persists |
 | 2026-01-19 | Schema version pattern | CalculatorState includes schema_version for future migrations |
+| 2026-01-19 | Dock persistence stores pinned list only | Running indicators derived from open windows |
 | 2026-01-19 | Orange memory indicator | #ffa500 matches macOS Calculator memory indicator |
 | 2026-01-18 | MENU_BAR_HEIGHT = 25.0 | Matches CSS --menubar-height variable |
 | 2026-01-18 | pointer-events: none on window title | Allows click-through to titlebar for dragging |

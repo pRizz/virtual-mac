@@ -2,26 +2,97 @@ use crate::context_menu::{show_context_menu, ContextMenuState, ContextMenuType};
 use crate::system_state::{MinimizedWindow, SystemState};
 use leptos::ev::MouseEvent;
 use leptos::prelude::*;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 #[allow(unused_imports)]
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 
+#[allow(dead_code)]
+const STORAGE_KEY: &str = "virtualmac_dock";
+#[allow(dead_code)]
+const CURRENT_SCHEMA_VERSION: u32 = 1;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct DockState {
+    schema_version: u32,
+    pinned_apps: Vec<String>,
+}
+
+impl DockState {
+    fn default_with_pins() -> Self {
+        Self {
+            schema_version: CURRENT_SCHEMA_VERSION,
+            pinned_apps: default_pinned_apps(),
+        }
+    }
+}
+
+fn default_pinned_apps() -> Vec<String> {
+    vec![
+        "Finder".to_string(),
+        "Safari".to_string(),
+        "Messages".to_string(),
+        "Mail".to_string(),
+        "Photos".to_string(),
+        "Music".to_string(),
+        "Notes".to_string(),
+        "Calendar".to_string(),
+        "TextEdit".to_string(),
+        "Calculator".to_string(),
+        "System Settings".to_string(),
+        "Terminal".to_string(),
+    ]
+}
+
+fn save_to_storage(state: &DockState) {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(json) = serde_json::to_string(state) {
+                    let _ = storage.set_item(STORAGE_KEY, &json);
+                }
+            }
+        }
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let _ = state;
+    }
+}
+
+fn load_from_storage() -> DockState {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(Some(json)) = storage.get_item(STORAGE_KEY) {
+                    if let Ok(state) = serde_json::from_str::<DockState>(&json) {
+                        if state.schema_version == CURRENT_SCHEMA_VERSION
+                            && !state.pinned_apps.is_empty()
+                        {
+                            return state;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    DockState::default_with_pins()
+}
+
 /// Represents a dock item (app icon)
 #[derive(Clone, Debug)]
 struct DockItem {
-    name: &'static str,
+    name: String,
     icon: &'static str,
     icon_class: &'static str,
     is_running: bool,
 }
 
 impl DockItem {
-    fn new(
-        name: &'static str,
-        icon: &'static str,
-        icon_class: &'static str,
-        is_running: bool,
-    ) -> Self {
+    fn new(name: String, icon: &'static str, icon_class: &'static str, is_running: bool) -> Self {
         Self {
             name,
             icon,
@@ -52,7 +123,7 @@ fn DockIcon(
     context_menu_state: WriteSignal<ContextMenuState>,
 ) -> impl IntoView {
     let (scale, set_scale) = signal(1.0);
-    let item_name = item.name;
+    let item_name = item.name.clone();
     let item_icon = item.icon;
     let item_icon_class = item.icon_class;
     let item_is_running = item.is_running;
@@ -75,6 +146,7 @@ fn DockIcon(
         }
     });
 
+    let context_name = item_name.clone();
     let on_contextmenu = move |ev: MouseEvent| {
         ev.prevent_default();
         ev.stop_propagation();
@@ -85,19 +157,20 @@ fn DockIcon(
             x,
             y,
             ContextMenuType::DockItem {
-                name: item_name.to_string(),
+                name: context_name.clone(),
             },
         );
     };
 
+    let click_name = item_name.clone();
     let on_click = move |_: MouseEvent| {
-        system_state.request_open_app(item_name);
+        system_state.request_open_app(&click_name);
     };
 
     view! {
         <div
             class="dock-item"
-            data-tooltip=item_name
+            data-tooltip=item_name.clone()
             style:transform=move || format!(
                 "scale({}) translateY({}px)",
                 scale.get(),
@@ -209,23 +282,49 @@ pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView 
     let (mouse_x, set_mouse_x) = signal(0.0);
     let (is_hovering, set_is_hovering) = signal(false);
 
-    // App dock items
-    let apps = vec![
-        DockItem::new("Finder", "📂", "finder", true),
-        DockItem::new("Safari", "🧭", "safari", true),
-        DockItem::new("Messages", "💬", "messages", false),
-        DockItem::new("Mail", "✉️", "mail", true),
-        DockItem::new("Photos", "🖼", "photos", false),
-        DockItem::new("Music", "🎵", "music", false),
-        DockItem::new("Notes", "📝", "notes", true),
-        DockItem::new("Calendar", "📅", "calendar", false),
-        DockItem::new("TextEdit", "T", "textedit", true),
-        DockItem::new("Calculator", "=", "calculator", true),
-        DockItem::new("System Settings", "⚙️", "settings", false),
-        DockItem::new("Terminal", ">_", "terminal", true),
-    ];
+    let (dock_state, _set_dock_state) = signal(load_from_storage());
 
-    let num_apps = apps.len();
+    let app_catalog: HashMap<&'static str, (&'static str, &'static str)> = HashMap::from([
+        ("Finder", ("📂", "finder")),
+        ("Safari", ("🧭", "safari")),
+        ("Messages", ("💬", "messages")),
+        ("Mail", ("✉️", "mail")),
+        ("Photos", ("🖼", "photos")),
+        ("Music", ("🎵", "music")),
+        ("Notes", ("📝", "notes")),
+        ("Calendar", ("📅", "calendar")),
+        ("TextEdit", ("T", "textedit")),
+        ("Calculator", ("=", "calculator")),
+        ("System Settings", ("⚙️", "settings")),
+        ("Terminal", (">_", "terminal")),
+    ]);
+
+    Effect::new(move |_| {
+        let current_state = dock_state.get();
+        save_to_storage(&current_state);
+    });
+
+    let dock_items = move || {
+        let running_apps = system_state.open_windows.get();
+        dock_state
+            .get()
+            .pinned_apps
+            .into_iter()
+            .filter_map(|app_name| {
+                let app_name_str = app_name.as_str();
+                let (icon, icon_class) = app_catalog.get(app_name_str)?;
+                Some(DockItem::new(
+                    app_name.clone(),
+                    icon,
+                    icon_class,
+                    running_apps.contains(&app_name),
+                ))
+            })
+            .collect::<Vec<_>>()
+    };
+
+    let dock_items_for_count = dock_items.clone();
+    let num_apps = move || dock_items_for_count().len();
 
     let downloads_contextmenu = move |ev: MouseEvent| {
         ev.prevent_default();
@@ -263,7 +362,7 @@ pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView 
                     }
                 >
                     // App icons
-                    {apps.into_iter().enumerate().map(|(idx, item)| {
+                    {dock_items().into_iter().enumerate().map(|(idx, item)| {
                         view! {
                             <DockIcon
                                 item=item
@@ -282,16 +381,23 @@ pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView 
                     <div
                         class="dock-item"
                         data-tooltip="Downloads"
-                        style:transform=move || {
-                            let mx = mouse_x.get();
-                            let hovering = is_hovering.get();
-                            let idx = num_apps;
-                            if hovering && mx > 0.0 {
-                                let item_center = 62.0 * (idx as f64) + 44.0; // +44 for separator
-                                let scale = calculate_scale(item_center, mx, 1.8, 120.0);
-                                format!("scale({}) translateY({}px)", scale, (scale - 1.0) * -24.0)
-                            } else {
-                                "scale(1) translateY(0px)".to_string()
+                        style:transform={
+                            let num_apps = num_apps.clone();
+                            move || {
+                                let mx = mouse_x.get();
+                                let hovering = is_hovering.get();
+                                let idx = num_apps();
+                                if hovering && mx > 0.0 {
+                                    let item_center = 62.0 * (idx as f64) + 44.0; // +44 for separator
+                                    let scale = calculate_scale(item_center, mx, 1.8, 120.0);
+                                    format!(
+                                        "scale({}) translateY({}px)",
+                                        scale,
+                                        (scale - 1.0) * -24.0
+                                    )
+                                } else {
+                                    "scale(1) translateY(0px)".to_string()
+                                }
                             }
                         }
                         on:contextmenu=downloads_contextmenu
@@ -306,7 +412,7 @@ pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView 
                     <TrashIcon
                         mouse_x=mouse_x
                         is_hovering=is_hovering
-                        index=num_apps + 1
+                        index=num_apps() + 1
                         context_menu_state=context_menu_state
                     />
                 </div>

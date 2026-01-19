@@ -11,7 +11,7 @@
 |-------|------|------|--------------|--------|
 | 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | ✓ Complete |
 | 2 | Terminal & TextEdit Persistence | Extend patterns to remaining apps | REQ-3, REQ-4 | ✓ Complete |
-| 3 | Dock State | Dynamic running indicators + pinned apps | REQ-5 | Planned |
+| 3 | Dock State | Dynamic running indicators + pinned apps | REQ-5 | ✓ Complete |
 | 4 | Notification Polish | macOS-style animations | REQ-6 | Planned |
 | 5 | About VirtualMac | Credits dialog in Apple menu | REQ-1 | Planned |
 
@@ -70,6 +70,8 @@ Plans:
 
 ### Phase 3: Dock State
 
+**Status:** Complete (2026-01-19)
+
 **Goal:** Ensure running indicators work correctly and add pinned apps persistence.
 
 **Delivers:**
@@ -87,6 +89,11 @@ Plans:
 **Research needed:** Verify running indicator derivation from WindowManager/SystemState
 
 **Estimated scope:** Small-Medium - one file, integration verification
+
+**Plans:** 1 plan
+
+Plans:
+- [x] 03-01-PLAN.md - Dock state persistence and running indicators
 
 ---
 

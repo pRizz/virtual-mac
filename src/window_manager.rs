@@ -77,6 +77,20 @@ impl AppType {
     }
 }
 
+impl std::fmt::Display for AppType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let name = match self {
+            AppType::Calculator => "Calculator",
+            AppType::SystemSettings => "System Settings",
+            AppType::Terminal => "Terminal",
+            AppType::TextEdit => "TextEdit",
+            AppType::Notes => "Notes",
+            AppType::Finder => "Finder",
+        };
+        write!(f, "{name}")
+    }
+}
+
 /// Animation state for window minimize/restore
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub enum AnimationState {
@@ -391,6 +405,18 @@ pub fn WindowManager() -> impl IntoView {
             })
             .collect();
         system_state.minimized_windows.set(minimized);
+    });
+
+    // Sync open window app names for dock running indicators
+    Effect::new(move |_| {
+        let current_windows = windows.get();
+        let mut open_apps: Vec<String> = current_windows
+            .iter()
+            .map(|w| w.app_type.to_string())
+            .collect();
+        open_apps.sort();
+        open_apps.dedup();
+        system_state.open_windows.set(open_apps);
     });
 
     // Save state when windows change (debounced via effect)
