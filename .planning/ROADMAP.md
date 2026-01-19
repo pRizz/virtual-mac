@@ -9,7 +9,7 @@
 
 | Phase | Name | Goal | Requirements | Status |
 |-------|------|------|--------------|--------|
-| 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | ✓ Complete |
+| 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | Complete |
 | 2 | Terminal & TextEdit Persistence | Extend patterns to remaining apps | REQ-3, REQ-4 | Planned |
 | 3 | Dock State | Dynamic running indicators + pinned apps | REQ-5 | Planned |
 | 4 | Notification Polish | macOS-style animations | REQ-6 | Planned |
@@ -36,7 +36,7 @@
 **Plans:** 1 plan
 
 Plans:
-- [x] 01-01-PLAN.md — Add memory functionality and localStorage persistence
+- [x] 01-01-PLAN.md - Add memory functionality and localStorage persistence
 
 ---
 
@@ -59,9 +59,11 @@ Plans:
 
 **Dependencies:** Phase 1 (patterns established)
 
-**Research needed:** Terminal multi-window history strategy (shared vs per-window)
+**Plans:** 2 plans (Wave 1 - parallel)
 
-**Estimated scope:** Medium - two files, slightly more complex state
+Plans:
+- [ ] 02-01-PLAN.md - Terminal command history and cwd persistence
+- [ ] 02-02-PLAN.md - TextEdit content and toolbar settings persistence
 
 ---
 
@@ -164,5 +166,6 @@ Milestone is complete when:
 
 ---
 *Roadmap created: 2026-01-19*
-*Phase 1 planned: 2026-01-19*
+*Phase 1 complete: 2026-01-19*
+*Phase 2 planned: 2026-01-19*
 *Based on research synthesis: .planning/research/SUMMARY.md*
