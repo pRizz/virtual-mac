@@ -689,10 +689,8 @@ fn NoteEditor(state: ReadSignal<NotesState>, set_state: WriteSignal<NotesState>)
             if let Some(el) = editor_ref.get() {
                 el.set_inner_html(&note.content);
             }
-        } else {
-            if let Some(el) = editor_ref.get() {
-                el.set_inner_html("");
-            }
+        } else if let Some(el) = editor_ref.get() {
+            el.set_inner_html("");
         }
     });
 

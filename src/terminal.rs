@@ -169,14 +169,12 @@ pub fn Terminal() -> impl IntoView {
                 } else {
                     "/".to_string()
                 }
-            } else if target.starts_with("./") {
-                format!("{}/{}", cwd_path, &target[2..])
+            } else if let Some(stripped) = target.strip_prefix("./") {
+                format!("{}/{}", cwd_path, stripped)
+            } else if cwd_path == "/" {
+                format!("/{}", target)
             } else {
-                if cwd_path == "/" {
-                    format!("/{}", target)
-                } else {
-                    format!("{}/{}", cwd_path, target)
-                }
+                format!("{}/{}", cwd_path, target)
             }
         };
 
@@ -198,11 +196,11 @@ pub fn Terminal() -> impl IntoView {
                 };
 
                 if !fs.exists(&target_path) {
-                    format!("ls: {}: No such file or directory", args.get(0).unwrap_or(&""))
+                    format!("ls: {}: No such file or directory", args.first().unwrap_or(&""))
                 } else {
                     match fs.get(&target_path) {
                         Some(entry) if entry.is_file() => {
-                            format!("ls: {}: Not a directory", args.get(0).unwrap_or(&""))
+                            format!("ls: {}: Not a directory", args.first().unwrap_or(&""))
                         }
                         _ => {
                             let entries = fs.list_dir(&target_path);
@@ -252,7 +250,7 @@ pub fn Terminal() -> impl IntoView {
                             format!("cat: {}: Is a directory", args[0])
                         }
                         Some(entry) => {
-                            entry.content.unwrap_or_else(|| String::new())
+                            entry.content.unwrap_or_else(String::new)
                         }
                         None => format!("cat: {}: No such file or directory", args[0]),
                     }

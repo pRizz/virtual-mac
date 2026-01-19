@@ -290,9 +290,9 @@ fn DropdownItem(
         <div class=class on:click=handler>
             <span>{label}</span>
             {if !shortcut.is_empty() {
-                view! { <span class="dropdown-shortcut">{shortcut}</span> }.into_any()
+                Some(view! { <span class="dropdown-shortcut">{shortcut}</span> })
             } else {
-                view! {}.into_any()
+                None
             }}
         </div>
     }

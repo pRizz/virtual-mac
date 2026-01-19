@@ -136,6 +136,7 @@ impl WindowState {
     }
 
     /// Convert to persistable form
+    #[allow(dead_code)]
     fn to_persisted(&self) -> PersistedWindow {
         PersistedWindow {
             app_type: self.app_type.clone(),
@@ -151,6 +152,7 @@ impl WindowState {
     }
 
     /// Create from persisted form
+    #[allow(dead_code)]
     fn from_persisted(persisted: &PersistedWindow, id: WindowId) -> Self {
         let title = match &persisted.app_type {
             AppType::Calculator => "Calculator",
@@ -180,6 +182,7 @@ impl WindowState {
 
 /// Persisted window state (excludes animation state)
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[allow(dead_code)]
 struct PersistedWindow {
     app_type: AppType,
     x: f64,
@@ -194,6 +197,7 @@ struct PersistedWindow {
 
 /// Full desktop state for persistence
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[allow(dead_code)]
 struct PersistedDesktopState {
     schema_version: u32,
     windows: Vec<PersistedWindow>,
@@ -201,7 +205,9 @@ struct PersistedDesktopState {
     top_z_index: i32,
 }
 
+#[allow(dead_code)]
 const CURRENT_SCHEMA_VERSION: u32 = 1;
+#[allow(dead_code)]
 const STORAGE_KEY: &str = "virtualmac_desktop";
 
 /// Save desktop state to localStorage

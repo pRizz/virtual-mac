@@ -18,7 +18,7 @@ pub fn ModalOverlay() -> impl IntoView {
                         Some(ModalType::LogOutConfirm) => view! { <LogOutModal /> }.into_any(),
                         Some(ModalType::ForceQuit) => view! { <ForceQuitModal /> }.into_any(),
                         Some(ModalType::ResetDesktopConfirm) => view! { <ResetDesktopModal /> }.into_any(),
-                        None => view! {}.into_any(),
+                        None => ().into_any(),
                     }}
                 </div>
             </div>
@@ -281,7 +281,7 @@ pub fn PowerOverlay() -> impl IntoView {
                                 <div class="power-icon restart-icon-large"></div>
                                 <div class="power-message">"Restarting..."</div>
                             }.into_any(),
-                            _ => view! {}.into_any(),
+                            _ => ().into_any(),
                         }
                     }}
                 </div>

@@ -6,6 +6,7 @@ pub struct Notification {
     pub id: usize,
     pub title: String,
     pub message: String,
+    #[allow(dead_code)]
     pub icon: Option<String>,
 }
 
