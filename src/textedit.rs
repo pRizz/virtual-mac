@@ -1,8 +1,68 @@
 use leptos::ev::MouseEvent;
 use leptos::html::Div;
 use leptos::prelude::*;
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
+
+#[allow(dead_code)]
+const STORAGE_KEY: &str = "virtualmac_textedit";
+#[allow(dead_code)]
+const CURRENT_SCHEMA_VERSION: u32 = 1;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct TextEditState {
+    schema_version: u32,
+    content: String,
+    font_size: u32,
+    font_family: String,
+    alignment: String,
+}
+
+impl Default for TextEditState {
+    fn default() -> Self {
+        Self {
+            schema_version: CURRENT_SCHEMA_VERSION,
+            content: String::new(),
+            font_size: 16,
+            font_family: "Helvetica Neue".to_string(),
+            alignment: "left".to_string(),
+        }
+    }
+}
+
+fn save_to_storage(state: &TextEditState) {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(json) = serde_json::to_string(state) {
+                    let _ = storage.set_item(STORAGE_KEY, &json);
+                }
+            }
+        }
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let _ = state;
+    }
+}
+
+fn load_from_storage() -> TextEditState {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(Some(json)) = storage.get_item(STORAGE_KEY) {
+                    if let Ok(state) = serde_json::from_str::<TextEditState>(&json) {
+                        return state;
+                    }
+                }
+            }
+        }
+    }
+    TextEditState::default()
+}
 
 #[wasm_bindgen]
 extern "C" {
@@ -15,19 +75,48 @@ extern "C" {
 
 #[component]
 pub fn TextEdit() -> impl IntoView {
-    let (font_size, set_font_size) = signal(16u32);
-    let (font_family, set_font_family) = signal("Helvetica Neue".to_string());
+    // Load persisted state
+    let (textedit_state, set_textedit_state) = signal(load_from_storage());
+    let initial_state = textedit_state.get_untracked();
+
+    let (font_size, set_font_size) = signal(initial_state.font_size);
+    let (font_family, set_font_family) = signal(initial_state.font_family);
     let (is_bold, set_is_bold) = signal(false);
     let (is_italic, set_is_italic) = signal(false);
     let (is_underline, set_is_underline) = signal(false);
     let (text_color, set_text_color) = signal("#000000".to_string());
     let (highlight_color, set_highlight_color) = signal("#ffff00".to_string());
-    let (alignment, set_alignment) = signal("left".to_string());
+    let (alignment, set_alignment) = signal(initial_state.alignment);
     let (word_count, set_word_count) = signal(0usize);
     let (char_count, set_char_count) = signal(0usize);
 
     // Node reference for the document div
     let doc_ref = NodeRef::<Div>::new();
+
+    // Track if content has been restored to avoid repeated restoration
+    let content_restored = StoredValue::new(false);
+    let initial_content = StoredValue::new(textedit_state.get_untracked().content);
+
+    // Restore content on mount - run once when doc_ref becomes available
+    Effect::new({
+        move |_| {
+            if !content_restored.get_value() {
+                if let Some(el) = doc_ref.get() {
+                    let content = initial_content.get_value();
+                    if !content.is_empty() {
+                        el.set_inner_html(&content);
+                    }
+                    content_restored.set_value(true);
+                }
+            }
+        }
+    });
+
+    // Auto-save on textedit_state changes
+    Effect::new(move |_| {
+        let current_state = textedit_state.get();
+        save_to_storage(&current_state);
+    });
 
     // Web-safe fonts that work across browsers
     const FONTS: &[(&str, &str)] = &[
@@ -70,6 +159,10 @@ pub fn TextEdit() -> impl IntoView {
         let value = select.value();
         set_font_family.set(value.clone());
         execCommand("fontName", false, &value);
+        // Persist
+        set_textedit_state.update(|state| {
+            state.font_family = value;
+        });
     };
 
     let on_size_change = move |e: web_sys::Event| {
@@ -78,6 +171,10 @@ pub fn TextEdit() -> impl IntoView {
         let value = select.value();
         if let Ok(size) = value.parse::<u32>() {
             set_font_size.set(size);
+            // Persist
+            set_textedit_state.update(|state| {
+                state.font_size = size;
+            });
         }
     };
 
@@ -109,10 +206,14 @@ pub fn TextEdit() -> impl IntoView {
             };
             execCommand(cmd, false, "");
             set_alignment.set(align.to_string());
+            // Persist
+            set_textedit_state.update(|state| {
+                state.alignment = align.to_string();
+            });
         }
     };
 
-    // Update word and character counts on input
+    // Update word and character counts on input, and save content
     let update_counts = move |_| {
         if let Some(el) = doc_ref.get() {
             let text = el.inner_text();
@@ -120,6 +221,12 @@ pub fn TextEdit() -> impl IntoView {
             let words = text.split_whitespace().count();
             set_char_count.set(chars);
             set_word_count.set(words);
+
+            // Save content (use innerHTML to preserve formatting)
+            let content = el.inner_html();
+            set_textedit_state.update(|state| {
+                state.content = content;
+            });
         }
     };
 
@@ -256,7 +363,7 @@ pub fn TextEdit() -> impl IntoView {
                     on:input=update_counts
                     style=move || format!("font-size: {}px;", font_size.get())
                 >
-                    "Start typing here..."
+                    // Content restored by Effect on mount
                 </div>
             </div>
             <div class="textedit-statusbar">

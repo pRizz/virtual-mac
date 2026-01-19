@@ -2,6 +2,63 @@ use crate::file_system::{use_file_system, EntryType, VirtualFileSystem};
 use crate::system_state::SystemState;
 use leptos::ev::KeyboardEvent;
 use leptos::prelude::*;
+use serde::{Deserialize, Serialize};
+
+#[allow(dead_code)]
+const STORAGE_KEY: &str = "virtualmac_terminal";
+#[allow(dead_code)]
+const CURRENT_SCHEMA_VERSION: u32 = 1;
+const MAX_COMMAND_HISTORY: usize = 1000;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct TerminalState {
+    schema_version: u32,
+    command_history: Vec<String>,
+    cwd: String,
+}
+
+impl Default for TerminalState {
+    fn default() -> Self {
+        Self {
+            schema_version: CURRENT_SCHEMA_VERSION,
+            command_history: Vec::new(),
+            cwd: "/".to_string(),
+        }
+    }
+}
+
+fn save_to_storage(state: &TerminalState) {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(json) = serde_json::to_string(state) {
+                    let _ = storage.set_item(STORAGE_KEY, &json);
+                }
+            }
+        }
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let _ = state;
+    }
+}
+
+fn load_from_storage() -> TerminalState {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(Some(json)) = storage.get_item(STORAGE_KEY) {
+                    if let Ok(state) = serde_json::from_str::<TerminalState>(&json) {
+                        return state;
+                    }
+                }
+            }
+        }
+    }
+    TerminalState::default()
+}
 
 /// Find file/directory completions for tab completion
 fn find_completions(fs: &VirtualFileSystem, partial: &str, cwd: &str) -> Vec<String> {
@@ -80,15 +137,20 @@ fn find_common_prefix(strings: &[String]) -> String {
 pub fn Terminal() -> impl IntoView {
     let system_state = expect_context::<SystemState>();
 
+    // Load persisted state from localStorage
+    let (terminal_state, set_terminal_state) = signal(load_from_storage());
+
     let (history, set_history) = signal(vec![
         String::from("Last login: Thu Jan 16 09:00:00 on ttys000"),
         String::new(),
     ]);
     let (input, set_input) = signal(String::new());
-    let (cwd, set_cwd) = signal(String::from("/"));
+    // Initialize cwd from persisted state
+    let (cwd, set_cwd) = signal(terminal_state.get_untracked().cwd);
 
-    // Command history for up/down arrow navigation
-    let (command_history, set_command_history) = signal::<Vec<String>>(Vec::new());
+    // Command history for up/down arrow navigation - initialized from persisted state
+    let (command_history, set_command_history) =
+        signal::<Vec<String>>(terminal_state.get_untracked().command_history);
     let (history_index, set_history_index) = signal::<Option<usize>>(None);
     let (saved_input, set_saved_input) = signal::<String>(String::new());
 
@@ -118,6 +180,12 @@ pub fn Terminal() -> impl IntoView {
         }
     });
 
+    // Auto-save terminal state to localStorage
+    Effect::new(move |_| {
+        let current_state = terminal_state.get();
+        save_to_storage(&current_state);
+    });
+
     let prompt = move || {
         let path = cwd.get();
         let display = if path == "/" {
@@ -140,7 +208,15 @@ pub fn Terminal() -> impl IntoView {
             // Don't add duplicates of the last command
             if h.last().map(|s| s.as_str()) != Some(&trimmed) {
                 h.push(trimmed.clone());
+                // Enforce history limit
+                if h.len() > MAX_COMMAND_HISTORY {
+                    h.remove(0);
+                }
             }
+        });
+        // Persist command history
+        set_terminal_state.update(|state| {
+            state.command_history = command_history.get_untracked();
         });
         // Reset history navigation state
         set_history_index.set(None);
@@ -226,6 +302,10 @@ pub fn Terminal() -> impl IntoView {
             "cd" => {
                 if args.is_empty() {
                     set_cwd.set(String::from("/"));
+                    // Persist cwd change
+                    set_terminal_state.update(|state| {
+                        state.cwd = "/".to_string();
+                    });
                     return;
                 }
                 let target = args[0];
@@ -233,7 +313,11 @@ pub fn Terminal() -> impl IntoView {
 
                 match fs.get(&new_path) {
                     Some(entry) if entry.is_directory() => {
-                        set_cwd.set(new_path);
+                        set_cwd.set(new_path.clone());
+                        // Persist cwd change
+                        set_terminal_state.update(|state| {
+                            state.cwd = new_path;
+                        });
                         return;
                     }
                     Some(_) => format!("cd: not a directory: {}", target),
