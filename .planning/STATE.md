@@ -2,18 +2,18 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-18)
+See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Core value:** Authentic macOS desktop experience in the browser
-**Current focus:** Ready for next milestone
+**Current focus:** v2.0 Persistence & Polish
 
 ## Current Position
 
-**Milestone:** v1.1 System Polish
-**Status:** Shipped
-**Shipped:** 2026-01-18
+**Milestone:** v2.0 Persistence & Polish
+**Status:** Planning
+**Started:** 2026-01-19
 
-Progress: [##########] 100% (3 of 3 phases)
+Progress: [----------] 0% (0 of 5 phases)
 
 ## Milestones
 
@@ -21,18 +21,19 @@ Progress: [##########] 100% (3 of 3 phases)
 |---------|------|--------|---------|
 | v1.0 | App Polish | Shipped | 2026-01-17 |
 | v1.1 | System Polish | Shipped | 2026-01-18 |
+| v2.0 | Persistence & Polish | Active | - |
 
 ## Session Continuity
 
-**Last Session:** 2026-01-18
-- Completed v1.1 System Polish milestone
-- All 9 FIX requirements resolved
-- UAT passed (9/9 tests)
-- Milestone audit passed (9/9 requirements, 3/3 phases)
+**Last Session:** 2026-01-19
+- Started v2.0 Persistence & Polish milestone
+- Completed research phase (STACK.md, FEATURES.md, ARCHITECTURE.md, SUMMARY.md)
+- Created REQUIREMENTS.md (6 requirements)
+- Created ROADMAP.md (5 phases)
 
 **Context for Next Session:**
-- v1.1 shipped
-- Ready for new milestone planning
+- v2.0 milestone planned and ready for execution
+- Start with Phase 1: Calculator Persistence
 
 ## Key Decisions
 
@@ -53,12 +54,14 @@ None - v1.1 complete.
 
 ## Todos
 
-**Pending:** 4 (in .planning/todos/pending/)
+**In v2.0 scope:** (now tracked in REQUIREMENTS.md)
 
-- About VirtualMac menu item with credits
-- Persist app state (Calculator, Terminal, TextEdit)
-- Persist dock state (pinned apps, running indicators)
-- Polish notification system
+- REQ-1: About VirtualMac menu item with credits
+- REQ-2: Calculator state persistence
+- REQ-3: Terminal state persistence
+- REQ-4: TextEdit state persistence
+- REQ-5: Dock state persistence
+- REQ-6: Notification system polish
 
 **Completed (post-v1.1):**
 - Show active app name in menu bar
@@ -69,4 +72,4 @@ None - v1.1 complete.
 ---
 
 *State updated: 2026-01-19*
-*v1.1 System Polish milestone archived: 2026-01-19*
+*v2.0 Persistence & Polish milestone started: 2026-01-19*
