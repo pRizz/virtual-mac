@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 **Milestone:** v2.0 Persistence & Polish
-**Phase:** 1 of 5 (01-calculator-persistence)
-**Plan:** 1 of 1 complete
-**Status:** Phase complete
+**Phase:** 2 of 5 (02-terminal-textedit-persistence)
+**Plan:** 1 of 2 complete
+**Status:** In progress
 **Started:** 2026-01-19
-**Last activity:** 2026-01-19 - Completed 01-01-PLAN.md
+**Last activity:** 2026-01-19 - Completed 02-01-PLAN.md
 
-Progress: [##--------] 20% (1 of 5 phases)
+Progress: [###-------] 30% (2 of 6 plans complete)
 
 ## Milestones
 
@@ -29,20 +29,22 @@ Progress: [##--------] 20% (1 of 5 phases)
 ## Session Continuity
 
 **Last Session:** 2026-01-19
-- Completed Phase 01 Plan 01: Calculator Memory Persistence
-- Calculator now has M+/M-/MR/MC memory buttons
-- Memory value persists via localStorage
-- Fixed pre-existing clippy warnings in 6 files
+- Completed Phase 02 Plan 01: Terminal Persistence
+- Terminal command history and cwd now persist via localStorage
+- Fixed broken Effect pattern in textedit.rs (pre-existing issue)
+- History limited to 1000 entries
 
 **Context for Next Session:**
-- Phase 1 (Calculator Persistence) complete
-- Continue with Phase 2: Terminal Persistence
-- Persistence pattern established in calculator.rs can be reused
+- Phase 2 Plan 1 (Terminal Persistence) complete
+- Continue with Phase 2 Plan 2: TextEdit Persistence
+- TextEdit already has partial persistence infrastructure (fixed and ready)
 
 ## Key Decisions
 
 | Date | Decision | Context |
 |------|----------|---------|
+| 2026-01-19 | Terminal history limit 1000 | Prevents localStorage exhaustion, removes oldest first |
+| 2026-01-19 | Output history NOT persisted | Matches real Terminal behavior - only commands persist |
 | 2026-01-19 | Memory-only persistence | Display, stored_value, current_op are transient; only memory persists |
 | 2026-01-19 | Schema version pattern | CalculatorState includes schema_version for future migrations |
 | 2026-01-19 | Orange memory indicator | #ffa500 matches macOS Calculator memory indicator |
@@ -65,13 +67,14 @@ None.
 
 - REQ-1: About VirtualMac menu item with credits
 - ~~REQ-2: Calculator state persistence~~ (DONE)
-- REQ-3: Terminal state persistence
+- ~~REQ-3: Terminal state persistence~~ (DONE)
 - REQ-4: TextEdit state persistence
 - REQ-5: Dock state persistence
 - REQ-6: Notification system polish
 
 **Completed (post-v1.1):**
 - Calculator memory persistence (M+/M-/MR/MC with localStorage)
+- Terminal persistence (command history + cwd with localStorage)
 - Show active app name in menu bar
 - Minimized windows in dock
 - Allow windows to drag off left edge
@@ -80,4 +83,4 @@ None.
 ---
 
 *State updated: 2026-01-19*
-*Phase 01-calculator-persistence complete: 2026-01-19*
+*Phase 02-terminal-textedit-persistence plan 01 complete: 2026-01-19*
