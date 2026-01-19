@@ -8,19 +8,15 @@ A browser-based macOS desktop simulation built with Rust/WebAssembly and Leptos.
 
 The applications feel like real macOS apps — users familiar with macOS immediately recognize the UI and behavior, creating an authentic desktop experience in the browser.
 
-## Latest Milestone: v1.1 System Polish (Shipped)
+## Current Milestone: v2.0 Persistence & Polish
 
-**Goal:** Fix bugs and rough edges from v1.0 — window system, UI polish, and clock fixes.
+**Goal:** Add state persistence across page refresh and polish remaining UI elements.
 
-**Delivered:**
-- Window drag bounds enforcement (25px menu bar)
-- Window title centering (relative to full width)
-- Initial Finder window uses correct AppType
-- Uniform dock icon sizing with rounded corners
-- Finder window without white padding
-- Calculator properly sized with uniform buttons and thousand separators
-- Clock format fixed ("H:MM:SS AM/PM")
-- Build timestamp with "Built at " prefix
+**Target features:**
+- About VirtualMac menu item with project credits
+- Persist app state (Calculator, Terminal, TextEdit) across refresh
+- Persist dock state (pinned apps, running indicators)
+- Polish notification system to match macOS
 
 ## Current State (v1.1 Shipped)
 
@@ -57,7 +53,10 @@ These capabilities exist and are working:
 
 ### Active
 
-(None — planning next milestone)
+- [ ] About VirtualMac menu item with credits — v2.0
+- [ ] Persist app state (Calculator, Terminal, TextEdit) — v2.0
+- [ ] Persist dock state (pinned apps, running indicators) — v2.0
+- [ ] Polish notification system — v2.0
 
 ### Out of Scope
 
@@ -90,4 +89,4 @@ These capabilities exist and are working:
 | YOLO workflow mode | Faster iteration with fewer confirmations | ✓ Good |
 
 ---
-*Last updated: 2026-01-18 after v1.1 milestone*
+*Last updated: 2026-01-19 starting v2.0 milestone*
