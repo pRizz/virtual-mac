@@ -16,7 +16,7 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 **Started:** 2026-01-19
 **Last activity:** 2026-01-19 - Completed 02-02-PLAN.md
 
-Progress: [####------] 40% (3 of 6 plans complete)
+Progress: [####------] 40% (2 of 5 phases complete)
 
 ## Milestones
 

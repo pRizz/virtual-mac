@@ -40,34 +40,36 @@ Calculator state persists across page refresh.
 - [x] Graceful degradation if storage unavailable (defaults used)
 - [x] No persistence of current display/operation (matches real Calculator behavior)
 
-### REQ-3: Terminal State Persistence
+### REQ-3: Terminal State Persistence ✓
 
 **Priority:** P1
 **Source:** Todo - Persist app state (Calculator, Terminal, TextEdit)
+**Status:** Complete (Phase 2)
 
 Terminal command history and working directory persist across page refresh.
 
 **Acceptance Criteria:**
-- [ ] Command history (up/down arrow recall) persists across refresh
-- [ ] Current working directory persists across refresh
-- [ ] State stored in `virtualmac_terminal` localStorage key
-- [ ] History limited to prevent quota exhaustion (max 1000 commands)
-- [ ] Output history does NOT persist (matches real Terminal behavior)
-- [ ] Graceful degradation if storage unavailable
+- [x] Command history (up/down arrow recall) persists across refresh
+- [x] Current working directory persists across refresh
+- [x] State stored in `virtualmac_terminal` localStorage key
+- [x] History limited to prevent quota exhaustion (max 1000 commands)
+- [x] Output history does NOT persist (matches real Terminal behavior)
+- [x] Graceful degradation if storage unavailable
 
-### REQ-4: TextEdit State Persistence
+### REQ-4: TextEdit State Persistence ✓
 
 **Priority:** P1
 **Source:** Todo - Persist app state (Calculator, Terminal, TextEdit)
+**Status:** Complete (Phase 2)
 
 TextEdit document content persists across page refresh.
 
 **Acceptance Criteria:**
-- [ ] Document content (HTML) persists across refresh
-- [ ] Toolbar settings (font, size, alignment) persist across refresh
-- [ ] State stored in `virtualmac_textedit` localStorage key
-- [ ] State includes schema version for future migration
-- [ ] Graceful degradation if storage unavailable (empty document)
+- [x] Document content (HTML) persists across refresh
+- [x] Toolbar settings (font, size, alignment) persist across refresh
+- [x] State stored in `virtualmac_textedit` localStorage key
+- [x] State includes schema version for future migration
+- [x] Graceful degradation if storage unavailable (empty document)
 
 ### REQ-5: Dock State Persistence
 
