@@ -9,7 +9,7 @@
 
 | Phase | Name | Goal | Requirements | Status |
 |-------|------|------|--------------|--------|
-| 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | Ready |
+| 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | ✓ Complete |
 | 2 | Terminal & TextEdit Persistence | Extend patterns to remaining apps | REQ-3, REQ-4 | Planned |
 | 3 | Dock State | Dynamic running indicators + pinned apps | REQ-5 | Planned |
 | 4 | Notification Polish | macOS-style animations | REQ-6 | Planned |
@@ -36,7 +36,7 @@
 **Plans:** 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md — Add memory functionality and localStorage persistence
+- [x] 01-01-PLAN.md — Add memory functionality and localStorage persistence
 
 ---
 

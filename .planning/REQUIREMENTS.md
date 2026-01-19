@@ -25,19 +25,20 @@ Add an "About VirtualMac" menu item in the Apple menu that displays project info
 - [ ] Dialog matches macOS About dialog styling (centered, rounded corners)
 - [ ] Dialog dismissable via close button or clicking outside
 
-### REQ-2: Calculator State Persistence
+### REQ-2: Calculator State Persistence ✓
 
 **Priority:** P1
 **Source:** Todo - Persist app state (Calculator, Terminal, TextEdit)
+**Status:** Complete (Phase 1)
 
 Calculator state persists across page refresh.
 
 **Acceptance Criteria:**
-- [ ] Calculator memory value (M+/M-/MR) persists across refresh
-- [ ] State stored in `virtualmac_calculator` localStorage key
-- [ ] State includes schema version for future migration
-- [ ] Graceful degradation if storage unavailable (defaults used)
-- [ ] No persistence of current display/operation (matches real Calculator behavior)
+- [x] Calculator memory value (M+/M-/MR) persists across refresh
+- [x] State stored in `virtualmac_calculator` localStorage key
+- [x] State includes schema version for future migration
+- [x] Graceful degradation if storage unavailable (defaults used)
+- [x] No persistence of current display/operation (matches real Calculator behavior)
 
 ### REQ-3: Terminal State Persistence
 
