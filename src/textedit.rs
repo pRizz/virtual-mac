@@ -112,6 +112,33 @@ pub fn TextEdit() -> impl IntoView {
         }
     });
 
+    // Apply toolbar settings to editor context after content restoration
+    Effect::new({
+        move |_| {
+            if content_restored.get_value() {
+                // Only apply settings after content is restored
+                let family = font_family.get_untracked();
+                let size = font_size.get_untracked();
+                let align = alignment.get_untracked();
+
+                // Apply font family to editor context
+                execCommand("fontName", false, &family);
+
+                // Apply font size to editor context (size in pixels)
+                execCommand("fontSize", false, &size.to_string());
+
+                // Apply alignment to editor context
+                let align_cmd = match align.as_str() {
+                    "center" => "justifyCenter",
+                    "right" => "justifyRight",
+                    "justify" => "justifyFull",
+                    _ => "justifyLeft",
+                };
+                execCommand(align_cmd, false, "");
+            }
+        }
+    });
+
     // Auto-save on textedit_state changes
     Effect::new(move |_| {
         let current_state = textedit_state.get();
