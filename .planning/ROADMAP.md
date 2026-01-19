@@ -1,7 +1,7 @@
 # Roadmap: v2.0 Persistence & Polish
 
 **Milestone:** v2.0
-**Status:** Planning
+**Status:** In Progress
 **Phases:** 5
 **Research:** Completed (see .planning/research/SUMMARY.md)
 
@@ -9,7 +9,7 @@
 
 | Phase | Name | Goal | Requirements | Status |
 |-------|------|------|--------------|--------|
-| 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | Planned |
+| 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | Ready |
 | 2 | Terminal & TextEdit Persistence | Extend patterns to remaining apps | REQ-3, REQ-4 | Planned |
 | 3 | Dock State | Dynamic running indicators + pinned apps | REQ-5 | Planned |
 | 4 | Notification Polish | macOS-style animations | REQ-6 | Planned |
@@ -33,7 +33,10 @@
 
 **Pattern:** Follow Notes app component-level persistence pattern.
 
-**Estimated scope:** Small - one file, simple state structure
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — Add memory functionality and localStorage persistence
 
 ---
 
@@ -161,4 +164,5 @@ Milestone is complete when:
 
 ---
 *Roadmap created: 2026-01-19*
+*Phase 1 planned: 2026-01-19*
 *Based on research synthesis: .planning/research/SUMMARY.md*
