@@ -1381,6 +1381,20 @@ html, body {
     color: #FF9500;
 }
 
+.calc-btn.memory {
+    background: #505050;
+    color: #fff;
+    font-size: 18px;
+}
+
+.calc-btn.memory:hover {
+    background: #606060;
+}
+
+.calc-btn.memory.has-value {
+    color: #ffa500;
+}
+
 .calc-btn.zero {
     grid-column: span 2;
     border-radius: 28px;

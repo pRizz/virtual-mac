@@ -1,8 +1,62 @@
 use leptos::prelude::*;
+use serde::{Deserialize, Serialize};
 #[allow(unused_imports)]
 use wasm_bindgen::prelude::*;
 #[allow(unused_imports)]
 use wasm_bindgen::JsCast;
+
+#[allow(dead_code)]
+const STORAGE_KEY: &str = "virtualmac_calculator";
+#[allow(dead_code)]
+const CURRENT_SCHEMA_VERSION: u32 = 1;
+
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+struct CalculatorState {
+    schema_version: u32,
+    memory: Option<f64>,
+}
+
+impl CalculatorState {
+    fn new() -> Self {
+        Self {
+            schema_version: CURRENT_SCHEMA_VERSION,
+            memory: None,
+        }
+    }
+}
+
+fn save_to_storage(state: &CalculatorState) {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(json) = serde_json::to_string(state) {
+                    let _ = storage.set_item(STORAGE_KEY, &json);
+                }
+            }
+        }
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let _ = state;
+    }
+}
+
+fn load_from_storage() -> CalculatorState {
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            if let Ok(Some(storage)) = window.local_storage() {
+                if let Ok(Some(json)) = storage.get_item(STORAGE_KEY) {
+                    if let Ok(state) = serde_json::from_str::<CalculatorState>(&json) {
+                        return state;
+                    }
+                }
+            }
+        }
+    }
+    CalculatorState::new()
+}
 
 #[derive(Clone, Copy, PartialEq)]
 enum Operation {
@@ -20,6 +74,49 @@ pub fn Calculator() -> impl IntoView {
     let (current_op, set_current_op) = signal(Operation::None);
     let (clear_on_next, set_clear_on_next) = signal(false);
     let (active_operator, set_active_operator) = signal::<Option<Operation>>(None);
+
+    // Memory state with persistence
+    let (calc_state, set_calc_state) = signal(load_from_storage());
+
+    // Auto-save on calc_state changes
+    Effect::new(move |_| {
+        let current_state = calc_state.get();
+        save_to_storage(&current_state);
+    });
+
+    // Memory operations
+    let memory_add = move || {
+        let current = strip_separators(&display.get());
+        if let Ok(val) = current.parse::<f64>() {
+            set_calc_state.update(|state| {
+                let new_memory = state.memory.unwrap_or(0.0) + val;
+                state.memory = Some(new_memory);
+            });
+        }
+    };
+
+    let memory_subtract = move || {
+        let current = strip_separators(&display.get());
+        if let Ok(val) = current.parse::<f64>() {
+            set_calc_state.update(|state| {
+                let new_memory = state.memory.unwrap_or(0.0) - val;
+                state.memory = Some(new_memory);
+            });
+        }
+    };
+
+    let memory_recall = move || {
+        if let Some(mem) = calc_state.get().memory {
+            set_display.set(format_result(mem));
+            set_clear_on_next.set(true);
+        }
+    };
+
+    let memory_clear = move || {
+        set_calc_state.update(|state| {
+            state.memory = None;
+        });
+    };
 
     let append_digit = move |digit: &str| {
         if clear_on_next.get() {
@@ -331,6 +428,25 @@ pub fn Calculator() -> impl IntoView {
                 <span class="calc-display-text">{move || display.get()}</span>
             </div>
             <div class="calc-buttons">
+                // Memory row
+                <button
+                    class=move || if calc_state.get().memory.is_some() { "calc-btn memory has-value" } else { "calc-btn memory" }
+                    on:click=move |_| memory_clear()
+                >"MC"</button>
+                <button
+                    class=move || if calc_state.get().memory.is_some() { "calc-btn memory has-value" } else { "calc-btn memory" }
+                    on:click=move |_| memory_add()
+                >"M+"</button>
+                <button
+                    class=move || if calc_state.get().memory.is_some() { "calc-btn memory has-value" } else { "calc-btn memory" }
+                    on:click=move |_| memory_subtract()
+                >"M−"</button>
+                <button
+                    class=move || if calc_state.get().memory.is_some() { "calc-btn memory has-value" } else { "calc-btn memory" }
+                    on:click=move |_| memory_recall()
+                >"MR"</button>
+
+                // Function row
                 <button class="calc-btn function" on:click=move |_| clear()>
                     {move || if current_op.get() != Operation::None || stored_value.get() != 0.0 { "C" } else { "AC" }}
                 </button>
