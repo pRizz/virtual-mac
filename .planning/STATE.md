@@ -53,21 +53,20 @@ None - v1.1 complete.
 
 ## Todos
 
-**Pending:** 3 (in .planning/todos/pending/)
+**Pending:** 4 (in .planning/todos/pending/)
 
-- Persist window state across page refresh (with reset mechanism)
-- Add vibe coded attribution in bottom left
+- About VirtualMac menu item with credits
+- Persist app state (Calculator, Terminal, TextEdit)
+- Persist dock state (pinned apps, running indicators)
+- Polish notification system
+
+**Completed (post-v1.1):**
+- Show active app name in menu bar
+- Minimized windows in dock
 - Allow windows to drag off left edge
-
-**Completed:** 6 (from v1.1)
-- Fix dock icon sizes to be uniform (FIX-004)
-- Remove white padding/border in Finder window (FIX-005)
-- Fix calculator window content clipping (FIX-006)
-- Fix clock format to H:MM:SS AM/PM (FIX-008)
-- Add seconds to clock display (FIX-009)
-- Add "Built at" prefix to timestamp (FIX-007)
+- Add vibe coded attribution
 
 ---
 
-*State updated: 2026-01-18*
-*v1.1 System Polish milestone shipped: 2026-01-18*
+*State updated: 2026-01-19*
+*v1.1 System Polish milestone archived: 2026-01-19*
