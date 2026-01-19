@@ -1,14 +1,14 @@
 ---
-status: diagnosed
+status: complete
 phase: 02-terminal-textedit-persistence
-source: [02-01-SUMMARY.md, 02-02-SUMMARY.md]
+source: [02-01-SUMMARY.md, 02-02-SUMMARY.md, 02-03-SUMMARY.md]
 started: 2026-01-19T18:45:00Z
-updated: 2026-01-19T19:00:00Z
+updated: 2026-01-19T19:15:00Z
 ---
 
 ## Current Test
 
-[testing complete]
+[all tests passed]
 
 ## Tests
 
@@ -32,9 +32,8 @@ note: Text formatting preserved; B/I/U button states reflect cursor position (ex
 
 ### 5. TextEdit Toolbar Settings Persistence
 expected: Change font size/family/alignment in TextEdit, refresh page - settings should be restored
-result: issue
-reported: "The buttons reflect that those settings persisted, but when I actually start typing, the modified font family does not seem to be applied to my new text"
-severity: major
+result: pass
+note: Fixed in 02-03-PLAN.md - added Effect to call execCommand on mount
 
 ### 6. Graceful Degradation (Terminal)
 expected: Clear localStorage (`virtualmac_terminal`), refresh - Terminal works with defaults, no errors
@@ -47,22 +46,11 @@ result: pass
 ## Summary
 
 total: 7
-passed: 6
-issues: 1
+passed: 7
+issues: 0
 pending: 0
 skipped: 0
 
 ## Gaps
 
-- truth: "TextEdit toolbar settings (font family) should be applied to new text after restore"
-  status: failed
-  reason: "User reported: The buttons reflect that those settings persisted, but when I actually start typing, the modified font family does not seem to be applied to my new text"
-  severity: major
-  test: 5
-  root_cause: "execCommand('fontName') not called on component mount - signal restored but editing context not initialized"
-  artifacts:
-    - path: "src/textedit.rs"
-      issue: "Content restoration Effect (line 113) restores HTML but doesn't call execCommand to apply font"
-  missing:
-    - "Add Effect after content restoration to call execCommand('fontName', false, &font_family) on mount"
-  debug_session: ".planning/debug/textedit-font-persistence.md"
+None - all gaps closed.
