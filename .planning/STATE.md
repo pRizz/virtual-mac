@@ -11,10 +11,10 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Milestone:** v2.0 Persistence & Polish
 **Phase:** 2 of 5 (02-terminal-textedit-persistence)
-**Plan:** 2 of 2 complete
-**Status:** Phase complete
+**Plan:** 3 of 3 complete (including gap closure)
+**Status:** Phase complete, UAT passed (7/7)
 **Started:** 2026-01-19
-**Last activity:** 2026-01-19 - Completed 02-02-PLAN.md
+**Last activity:** 2026-01-19 - Completed 02-03-PLAN.md (gap closure)
 
 Progress: [####------] 40% (2 of 5 phases complete)
 
@@ -29,15 +29,15 @@ Progress: [####------] 40% (2 of 5 phases complete)
 ## Session Continuity
 
 **Last Session:** 2026-01-19
-- Completed Phase 02 Plan 02: TextEdit Persistence
-- TextEdit document content and toolbar settings now persist via localStorage
-- Uses innerHTML to preserve bold/italic/underline formatting
-- Phase 2 (Terminal & TextEdit Persistence) now complete
+- Completed Phase 02 gap closure (02-03-PLAN.md)
+- Fixed TextEdit toolbar settings not applying to new text after restore
+- Added Effect to call execCommand for fontName, fontSize, alignment on mount
+- UAT complete: 7/7 tests passing for Phase 2
 
 **Context for Next Session:**
-- Phase 2 complete (Terminal & TextEdit persistence)
-- Continue with Phase 3 or other v2.0 tasks
-- Calculator, Terminal, TextEdit all have persistence now
+- Phase 2 fully complete (Terminal & TextEdit persistence, UAT passed)
+- Continue with Phase 3 (Dock State) or other v2.0 tasks
+- Calculator, Terminal, TextEdit all have working persistence
 
 ## Key Decisions
 

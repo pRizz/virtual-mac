@@ -64,6 +64,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md - Terminal command history and cwd persistence
 - [x] 02-02-PLAN.md - TextEdit content and toolbar settings persistence
+- [x] 02-03-PLAN.md - Gap closure: TextEdit toolbar settings applied on mount
 
 ---
 
