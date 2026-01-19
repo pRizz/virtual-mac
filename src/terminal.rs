@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use leptos::ev::KeyboardEvent;
 use crate::file_system::{use_file_system, EntryType, VirtualFileSystem};
+use crate::system_state::SystemState;
 
 /// Find file/directory completions for tab completion
 fn find_completions(fs: &VirtualFileSystem, partial: &str, cwd: &str) -> Vec<String> {
@@ -69,6 +70,8 @@ fn find_common_prefix(strings: &[String]) -> String {
 /// Terminal component with simulated shell
 #[component]
 pub fn Terminal() -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
+
     let (history, set_history) = signal(vec![
         String::from("Last login: Thu Jan 16 09:00:00 on ttys000"),
         String::new(),
@@ -94,6 +97,16 @@ pub fn Terminal() -> impl IntoView {
         if let Some(el) = output_ref.get() {
             let scroll_height = el.scroll_height();
             el.set_scroll_top(scroll_height);
+        }
+    });
+
+    // Auto-focus input when Terminal becomes the active app
+    Effect::new(move |_| {
+        let active_app = system_state.active_app.get();
+        if active_app == "Terminal" {
+            if let Some(input_el) = input_ref.get() {
+                let _ = input_el.focus();
+            }
         }
     });
 

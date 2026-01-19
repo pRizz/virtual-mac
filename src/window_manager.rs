@@ -14,7 +14,7 @@ use crate::finder::Finder;
 use crate::calculator::Calculator;
 use crate::notification::NotificationState;
 use crate::system_settings::SystemSettings;
-use crate::system_state::SystemState;
+use crate::system_state::{MinimizedWindow, SystemState};
 use crate::terminal::Terminal;
 use crate::textedit::TextEdit;
 use crate::notes::Notes;
@@ -51,6 +51,32 @@ pub enum AppType {
     Finder,
 }
 
+impl AppType {
+    /// Get the icon character for this app type
+    pub fn icon(&self) -> &'static str {
+        match self {
+            AppType::Calculator => "=",
+            AppType::SystemSettings => "⚙️",
+            AppType::Terminal => ">_",
+            AppType::TextEdit => "T",
+            AppType::Notes => "📝",
+            AppType::Finder => "📂",
+        }
+    }
+
+    /// Get the CSS class for this app type's icon
+    pub fn icon_class(&self) -> &'static str {
+        match self {
+            AppType::Calculator => "calculator",
+            AppType::SystemSettings => "settings",
+            AppType::Terminal => "terminal",
+            AppType::TextEdit => "textedit",
+            AppType::Notes => "notes",
+            AppType::Finder => "finder",
+        }
+    }
+}
+
 /// Animation state for window minimize/restore
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub enum AnimationState {
@@ -78,6 +104,8 @@ pub struct WindowState {
     pub app_type: AppType,
     /// Current animation state
     pub animation: AnimationState,
+    /// Target X position for minimize/restore animation (screen coordinates)
+    pub animation_target_x: Option<f64>,
 }
 
 impl WindowState {
@@ -95,6 +123,7 @@ impl WindowState {
             pre_maximize: None,
             app_type,
             animation: AnimationState::None,
+            animation_target_x: None,
         }
     }
 
@@ -136,6 +165,7 @@ impl WindowState {
             pre_maximize: persisted.pre_maximize,
             app_type: persisted.app_type.clone(),
             animation: AnimationState::None,
+            animation_target_x: None,
         }
     }
 }
@@ -283,6 +313,36 @@ pub fn WindowManager() -> impl IntoView {
     let (next_id, set_next_id) = signal(initial_next_id);
     let (drag_op, set_drag_op) = signal(DragOperation::None);
     let (top_z_index, set_top_z_index) = signal(initial_top_z);
+
+    // Auto-sync active app from windows state
+    // This Effect watches windows and automatically updates the active app in menu bar
+    // whenever windows change (open, close, focus, minimize, restore, etc.)
+    Effect::new(move |_| {
+        let current_windows = windows.get();
+        let active_app = current_windows
+            .iter()
+            .filter(|w| !w.is_minimized)
+            .max_by_key(|w| w.z_index)
+            .map(|w| w.title.clone())
+            .unwrap_or_else(|| "Finder".to_string());
+        system_state.set_active_app(&active_app);
+    });
+
+    // Sync minimized windows to SystemState for dock display
+    Effect::new(move |_| {
+        let current_windows = windows.get();
+        let minimized: Vec<MinimizedWindow> = current_windows
+            .iter()
+            .filter(|w| w.is_minimized)
+            .map(|w| MinimizedWindow {
+                id: w.id,
+                title: w.title.clone(),
+                icon: w.app_type.icon().to_string(),
+                icon_class: w.app_type.icon_class().to_string(),
+            })
+            .collect();
+        system_state.minimized_windows.set(minimized);
+    });
 
     // Save state when windows change (debounced via effect)
     Effect::new(move |_| {
@@ -453,10 +513,11 @@ pub fn WindowManager() -> impl IntoView {
         cb.forget();
     }
 
-    // Bring window to front
+    // Bring window to front (active app auto-updates via Effect watching windows)
     let bring_to_front = move |window_id: WindowId| {
         let new_z = top_z_index.get() + 1;
         set_top_z_index.set(new_z);
+
         set_windows.update(|windows| {
             if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
                 win.z_index = new_z;
@@ -464,7 +525,7 @@ pub fn WindowManager() -> impl IntoView {
         });
     };
 
-    // Close window
+    // Close window (active app auto-updates via Effect watching windows)
     let close_window = move |window_id: WindowId| {
         set_windows.update(|windows| {
             windows.retain(|w| w.id != window_id);
@@ -473,10 +534,49 @@ pub fn WindowManager() -> impl IntoView {
 
     // Minimize window with genie animation
     let minimize_window = move |window_id: WindowId| {
-        // Start the minimize animation
+        // Calculate the target X position for the animation
+        // The minimized dock appears to the right of the main dock, centered as a whole
+        #[cfg(target_arch = "wasm32")]
+        let target_x = {
+            let screen_width = web_sys::window()
+                .and_then(|w| Some(w.inner_width().ok()?.as_f64()?))
+                .unwrap_or(1920.0);
+
+            // Count current minimized windows (this will be the new item's index)
+            let minimized_count = windows.get().iter().filter(|w| w.is_minimized).count();
+
+            // Main dock is approximately 930px wide (14 apps + separator + downloads + trash)
+            let main_dock_width = 930.0;
+            // Minimized dock: separator margin (8px each side) + dock padding (12px each side)
+            let minimized_dock_start_offset = 8.0 + 12.0;
+            // Each minimized item is 56px with 6px gap
+            let item_width = 56.0;
+            let item_gap = 6.0;
+
+            // Calculate center offset based on number of minimized items
+            // As items are added, the whole dock shifts left to stay centered
+            let minimized_dock_width = if minimized_count == 0 {
+                // This will be the first item
+                12.0 + item_width + 12.0 // padding + item + padding
+            } else {
+                12.0 + (minimized_count as f64 + 1.0) * item_width + (minimized_count as f64) * item_gap + 12.0
+            };
+
+            // The dock wrapper centers both docks together
+            let total_width = main_dock_width + 16.0 + minimized_dock_width; // 16 = separator margins
+            let dock_start_x = (screen_width - total_width) / 2.0;
+
+            // Position of the new item in the minimized dock
+            dock_start_x + main_dock_width + minimized_dock_start_offset + (minimized_count as f64 * (item_width + item_gap)) + item_width / 2.0
+        };
+        #[cfg(not(target_arch = "wasm32"))]
+        let target_x = 960.0; // Default center for non-wasm
+
+        // Start the minimize animation with target position
         set_windows.update(|windows| {
             if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
                 win.animation = AnimationState::Minimizing;
+                win.animation_target_x = Some(target_x);
             }
         });
 
@@ -537,12 +637,47 @@ pub fn WindowManager() -> impl IntoView {
 
     // Restore minimized window with genie animation
     let restore_window = move |window_id: WindowId| {
+        // Calculate the source X position (where the item is in the minimized dock)
+        #[cfg(target_arch = "wasm32")]
+        let source_x = {
+            let screen_width = web_sys::window()
+                .and_then(|w| Some(w.inner_width().ok()?.as_f64()?))
+                .unwrap_or(1920.0);
+
+            // Find the index of this window in the minimized windows list
+            let minimized_windows: Vec<_> = windows.get().iter()
+                .filter(|w| w.is_minimized)
+                .map(|w| w.id)
+                .collect();
+            let item_index = minimized_windows.iter().position(|&id| id == window_id).unwrap_or(0);
+            let minimized_count = minimized_windows.len();
+
+            // Main dock is approximately 930px wide
+            let main_dock_width = 930.0;
+            let minimized_dock_start_offset = 8.0 + 12.0; // separator margin + dock padding
+            let item_width = 56.0;
+            let item_gap = 6.0;
+
+            // Calculate minimized dock width
+            let minimized_dock_width = 12.0 + (minimized_count as f64) * item_width + ((minimized_count - 1).max(0) as f64) * item_gap + 12.0;
+
+            // The dock wrapper centers both docks together
+            let total_width = main_dock_width + 16.0 + minimized_dock_width;
+            let dock_start_x = (screen_width - total_width) / 2.0;
+
+            // Position of this item in the minimized dock
+            dock_start_x + main_dock_width + minimized_dock_start_offset + (item_index as f64 * (item_width + item_gap)) + item_width / 2.0
+        };
+        #[cfg(not(target_arch = "wasm32"))]
+        let source_x = 960.0;
+
         bring_to_front(window_id);
         // Start restore animation - remove minimized and add restoring
         set_windows.update(|windows| {
             if let Some(win) = windows.iter_mut().find(|w| w.id == window_id) {
                 win.is_minimized = false;
                 win.animation = AnimationState::Restoring;
+                win.animation_target_x = Some(source_x);
             }
         });
 
@@ -575,6 +710,14 @@ pub fn WindowManager() -> impl IntoView {
             });
         }
     };
+
+    // Watch for restore window requests from dock
+    Effect::new(move |_| {
+        if let Some(window_id) = system_state.restore_window_id.get() {
+            system_state.restore_window_id.set(None);
+            restore_window(window_id);
+        }
+    });
 
     // Start dragging (moving) a window
     let start_drag = move |window_id: WindowId, e: MouseEvent| {
@@ -805,14 +948,6 @@ pub fn WindowManager() -> impl IntoView {
         doc_mouseup_handler.forget();
     }
 
-    // Get minimized windows for dock
-    let minimized_windows = move || {
-        windows.get().iter()
-            .filter(|w| w.is_minimized)
-            .cloned()
-            .collect::<Vec<_>>()
-    };
-
     // Get the active (top z-index non-minimized) window
     let active_window_id = move || {
         windows.get().iter()
@@ -889,10 +1024,19 @@ pub fn WindowManager() -> impl IntoView {
                     let style_str = move || {
                         let win = windows.get().iter().find(|w| w.id == window_id).cloned();
                         if let Some(w) = win {
-                            format!(
+                            let base_style = format!(
                                 "left: {}px; top: {}px; width: {}px; height: {}px; z-index: {};",
                                 w.x, w.y, w.width, w.height, w.z_index
-                            )
+                            );
+                            // Add animation target position as CSS custom property
+                            if let Some(target_x) = w.animation_target_x {
+                                // Calculate the horizontal offset from window center to dock target
+                                let window_center_x = w.x + w.width / 2.0;
+                                let offset_x = target_x - window_center_x;
+                                format!("{} --dock-target-x: {}px;", base_style, offset_x)
+                            } else {
+                                base_style
+                            }
                         } else {
                             String::new()
                         }
@@ -992,25 +1136,6 @@ pub fn WindowManager() -> impl IntoView {
                 }
             />
 
-            // Dock for minimized windows
-            <div class="minimized-windows-dock">
-                <For
-                    each=minimized_windows
-                    key=|window| window.id
-                    children=move |window| {
-                        let window_id = window.id;
-                        let title = window.title.chars().take(2).collect::<String>().to_uppercase();
-                        view! {
-                            <div
-                                class="dock-item"
-                                on:click=move |_| restore_window(window_id)
-                            >
-                                {title}
-                            </div>
-                        }
-                    }
-                />
-            </div>
         </div>
     }
 }

@@ -1,5 +1,14 @@
 use leptos::prelude::*;
 
+/// Minimized window info for dock display
+#[derive(Clone, Debug, PartialEq)]
+pub struct MinimizedWindow {
+    pub id: usize,
+    pub title: String,
+    pub icon: String,
+    pub icon_class: String,
+}
+
 /// System-wide state for VirtualMac
 #[derive(Clone, Copy)]
 pub struct SystemState {
@@ -15,6 +24,12 @@ pub struct SystemState {
     pub open_app: RwSignal<Option<String>>,
     /// Whether a desktop reset was requested
     pub reset_desktop: RwSignal<bool>,
+    /// Currently active/foreground app name (shown in menu bar)
+    pub active_app: RwSignal<String>,
+    /// Minimized windows for dock display
+    pub minimized_windows: RwSignal<Vec<MinimizedWindow>>,
+    /// Request to restore a minimized window by ID
+    pub restore_window_id: RwSignal<Option<usize>>,
 }
 
 /// Power state of the system
@@ -47,7 +62,15 @@ impl SystemState {
             open_system_settings: RwSignal::new(false),
             open_app: RwSignal::new(None),
             reset_desktop: RwSignal::new(false),
+            active_app: RwSignal::new("Finder".to_string()), // Default to Finder like real macOS
+            minimized_windows: RwSignal::new(Vec::new()),
+            restore_window_id: RwSignal::new(None),
         }
+    }
+
+    /// Set the active/foreground app (shown in menu bar)
+    pub fn set_active_app(&self, app_name: &str) {
+        self.active_app.set(app_name.to_string());
     }
 
     pub fn request_open_app(&self, app_name: &str) {

@@ -4,7 +4,7 @@ use leptos::ev::MouseEvent;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use crate::context_menu::{ContextMenuState, ContextMenuType, show_context_menu};
-use crate::system_state::SystemState;
+use crate::system_state::{MinimizedWindow, SystemState};
 
 /// Represents a dock item (app icon)
 #[derive(Clone, Debug)]
@@ -162,11 +162,42 @@ fn TrashIcon(
     }
 }
 
+/// Minimized window dock item component
+#[component]
+fn MinimizedDockItem(
+    window: MinimizedWindow,
+) -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
+    let window_id = window.id;
+    let icon = window.icon.clone();
+    let icon_class = format!("dock-icon {}", window.icon_class);
+
+    let on_click = move |_: MouseEvent| {
+        system_state.restore_window_id.set(Some(window_id));
+    };
+
+    view! {
+        <div
+            class="dock-item minimized-item"
+            data-tooltip=window.title.clone()
+            on:click=on_click
+        >
+            <div class="dock-icon-wrapper">
+                <div class=icon_class>
+                    {icon}
+                </div>
+            </div>
+            <div class="dock-indicator active"></div>
+        </div>
+    }
+}
+
 /// Main dock component
 #[component]
 pub fn Dock(
     context_menu_state: WriteSignal<ContextMenuState>,
 ) -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
     let (mouse_x, set_mouse_x) = signal(0.0);
     let (is_hovering, set_is_hovering) = signal(false);
 
@@ -201,69 +232,89 @@ pub fn Dock(
         );
     };
 
+    // Get minimized windows from system state
+    let minimized_windows = move || system_state.minimized_windows.get();
+    let has_minimized = move || !minimized_windows().is_empty();
+
     view! {
-        <div class="dock-container">
-            <div
-                class="dock"
-                on:mouseenter=move |_| set_is_hovering.set(true)
-                on:mouseleave=move |_| {
-                    set_is_hovering.set(false);
-                    set_mouse_x.set(0.0);
-                }
-                on:mousemove=move |ev: MouseEvent| {
-                    let target = ev.current_target().unwrap();
-                    let rect = target.unchecked_ref::<web_sys::Element>().get_bounding_client_rect();
-                    set_mouse_x.set(ev.client_x() as f64 - rect.left());
-                }
-            >
-                // App icons
-                {apps.into_iter().enumerate().map(|(idx, item)| {
-                    view! {
-                        <DockIcon
-                            item=item
-                            mouse_x=mouse_x
-                            is_hovering=is_hovering
-                            index=idx
-                            context_menu_state=context_menu_state
-                        />
-                    }
-                }).collect::<Vec<_>>()}
-
-                // Separator
-                <div class="dock-separator"></div>
-
-                // Downloads folder
+        <div class="dock-wrapper">
+            <div class="dock-container">
                 <div
-                    class="dock-item"
-                    data-tooltip="Downloads"
-                    style:transform=move || {
-                        let mx = mouse_x.get();
-                        let hovering = is_hovering.get();
-                        let idx = num_apps;
-                        if hovering && mx > 0.0 {
-                            let item_center = 62.0 * (idx as f64) + 44.0; // +44 for separator
-                            let scale = calculate_scale(item_center, mx, 1.8, 120.0);
-                            format!("scale({}) translateY({}px)", scale, (scale - 1.0) * -24.0)
-                        } else {
-                            "scale(1) translateY(0px)".to_string()
-                        }
+                    class="dock"
+                    on:mouseenter=move |_| set_is_hovering.set(true)
+                    on:mouseleave=move |_| {
+                        set_is_hovering.set(false);
+                        set_mouse_x.set(0.0);
                     }
-                    on:contextmenu=downloads_contextmenu
+                    on:mousemove=move |ev: MouseEvent| {
+                        let target = ev.current_target().unwrap();
+                        let rect = target.unchecked_ref::<web_sys::Element>().get_bounding_client_rect();
+                        set_mouse_x.set(ev.client_x() as f64 - rect.left());
+                    }
                 >
-                    <div class="dock-icon-wrapper">
-                        <div class="dock-icon downloads">"📥"</div>
-                    </div>
-                    <div class="dock-indicator"></div>
-                </div>
+                    // App icons
+                    {apps.into_iter().enumerate().map(|(idx, item)| {
+                        view! {
+                            <DockIcon
+                                item=item
+                                mouse_x=mouse_x
+                                is_hovering=is_hovering
+                                index=idx
+                                context_menu_state=context_menu_state
+                            />
+                        }
+                    }).collect::<Vec<_>>()}
 
-                // Trash
-                <TrashIcon
-                    mouse_x=mouse_x
-                    is_hovering=is_hovering
-                    index=num_apps + 1
-                    context_menu_state=context_menu_state
-                />
+                    // Separator
+                    <div class="dock-separator"></div>
+
+                    // Downloads folder
+                    <div
+                        class="dock-item"
+                        data-tooltip="Downloads"
+                        style:transform=move || {
+                            let mx = mouse_x.get();
+                            let hovering = is_hovering.get();
+                            let idx = num_apps;
+                            if hovering && mx > 0.0 {
+                                let item_center = 62.0 * (idx as f64) + 44.0; // +44 for separator
+                                let scale = calculate_scale(item_center, mx, 1.8, 120.0);
+                                format!("scale({}) translateY({}px)", scale, (scale - 1.0) * -24.0)
+                            } else {
+                                "scale(1) translateY(0px)".to_string()
+                            }
+                        }
+                        on:contextmenu=downloads_contextmenu
+                    >
+                        <div class="dock-icon-wrapper">
+                            <div class="dock-icon downloads">"📥"</div>
+                        </div>
+                        <div class="dock-indicator"></div>
+                    </div>
+
+                    // Trash
+                    <TrashIcon
+                        mouse_x=mouse_x
+                        is_hovering=is_hovering
+                        index=num_apps + 1
+                        context_menu_state=context_menu_state
+                    />
+                </div>
             </div>
+
+            // Minimized windows dock - only show if there are minimized windows
+            <Show when=has_minimized>
+                <div class="minimized-dock-separator"></div>
+                <div class="minimized-dock">
+                    <For
+                        each=minimized_windows
+                        key=|w| w.id
+                        children=move |window| {
+                            view! { <MinimizedDockItem window=window /> }
+                        }
+                    />
+                </div>
+            </Show>
         </div>
     }
 }

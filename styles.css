@@ -388,46 +388,70 @@ html, body {
     cursor: sw-resize;
 }
 
-/* Dock/Taskbar for minimized windows */
-/* Minimized windows dock - positioned above the main app dock */
-.minimized-windows-dock {
+/* Dock wrapper - centers the combined dock (main + minimized) */
+.dock-wrapper {
     position: fixed;
-    bottom: 90px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 16px;
-    padding: 6px 10px;
     display: flex;
-    gap: 8px;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
-    z-index: 999;
+    align-items: flex-end;
+    gap: 0;
+    z-index: 1000;
+    padding: 4px 4px 0 4px;
+    /* Smooth transition when dock width changes */
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.minimized-windows-dock:empty {
-    display: none;
-}
-
-.minimized-windows-dock .dock-item {
-    width: 48px;
+/* Separator between main dock and minimized dock */
+.minimized-dock-separator {
+    width: 1px;
     height: 48px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 500;
-    color: #333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: transform 0.1s;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(255, 255, 255, 0.4) 20%,
+        rgba(255, 255, 255, 0.4) 80%,
+        transparent 100%
+    );
+    margin: 0 8px;
+    align-self: center;
 }
 
-.minimized-windows-dock .dock-item:hover {
-    transform: scale(1.1);
+/* Minimized windows dock - glass effect matching main dock */
+.minimized-dock {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 4px 12px;
+    gap: 6px;
+    background: var(--dock-bg, rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: 18px;
+    border: 1px solid var(--dock-border);
+    box-shadow:
+        0 0 0 0.5px rgba(0, 0, 0, 0.1),
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Minimized dock items - use same structure as main dock */
+.minimized-dock .dock-item.minimized-item {
+    animation: minimized-dock-item-enter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Entrance animation for minimized dock items */
+@keyframes minimized-dock-item-enter {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 /* VirtualMac Dock Styles - macOS-style dock */
 
@@ -459,14 +483,9 @@ html, body {
     pointer-events: auto;
 }
 
-/* Dock container - positioned at bottom center */
+/* Dock container - contains the main dock */
 .dock-container {
-    position: fixed;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    padding: 4px 4px 0 4px;
+    position: relative;
 }
 
 /* Dock background with glass effect */
@@ -698,50 +717,50 @@ html, body {
 
 /* Genie effect - minimize animation
    Simulates the classic macOS genie effect where windows
-   appear to pour into the dock */
+   appear to pour into the dock. Uses --dock-target-x for horizontal movement. */
 @keyframes genie-minimize {
     0% {
-        transform: scale(1) translateY(0) perspective(1000px) rotateX(0deg);
+        transform: scale(1) translate(0, 0) perspective(1000px) rotateX(0deg);
         opacity: 1;
         clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
     30% {
-        transform: scale(0.8) translateY(30vh) perspective(1000px) rotateX(5deg);
+        transform: scale(0.8) translate(calc(var(--dock-target-x, 0px) * 0.3), 30vh) perspective(1000px) rotateX(5deg);
         opacity: 1;
         clip-path: polygon(10% 0%, 90% 0%, 95% 100%, 5% 100%);
     }
     60% {
-        transform: scale(0.4) translateY(60vh) perspective(1000px) rotateX(10deg);
+        transform: scale(0.4) translate(calc(var(--dock-target-x, 0px) * 0.7), 60vh) perspective(1000px) rotateX(10deg);
         opacity: 0.9;
         clip-path: polygon(25% 0%, 75% 0%, 85% 100%, 15% 100%);
     }
     100% {
-        transform: scale(0.05) translateY(calc(100vh - 80px)) perspective(1000px) rotateX(15deg);
+        transform: scale(0.05) translate(var(--dock-target-x, 0px), calc(100vh - 80px)) perspective(1000px) rotateX(15deg);
         opacity: 0;
         clip-path: polygon(40% 0%, 60% 0%, 70% 100%, 30% 100%);
     }
 }
 
 /* Genie effect - restore animation
-   Reverse of minimize, window emerges from dock */
+   Reverse of minimize, window emerges from dock. Uses --dock-target-x for horizontal movement. */
 @keyframes genie-restore {
     0% {
-        transform: scale(0.05) translateY(calc(100vh - 80px)) perspective(1000px) rotateX(15deg);
+        transform: scale(0.05) translate(var(--dock-target-x, 0px), calc(100vh - 80px)) perspective(1000px) rotateX(15deg);
         opacity: 0;
         clip-path: polygon(40% 0%, 60% 0%, 70% 100%, 30% 100%);
     }
     40% {
-        transform: scale(0.4) translateY(60vh) perspective(1000px) rotateX(10deg);
+        transform: scale(0.4) translate(calc(var(--dock-target-x, 0px) * 0.7), 60vh) perspective(1000px) rotateX(10deg);
         opacity: 0.9;
         clip-path: polygon(25% 0%, 75% 0%, 85% 100%, 15% 100%);
     }
     70% {
-        transform: scale(0.8) translateY(30vh) perspective(1000px) rotateX(5deg);
+        transform: scale(0.8) translate(calc(var(--dock-target-x, 0px) * 0.3), 30vh) perspective(1000px) rotateX(5deg);
         opacity: 1;
         clip-path: polygon(10% 0%, 90% 0%, 95% 100%, 5% 100%);
     }
     100% {
-        transform: scale(1) translateY(0) perspective(1000px) rotateX(0deg);
+        transform: scale(1) translate(0, 0) perspective(1000px) rotateX(0deg);
         opacity: 1;
         clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
