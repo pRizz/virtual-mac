@@ -677,6 +677,207 @@ body {
 }
 
 /* ======================================
+   About VirtualMac Dialog
+   ====================================== */
+
+.about-virtualmac-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    /* No background dimming - more like a floating window */
+    pointer-events: none;
+}
+
+.about-virtualmac-dialog {
+    position: absolute;
+    pointer-events: auto;
+    width: 320px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    font-family: var(--font-family);
+    overflow: hidden;
+}
+
+.about-virtualmac-titlebar {
+    height: 36px;
+    background: linear-gradient(180deg, #f6f6f6 0%, #e8e8e8 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    cursor: grab;
+    user-select: none;
+}
+
+.about-virtualmac-titlebar:active {
+    cursor: grabbing;
+}
+
+.about-close-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #ff5f57 0%, #e5453c 100%);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    font-size: 0;  /* Hide text */
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.about-close-btn::before {
+    content: '\00d7';  /* X symbol */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    font-weight: bold;
+    color: transparent;
+    line-height: 1;
+}
+
+.about-virtualmac-titlebar:hover .about-close-btn::before {
+    color: #4d0000;
+}
+
+.about-virtualmac-content {
+    padding: 24px;
+    text-align: center;
+}
+
+.about-virtualmac-icon {
+    font-size: 64px;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.about-virtualmac-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 4px;
+}
+
+.about-virtualmac-version {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.about-virtualmac-tagline {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 16px;
+    font-style: italic;
+}
+
+.about-virtualmac-links {
+    margin-bottom: 20px;
+}
+
+.about-virtualmac-links a {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 0 8px;
+}
+
+.about-virtualmac-links a:hover {
+    text-decoration: underline;
+}
+
+.about-virtualmac-credits {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.about-credits-heading {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.about-virtualmac-credits a {
+    color: #555;
+    text-decoration: none;
+}
+
+.about-virtualmac-credits a:hover {
+    text-decoration: underline;
+}
+
+.about-vibe-coded {
+    font-size: 10px;
+    color: #999;
+    margin-top: 6px;
+}
+
+.about-virtualmac-creator {
+    font-size: 12px;
+    color: #666;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.about-virtualmac-creator a {
+    color: #888;
+    text-decoration: none;
+    margin: 0 4px;
+}
+
+.about-virtualmac-creator a:hover {
+    color: #0066cc;
+    text-decoration: underline;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .about-virtualmac-dialog {
+    background: rgba(40, 40, 40, 0.95);
+}
+
+[data-theme="dark"] .about-virtualmac-titlebar {
+    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .about-virtualmac-title {
+    color: #fff;
+}
+
+[data-theme="dark"] .about-virtualmac-tagline {
+    color: #aaa;
+}
+
+[data-theme="dark"] .about-virtualmac-links a {
+    color: #5ac8fa;
+}
+
+[data-theme="dark"] .about-virtualmac-version,
+[data-theme="dark"] .about-virtualmac-credits,
+[data-theme="dark"] .about-virtualmac-creator {
+    color: #999;
+}
+
+[data-theme="dark"] .about-virtualmac-credits a,
+[data-theme="dark"] .about-virtualmac-creator a {
+    color: #aaa;
+}
+
+[data-theme="dark"] .about-virtualmac-creator {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ======================================
    Lock Screen
    ====================================== */
 
