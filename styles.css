@@ -3027,23 +3027,39 @@ html, body {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    box-shadow: 
+    box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 0 1px rgba(255, 255, 255, 0.1) inset;
-    animation: notification-slide-in 0.3s ease-out;
+    animation: notification-enter 400ms ease-out forwards;
     pointer-events: auto;
     position: relative;
 }
 
-@keyframes notification-slide-in {
+@keyframes notification-enter {
     from {
         opacity: 0;
-        transform: translateX(100px);
+        transform: translateX(100%);
     }
     to {
         opacity: 1;
         transform: translateX(0);
     }
+}
+
+@keyframes notification-exit {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.notification.exiting {
+    animation: notification-exit 400ms ease-in forwards;
+    pointer-events: none; /* Prevent clicks during exit */
 }
 
 .notification-content {
