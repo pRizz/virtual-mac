@@ -11,12 +11,12 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Milestone:** v2.0 Persistence & Polish
 **Phase:** 4 of 5 (04-notification-polish)
-**Plan:** 1 of 2 complete
-**Status:** In progress
+**Plan:** 2 of 2 complete
+**Status:** Phase complete
 **Started:** 2026-01-19
-**Last activity:** 2026-01-20 - Completed 04-01-PLAN.md
+**Last activity:** 2026-01-20 - Completed Phase 04
 
-Progress: [#######---] 70% (3.5 of 5 phases complete)
+Progress: [########--] 80% (4 of 5 phases complete)
 
 ## Milestones
 
@@ -29,23 +29,28 @@ Progress: [#######---] 70% (3.5 of 5 phases complete)
 ## Session Continuity
 
 **Last Session:** 2026-01-20
-- Completed Phase 04 Plan 01 (notification CSS polish)
-- Added entrance/exit animation keyframes
-- Updated shadow to macOS Big Sur style
-- Added hover brightness filter
+- Completed Phase 04 (notification polish)
+- Added entrance/exit animations with smooth collapse
+- Hover pauses timer, click dismisses
+- Max 3 visible notifications
+- Added `notify` Terminal command for testing
 
 **Context for Next Session:**
-- Phase 4 Plan 01 complete (CSS animations ready)
-- Continue with Phase 4 Plan 02 (Rust state management for notifications)
-- CSS .exiting class ready for Rust to apply on dismiss
+- Phase 4 complete (notification polish)
+- Continue with Phase 5 (About VirtualMac dialog)
+- Only 1 phase remaining in v2.0 milestone
 
 ## Key Decisions
 
 | Date | Decision | Context |
 |------|----------|---------|
-| 2026-01-20 | 400ms animation timing | Entrance ease-out, exit ease-in for smooth feel |
+| 2026-01-20 | 400ms animation timing | Entrance ease-out, exit ease-in-out for smooth feel |
 | 2026-01-20 | translateX(100%) for slide | Full off-screen slide instead of fixed 100px |
 | 2026-01-20 | brightness(1.05) hover | Subtle feedback without dimming notification content |
+| 2026-01-20 | Collapse animation on exit | Height/padding collapse causes smooth stacking |
+| 2026-01-20 | Reactive exiting lookup | Look up exiting state from signal, not static prop |
+| 2026-01-20 | Max 3 visible notifications | Beyond 3, queue until space opens |
+| 2026-01-20 | Terminal notify command | Easy testing: `notify <title> [message]` |
 | 2026-01-19 | TextEdit uses innerHTML for content | Preserves bold/italic/underline formatting on persistence |
 | 2026-01-19 | StoredValue for one-time mount Effect | Cleaner pattern than signal for tracking effect execution |
 | 2026-01-19 | Terminal history limit 1000 | Prevents localStorage exhaustion, removes oldest first |
@@ -76,13 +81,14 @@ None.
 - ~~REQ-3: Terminal state persistence~~ (DONE)
 - ~~REQ-4: TextEdit state persistence~~ (DONE)
 - ~~REQ-5: Dock state persistence~~ (DONE)
-- REQ-6: Notification system polish (in progress)
+- ~~REQ-6: Notification system polish~~ (DONE)
 
 **Completed (post-v1.1):**
 - Calculator memory persistence (M+/M-/MR/MC with localStorage)
 - Terminal persistence (command history + cwd with localStorage)
 - TextEdit persistence (document content + toolbar settings with localStorage)
 - Dock persistence (pinned apps with localStorage)
+- Notification polish (macOS Big Sur animations, hover pause, click dismiss)
 - Show active app name in menu bar
 - Minimized windows in dock
 - Allow windows to drag off left edge
@@ -91,4 +97,4 @@ None.
 ---
 
 *State updated: 2026-01-20*
-*Phase 04-notification-polish Plan 01 complete: 2026-01-20*
+*Phase 04-notification-polish complete: 2026-01-20*

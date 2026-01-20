@@ -12,7 +12,7 @@
 | 1 | Calculator Persistence | Establish persistence patterns with simplest app | REQ-2 | ✓ Complete |
 | 2 | Terminal & TextEdit Persistence | Extend patterns to remaining apps | REQ-3, REQ-4 | ✓ Complete |
 | 3 | Dock State | Dynamic running indicators + pinned apps | REQ-5 | ✓ Complete |
-| 4 | Notification Polish | macOS-style animations | REQ-6 | Planned |
+| 4 | Notification Polish | macOS-style animations | REQ-6 | ✓ Complete |
 | 5 | About VirtualMac | Credits dialog in Apple menu | REQ-1 | Planned |
 
 ## Phase Details
@@ -99,6 +99,8 @@ Plans:
 
 ### Phase 4: Notification Polish
 
+**Status:** Complete (2026-01-20)
+
 **Goal:** Polish notification animations to match macOS Big Sur style with smooth entrance/exit animations, hover-to-pause, and click-to-dismiss.
 
 **Delivers:**
@@ -109,20 +111,22 @@ Plans:
 - Max 3 visible notifications (queued beyond)
 - Soft diffuse macOS Big Sur shadow
 - App icon rendering (use existing icon field)
+- Terminal `notify` command for testing
 
 **Requirements covered:** REQ-6 (Notification System Polish)
 
 **Key files:**
 - `styles.css` - Notification animation keyframes and styling
 - `src/notification.rs` - Exit state, hover pause, click dismiss
+- `src/terminal.rs` - Added notify command
 
 **Dependencies:** None (independent of persistence phases)
 
 **Plans:** 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md - CSS animations and styling (entrance/exit, shadow, hover)
-- [ ] 04-02-PLAN.md - Rust state management (exit state, hover pause, click dismiss, max 3)
+- [x] 04-01-PLAN.md - CSS animations and styling (entrance/exit, shadow, hover)
+- [x] 04-02-PLAN.md - Rust state management (exit state, hover pause, click dismiss, max 3)
 
 ---
 
@@ -183,6 +187,7 @@ Milestone is complete when:
 ---
 *Roadmap created: 2026-01-19*
 *Phase 1 complete: 2026-01-19*
-*Phase 2 planned: 2026-01-19*
-*Phase 4 planned: 2026-01-20*
+*Phase 2 complete: 2026-01-19*
+*Phase 3 complete: 2026-01-19*
+*Phase 4 complete: 2026-01-20*
 *Based on research synthesis: .planning/research/SUMMARY.md*

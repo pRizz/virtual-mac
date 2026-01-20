@@ -85,19 +85,20 @@ Dock configuration persists across page refresh.
 - [ ] Default dock apps shown on first load (no prior state)
 - [ ] Running indicators derive from WindowManager (not persisted separately)
 
-### REQ-6: Notification System Polish
+### REQ-6: Notification System Polish ✓
 
 **Priority:** P2
 **Source:** Todo - Polish notification system
+**Status:** Complete (Phase 4)
 
 Notifications match macOS visual style more closely.
 
 **Acceptance Criteria:**
-- [ ] Smooth entrance animation with subtle ease-out
-- [ ] Slide-out exit animation when dismissed (not abrupt disappear)
-- [ ] App icons display in notifications (use existing icon field)
-- [ ] Styling matches macOS (rounded corners, blur backdrop - already mostly done)
-- [ ] Stacking behavior remains correct (multiple notifications stack)
+- [x] Smooth entrance animation with subtle ease-out
+- [x] Slide-out exit animation when dismissed (not abrupt disappear)
+- [x] App icons display in notifications (use existing icon field)
+- [x] Styling matches macOS (rounded corners, blur backdrop - already mostly done)
+- [x] Stacking behavior remains correct (multiple notifications stack)
 
 ## Technical Constraints
 
