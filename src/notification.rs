@@ -9,6 +9,8 @@ pub struct Notification {
     #[allow(dead_code)]
     pub icon: Option<String>,
     pub exiting: bool,
+    #[allow(dead_code)]
+    pub timeout_handle: Option<i32>,
 }
 
 /// Global notification state
@@ -37,6 +39,7 @@ impl NotificationState {
             message: message.into(),
             icon: None,
             exiting: false,
+            timeout_handle: None,
         };
 
         self.notifications.update(|n| n.push(notification));
@@ -70,12 +73,90 @@ impl NotificationState {
             }) as Box<dyn FnOnce()>);
 
             if let Some(window) = web_sys::window() {
-                let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(
+                if let Ok(handle) = window.set_timeout_with_callback_and_timeout_and_arguments_0(
                     cb.as_ref().unchecked_ref(),
                     5000,
-                );
+                ) {
+                    // Store handle for cancellation on hover
+                    self.notifications.update(|n| {
+                        if let Some(notif) = n.iter_mut().find(|notif| notif.id == id) {
+                            notif.timeout_handle = Some(handle);
+                        }
+                    });
+                }
                 cb.forget();
             }
+        }
+    }
+
+    /// Pause auto-dismiss timer when hovering
+    pub fn pause_auto_dismiss(&self, id: usize) {
+        #[cfg(target_arch = "wasm32")]
+        {
+            self.notifications.update(|n| {
+                if let Some(notif) = n.iter_mut().find(|notif| notif.id == id) {
+                    if let Some(handle) = notif.timeout_handle.take() {
+                        if let Some(window) = web_sys::window() {
+                            window.clear_timeout_with_handle(handle);
+                        }
+                    }
+                }
+            });
+        }
+        // Non-wasm: no-op
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            let _ = id;
+        }
+    }
+
+    /// Resume auto-dismiss timer when hover ends
+    pub fn resume_auto_dismiss(&self, id: usize) {
+        #[cfg(target_arch = "wasm32")]
+        {
+            use wasm_bindgen::closure::Closure;
+            use wasm_bindgen::JsCast;
+
+            let notifications = self.notifications;
+            let cb = Closure::once(Box::new(move || {
+                // Set exiting state
+                notifications.update(|n| {
+                    if let Some(notif) = n.iter_mut().find(|notif| notif.id == id) {
+                        notif.exiting = true;
+                    }
+                });
+                // Schedule actual removal after animation
+                let notifications_inner = notifications;
+                let remove_cb = Closure::once(Box::new(move || {
+                    notifications_inner.update(|n| n.retain(|notif| notif.id != id));
+                }) as Box<dyn FnOnce()>);
+                if let Some(window) = web_sys::window() {
+                    let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(
+                        remove_cb.as_ref().unchecked_ref(),
+                        400,
+                    );
+                    remove_cb.forget();
+                }
+            }) as Box<dyn FnOnce()>);
+
+            if let Some(window) = web_sys::window() {
+                if let Ok(handle) = window.set_timeout_with_callback_and_timeout_and_arguments_0(
+                    cb.as_ref().unchecked_ref(),
+                    5000,
+                ) {
+                    self.notifications.update(|n| {
+                        if let Some(notif) = n.iter_mut().find(|notif| notif.id == id) {
+                            notif.timeout_handle = Some(handle);
+                        }
+                    });
+                }
+                cb.forget();
+            }
+        }
+        // Non-wasm: no-op
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            let _ = id;
         }
     }
 
@@ -166,8 +247,18 @@ fn NotificationItem(
 ) -> impl IntoView {
     let notification_state = expect_context::<NotificationState>();
 
-    let on_dismiss = move |_| {
+    // Click anywhere to dismiss
+    let on_click = move |_| {
         notification_state.dismiss(id);
+    };
+
+    // Hover to pause auto-dismiss
+    let on_hover_start = move |_| {
+        notification_state.pause_auto_dismiss(id);
+    };
+
+    let on_hover_end = move |_| {
+        notification_state.resume_auto_dismiss(id);
     };
 
     let class_name = if exiting {
@@ -179,7 +270,12 @@ fn NotificationItem(
     let icon_display = icon.unwrap_or_else(|| "gear".to_string());
 
     view! {
-        <div class=class_name>
+        <div
+            class=class_name
+            on:click=on_click
+            on:mouseenter=on_hover_start
+            on:mouseleave=on_hover_end
+        >
             <div class="notification-content">
                 <div class="notification-icon">
                     <div class="notification-app-icon">{icon_display}</div>
@@ -189,9 +285,6 @@ fn NotificationItem(
                     <div class="notification-message">{message}</div>
                 </div>
             </div>
-            <button class="notification-dismiss" on:click=on_dismiss>
-                "x"
-            </button>
         </div>
     }
 }
