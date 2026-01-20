@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 **Milestone:** v2.0 Persistence & Polish
-**Phase:** 3 of 5 (03-dock-state)
-**Plan:** 1 of 1 complete
-**Status:** Phase complete
+**Phase:** 4 of 5 (04-notification-polish)
+**Plan:** 1 of 2 complete
+**Status:** In progress
 **Started:** 2026-01-19
-**Last activity:** 2026-01-19 - Completed 03-01-PLAN.md
+**Last activity:** 2026-01-20 - Completed 04-01-PLAN.md
 
-Progress: [######----] 60% (3 of 5 phases complete)
+Progress: [#######---] 70% (3.5 of 5 phases complete)
 
 ## Milestones
 
@@ -28,21 +28,24 @@ Progress: [######----] 60% (3 of 5 phases complete)
 
 ## Session Continuity
 
-**Last Session:** 2026-01-19
-- Completed Phase 03 dock state persistence (03-01-PLAN.md)
-- Added DockState persistence under virtualmac_dock
-- Running indicators now derive from open windows
-- Dock order renders from persisted pinned list
+**Last Session:** 2026-01-20
+- Completed Phase 04 Plan 01 (notification CSS polish)
+- Added entrance/exit animation keyframes
+- Updated shadow to macOS Big Sur style
+- Added hover brightness filter
 
 **Context for Next Session:**
-- Phase 3 complete (dock persistence and indicators)
-- Continue with Phase 4 (Notification Polish) or Phase 5 (About VirtualMac)
-- Persistence patterns now cover Calculator, Terminal, TextEdit, Dock
+- Phase 4 Plan 01 complete (CSS animations ready)
+- Continue with Phase 4 Plan 02 (Rust state management for notifications)
+- CSS .exiting class ready for Rust to apply on dismiss
 
 ## Key Decisions
 
 | Date | Decision | Context |
 |------|----------|---------|
+| 2026-01-20 | 400ms animation timing | Entrance ease-out, exit ease-in for smooth feel |
+| 2026-01-20 | translateX(100%) for slide | Full off-screen slide instead of fixed 100px |
+| 2026-01-20 | brightness(1.05) hover | Subtle feedback without dimming notification content |
 | 2026-01-19 | TextEdit uses innerHTML for content | Preserves bold/italic/underline formatting on persistence |
 | 2026-01-19 | StoredValue for one-time mount Effect | Cleaner pattern than signal for tracking effect execution |
 | 2026-01-19 | Terminal history limit 1000 | Prevents localStorage exhaustion, removes oldest first |
@@ -72,13 +75,14 @@ None.
 - ~~REQ-2: Calculator state persistence~~ (DONE)
 - ~~REQ-3: Terminal state persistence~~ (DONE)
 - ~~REQ-4: TextEdit state persistence~~ (DONE)
-- REQ-5: Dock state persistence
-- REQ-6: Notification system polish
+- ~~REQ-5: Dock state persistence~~ (DONE)
+- REQ-6: Notification system polish (in progress)
 
 **Completed (post-v1.1):**
 - Calculator memory persistence (M+/M-/MR/MC with localStorage)
 - Terminal persistence (command history + cwd with localStorage)
 - TextEdit persistence (document content + toolbar settings with localStorage)
+- Dock persistence (pinned apps with localStorage)
 - Show active app name in menu bar
 - Minimized windows in dock
 - Allow windows to drag off left edge
@@ -86,5 +90,5 @@ None.
 
 ---
 
-*State updated: 2026-01-19*
-*Phase 02-terminal-textedit-persistence complete: 2026-01-19*
+*State updated: 2026-01-20*
+*Phase 04-notification-polish Plan 01 complete: 2026-01-20*
