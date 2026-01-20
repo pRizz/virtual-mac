@@ -3017,7 +3017,7 @@ html, body {
 }
 
 .notification {
-    background: rgba(45, 45, 50, 0.95);
+    background: rgba(45, 45, 50, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 16px;
@@ -3155,7 +3155,7 @@ html, body {
 
 /* Light theme notifications */
 [data-theme="light"] .notification {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.8);
     box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.08),
         0 2px 8px rgba(0, 0, 0, 0.05);
