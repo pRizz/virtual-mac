@@ -13,7 +13,7 @@
 | 2 | Terminal & TextEdit Persistence | Extend patterns to remaining apps | REQ-3, REQ-4 | ✓ Complete |
 | 3 | Dock State | Dynamic running indicators + pinned apps | REQ-5 | ✓ Complete |
 | 4 | Notification Polish | macOS-style animations | REQ-6 | ✓ Complete |
-| 5 | About VirtualMac | Credits dialog in Apple menu | REQ-1 | Planned |
+| 5 | About VirtualMac | Credits dialog in Apple menu | REQ-1 | ✓ Complete |
 
 ## Phase Details
 
@@ -157,7 +157,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 05-01-PLAN.md - Add AboutVirtualMac dialog with drag behavior and styling
+- [x] 05-01-PLAN.md - Add AboutVirtualMac dialog with drag behavior and styling
 
 ---
 
@@ -198,5 +198,5 @@ Milestone is complete when:
 *Phase 2 complete: 2026-01-19*
 *Phase 3 complete: 2026-01-19*
 *Phase 4 complete: 2026-01-20*
-*Phase 5 planned: 2026-01-20*
+*Phase 5 complete: 2026-01-20*
 *Based on research synthesis: .planning/research/SUMMARY.md*

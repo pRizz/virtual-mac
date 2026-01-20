@@ -10,20 +10,21 @@ VirtualMac v2.0 adds persistence for individual app state (Calculator, Terminal,
 
 ## Requirements
 
-### REQ-1: About VirtualMac Menu Item
+### REQ-1: About VirtualMac Menu Item ✓
 
 **Priority:** P1
 **Source:** Todo - About VirtualMac menu item with credits
+**Status:** Complete (Phase 5)
 
 Add an "About VirtualMac" menu item in the Apple menu that displays project information and credits.
 
 **Acceptance Criteria:**
-- [ ] Apple menu contains "About VirtualMac" item (below existing About This Mac)
-- [ ] Clicking opens a modal dialog
-- [ ] Dialog shows: VirtualMac logo/icon, version number, build info
-- [ ] Dialog shows credits: creator attribution, tools used (Claude Code, GSD, Cursor, Ralph)
-- [ ] Dialog matches macOS About dialog styling (centered, rounded corners)
-- [ ] Dialog dismissable via close button or clicking outside
+- [x] Apple menu contains "About VirtualMac" item (below existing About This Mac)
+- [x] Clicking opens a modal dialog
+- [x] Dialog shows: VirtualMac logo/icon, version number, build info
+- [x] Dialog shows credits: creator attribution, tools used (Claude Code, GSD, Cursor, Rust+Leptos)
+- [x] Dialog matches macOS About dialog styling (centered, rounded corners)
+- [x] Dialog dismissable via close button (X button only per phase context decision)
 
 ### REQ-2: Calculator State Persistence ✓
 
@@ -71,19 +72,20 @@ TextEdit document content persists across page refresh.
 - [x] State includes schema version for future migration
 - [x] Graceful degradation if storage unavailable (empty document)
 
-### REQ-5: Dock State Persistence
+### REQ-5: Dock State Persistence ✓
 
 **Priority:** P1
 **Source:** Todo - Persist dock state (pinned apps, running indicators)
+**Status:** Complete (Phase 3)
 
 Dock configuration persists across page refresh.
 
 **Acceptance Criteria:**
-- [ ] Running indicators correctly show for all open app windows
-- [ ] Pinned apps list persists across refresh
-- [ ] State stored in `virtualmac_dock` localStorage key
-- [ ] Default dock apps shown on first load (no prior state)
-- [ ] Running indicators derive from WindowManager (not persisted separately)
+- [x] Running indicators correctly show for all open app windows
+- [x] Pinned apps list persists across refresh
+- [x] State stored in `virtualmac_dock` localStorage key
+- [x] Default dock apps shown on first load (no prior state)
+- [x] Running indicators derive from WindowManager (not persisted separately)
 
 ### REQ-6: Notification System Polish ✓
 
