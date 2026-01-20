@@ -8,6 +8,7 @@ pub struct Notification {
     pub message: String,
     #[allow(dead_code)]
     pub icon: Option<String>,
+    pub exiting: bool,
 }
 
 /// Global notification state
@@ -35,11 +36,59 @@ impl NotificationState {
             title: title.into(),
             message: message.into(),
             icon: None,
+            exiting: false,
         };
 
         self.notifications.update(|n| n.push(notification));
 
-        // Auto-dismiss after 5 seconds
+        // Auto-dismiss after 5 seconds (uses dismiss() for exit animation)
+        #[cfg(target_arch = "wasm32")]
+        {
+            use wasm_bindgen::closure::Closure;
+            use wasm_bindgen::JsCast;
+
+            let notifications = self.notifications;
+            let cb = Closure::once(Box::new(move || {
+                // Set exiting state
+                notifications.update(|n| {
+                    if let Some(notif) = n.iter_mut().find(|notif| notif.id == id) {
+                        notif.exiting = true;
+                    }
+                });
+                // Schedule actual removal after animation
+                let notifications_inner = notifications;
+                let remove_cb = Closure::once(Box::new(move || {
+                    notifications_inner.update(|n| n.retain(|notif| notif.id != id));
+                }) as Box<dyn FnOnce()>);
+                if let Some(window) = web_sys::window() {
+                    let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(
+                        remove_cb.as_ref().unchecked_ref(),
+                        400,
+                    );
+                    remove_cb.forget();
+                }
+            }) as Box<dyn FnOnce()>);
+
+            if let Some(window) = web_sys::window() {
+                let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(
+                    cb.as_ref().unchecked_ref(),
+                    5000,
+                );
+                cb.forget();
+            }
+        }
+    }
+
+    /// Dismiss a notification by ID (with exit animation)
+    pub fn dismiss(&self, id: usize) {
+        // Set exiting state (triggers CSS animation)
+        self.notifications.update(|n| {
+            if let Some(notif) = n.iter_mut().find(|notif| notif.id == id) {
+                notif.exiting = true;
+            }
+        });
+
+        // Actually remove after animation completes
         #[cfg(target_arch = "wasm32")]
         {
             use wasm_bindgen::closure::Closure;
@@ -53,18 +102,18 @@ impl NotificationState {
             if let Some(window) = web_sys::window() {
                 let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(
                     cb.as_ref().unchecked_ref(),
-                    5000,
+                    400, // Match CSS animation duration
                 );
                 cb.forget();
             }
         }
-    }
 
-    /// Dismiss a notification by ID
-    #[allow(dead_code)]
-    pub fn dismiss(&self, id: usize) {
-        self.notifications
-            .update(|n| n.retain(|notif| notif.id != id));
+        // Non-wasm fallback (immediate removal)
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            self.notifications
+                .update(|n| n.retain(|notif| notif.id != id));
+        }
     }
 }
 
@@ -88,12 +137,16 @@ pub fn NotificationContainer() -> impl IntoView {
                     let id = notification.id;
                     let title = notification.title.clone();
                     let message = notification.message.clone();
+                    let icon = notification.icon.clone();
+                    let exiting = notification.exiting;
 
                     view! {
                         <NotificationItem
                             id=id
                             title=title
                             message=message
+                            icon=icon
+                            exiting=exiting
                         />
                     }
                 }
@@ -104,18 +157,32 @@ pub fn NotificationContainer() -> impl IntoView {
 
 /// Individual notification component
 #[component]
-fn NotificationItem(id: usize, title: String, message: String) -> impl IntoView {
+fn NotificationItem(
+    id: usize,
+    title: String,
+    message: String,
+    icon: Option<String>,
+    exiting: bool,
+) -> impl IntoView {
     let notification_state = expect_context::<NotificationState>();
 
     let on_dismiss = move |_| {
         notification_state.dismiss(id);
     };
 
+    let class_name = if exiting {
+        "notification exiting"
+    } else {
+        "notification"
+    };
+
+    let icon_display = icon.unwrap_or_else(|| "gear".to_string());
+
     view! {
-        <div class="notification">
+        <div class=class_name>
             <div class="notification-content">
                 <div class="notification-icon">
-                    <div class="notification-app-icon">"⚙️"</div>
+                    <div class="notification-app-icon">{icon_display}</div>
                 </div>
                 <div class="notification-text">
                     <div class="notification-title">{title}</div>
@@ -123,7 +190,7 @@ fn NotificationItem(id: usize, title: String, message: String) -> impl IntoView 
                 </div>
             </div>
             <button class="notification-dismiss" on:click=on_dismiss>
-                "×"
+                "x"
             </button>
         </div>
     }
