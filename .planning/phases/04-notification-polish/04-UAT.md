@@ -57,11 +57,14 @@ skipped: 0
 ## Gaps
 
 - truth: "Notifications have translucent background with blur effect (glassmorphism)"
-  status: failed
+  status: fixed
   reason: "User reported: it is fully opaque"
   severity: cosmetic
   test: 7
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Background opacity was 0.95 (95%), making blur nearly invisible"
+  artifacts:
+    - path: "styles.css"
+      issue: "rgba opacity too high"
+  missing:
+    - "Reduce opacity from 0.95 to 0.8"
+  fix_commit: "61dc431"
