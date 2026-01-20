@@ -204,6 +204,9 @@ impl Default for NotificationState {
     }
 }
 
+/// Maximum number of visible notifications at once
+const MAX_VISIBLE_NOTIFICATIONS: usize = 3;
+
 /// Notification container component - renders all active notifications
 #[component]
 pub fn NotificationContainer() -> impl IntoView {
@@ -212,7 +215,25 @@ pub fn NotificationContainer() -> impl IntoView {
     view! {
         <div class="notification-container">
             <For
-                each=move || notification_state.notifications.get()
+                each=move || {
+                    let all = notification_state.notifications.get();
+                    // Show exiting notifications (so they can animate out)
+                    // plus the first MAX_VISIBLE non-exiting ones
+                    let mut visible = Vec::new();
+                    let mut non_exiting_count = 0;
+
+                    for notif in all {
+                        if notif.exiting {
+                            // Always show exiting (animating out)
+                            visible.push(notif);
+                        } else if non_exiting_count < MAX_VISIBLE_NOTIFICATIONS {
+                            visible.push(notif);
+                            non_exiting_count += 1;
+                        }
+                        // Beyond MAX_VISIBLE non-exiting: queued, not rendered
+                    }
+                    visible
+                }
                 key=|n| n.id
                 children=move |notification| {
                     let id = notification.id;
