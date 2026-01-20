@@ -240,7 +240,6 @@ pub fn NotificationContainer() -> impl IntoView {
                     let title = notification.title.clone();
                     let message = notification.message.clone();
                     let icon = notification.icon.clone();
-                    let exiting = notification.exiting;
 
                     view! {
                         <NotificationItem
@@ -248,7 +247,6 @@ pub fn NotificationContainer() -> impl IntoView {
                             title=title
                             message=message
                             icon=icon
-                            exiting=exiting
                         />
                     }
                 }
@@ -264,7 +262,6 @@ fn NotificationItem(
     title: String,
     message: String,
     icon: Option<String>,
-    exiting: bool,
 ) -> impl IntoView {
     let notification_state = expect_context::<NotificationState>();
 
@@ -282,13 +279,23 @@ fn NotificationItem(
         notification_state.resume_auto_dismiss(id);
     };
 
-    let class_name = if exiting {
-        "notification exiting"
-    } else {
-        "notification"
+    // Reactively look up exiting state so class updates when dismiss is called
+    let class_name = move || {
+        let is_exiting = notification_state
+            .notifications
+            .get()
+            .iter()
+            .find(|n| n.id == id)
+            .map(|n| n.exiting)
+            .unwrap_or(false);
+        if is_exiting {
+            "notification exiting"
+        } else {
+            "notification"
+        }
     };
 
-    let icon_display = icon.unwrap_or_else(|| "gear".to_string());
+    let icon_display = icon.unwrap_or_else(|| "⚙️".to_string());
 
     view! {
         <div
