@@ -1,4 +1,5 @@
 use crate::file_system::{use_file_system, EntryType, VirtualFileSystem};
+use crate::notification::NotificationState;
 use crate::system_state::SystemState;
 use leptos::ev::KeyboardEvent;
 use leptos::prelude::*;
@@ -136,6 +137,7 @@ fn find_common_prefix(strings: &[String]) -> String {
 #[component]
 pub fn Terminal() -> impl IntoView {
     let system_state = expect_context::<SystemState>();
+    let notification_state = expect_context::<NotificationState>();
 
     // Load persisted state from localStorage
     let (terminal_state, set_terminal_state) = signal(load_from_storage());
@@ -377,7 +379,21 @@ pub fn Terminal() -> impl IntoView {
                     String::new()
                 }
             }
-            "help" => String::from("Available commands: ls, cd, pwd, echo, cat, mkdir, rm, touch, clear, whoami, hostname, date, help"),
+            "help" => String::from("Available commands: ls, cd, pwd, echo, cat, mkdir, rm, touch, clear, whoami, hostname, date, notify, help"),
+            "notify" => {
+                if args.is_empty() {
+                    String::from("usage: notify <title> [message]")
+                } else {
+                    let title = args[0].to_string();
+                    let message = if args.len() > 1 {
+                        args[1..].join(" ")
+                    } else {
+                        String::new()
+                    };
+                    notification_state.show(title, message);
+                    String::new()
+                }
+            }
             _ => format!("command not found: {}", command),
         };
 
