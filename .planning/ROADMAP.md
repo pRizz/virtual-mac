@@ -132,24 +132,32 @@ Plans:
 
 ### Phase 5: About VirtualMac
 
-**Goal:** Add About VirtualMac menu item and dialog with credits.
+**Goal:** Add About VirtualMac menu item and draggable dialog with version, links, and credits.
 
 **Delivers:**
-- "About VirtualMac" menu item in Apple menu
-- Modal dialog with version, build info, and credits
-- macOS-style About dialog appearance
+- "About VirtualMac" menu item in VirtualMac app menu
+- Draggable dialog (like a window, not a simple modal)
+- Version info: "Version 2.0 (Build 2026.01.20)"
+- Links: GitHub repo, hosted site, creator GitHub, creator LinkedIn
+- Credits: Claude Code, GSD, Cursor, Rust + Leptos, "vibe coded" (subtle)
+- Creator attribution: Peter Ryszkiewicz
 
 **Requirements covered:** REQ-1 (About VirtualMac Menu Item)
 
 **Key files:**
-- `src/menu_bar.rs` - Add menu item
-- `src/modals.rs` - Add or update About dialog
-- `src/system_state.rs` - Add ModalType if needed
-- `styles.css` - About dialog styling
+- `src/system_state.rs` - Add AboutVirtualMac ModalType variant
+- `src/menu_bar.rs` - Wire handler to existing menu item
+- `src/modals.rs` - AboutVirtualMacDialog component with drag behavior
+- `src/styles.css` - Dialog styling
 
 **Dependencies:** None (modal system exists)
 
-**Estimated scope:** Small - content and styling
+**Estimated scope:** Small - 4 files, one plan
+
+**Plans:** 1 plan
+
+Plans:
+- [ ] 05-01-PLAN.md - Add AboutVirtualMac dialog with drag behavior and styling
 
 ---
 
@@ -190,4 +198,5 @@ Milestone is complete when:
 *Phase 2 complete: 2026-01-19*
 *Phase 3 complete: 2026-01-19*
 *Phase 4 complete: 2026-01-20*
+*Phase 5 planned: 2026-01-20*
 *Based on research synthesis: .planning/research/SUMMARY.md*
