@@ -1,6 +1,19 @@
 use leptos::prelude::*;
 
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::closure::Closure;
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::JsCast;
+
 use crate::system_state::{ModalType, PowerState, SystemState};
+
+/// Menu bar height in pixels (matches CSS --menubar-height)
+#[cfg(target_arch = "wasm32")]
+const MENU_BAR_HEIGHT: f64 = 25.0;
+
+/// Dialog dimensions for centering calculation
+#[cfg(target_arch = "wasm32")]
+const DIALOG_WIDTH: f64 = 320.0;
 
 /// Modal overlay component - renders active modal dialogs
 #[component]
@@ -41,20 +54,155 @@ pub fn ModalOverlay() -> impl IntoView {
 }
 
 /// About VirtualMac dialog - draggable window with credits
-/// Placeholder - full implementation in Task 2
 #[component]
 fn AboutVirtualMacDialog() -> impl IntoView {
     let system_state = expect_context::<SystemState>();
 
+    // Position state - will be set on mount
+    let (x, set_x) = signal(0.0_f64);
+    let (y, set_y) = signal(0.0_f64);
+
+    // Drag state
+    #[cfg(target_arch = "wasm32")]
+    let (dragging, set_dragging) = signal(false);
+    #[cfg(target_arch = "wasm32")]
+    let (drag_start_x, set_drag_start_x) = signal(0.0_f64);
+    #[cfg(target_arch = "wasm32")]
+    let (drag_start_y, set_drag_start_y) = signal(0.0_f64);
+    #[cfg(target_arch = "wasm32")]
+    let (dialog_start_x, set_dialog_start_x) = signal(0.0_f64);
+    #[cfg(target_arch = "wasm32")]
+    let (dialog_start_y, set_dialog_start_y) = signal(0.0_f64);
+
+    // Center dialog on mount (WASM only)
+    #[cfg(target_arch = "wasm32")]
+    {
+        if let Some(window) = web_sys::window() {
+            let viewport_width = window
+                .inner_width()
+                .ok()
+                .and_then(|v| v.as_f64())
+                .unwrap_or(1920.0);
+            let viewport_height = window
+                .inner_height()
+                .ok()
+                .and_then(|v| v.as_f64())
+                .unwrap_or(1080.0);
+
+            // Center horizontally, position at 1/3 from top (like macOS About dialogs)
+            let initial_x = (viewport_width - DIALOG_WIDTH) / 2.0;
+            let initial_y = viewport_height / 3.0;
+            set_x.set(initial_x);
+            set_y.set(initial_y.max(MENU_BAR_HEIGHT));
+        }
+    }
+
+    // For non-WASM, use static centered position
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        set_x.set(800.0);
+        set_y.set(300.0);
+    }
+
+    // Set up document-level drag listeners (WASM only)
+    #[cfg(target_arch = "wasm32")]
+    {
+        // Mouse move handler
+        let mousemove_handler = Closure::wrap(Box::new(move |e: web_sys::MouseEvent| {
+            if dragging.get_untracked() {
+                let dx = e.client_x() as f64 - drag_start_x.get_untracked();
+                let dy = e.client_y() as f64 - drag_start_y.get_untracked();
+                set_x.set(dialog_start_x.get_untracked() + dx);
+                // Constrain Y so titlebar stays accessible (above menu bar)
+                set_y.set((dialog_start_y.get_untracked() + dy).max(MENU_BAR_HEIGHT));
+            }
+        }) as Box<dyn Fn(web_sys::MouseEvent)>);
+
+        // Mouse up handler
+        let mouseup_handler = Closure::wrap(Box::new(move |_: web_sys::MouseEvent| {
+            set_dragging.set(false);
+        }) as Box<dyn Fn(web_sys::MouseEvent)>);
+
+        // Add document-level listeners
+        if let Some(window) = web_sys::window() {
+            if let Some(document) = window.document() {
+                let _ = document.add_event_listener_with_callback(
+                    "mousemove",
+                    mousemove_handler.as_ref().unchecked_ref(),
+                );
+                let _ = document.add_event_listener_with_callback(
+                    "mouseup",
+                    mouseup_handler.as_ref().unchecked_ref(),
+                );
+            }
+        }
+
+        // Keep closures alive
+        mousemove_handler.forget();
+        mouseup_handler.forget();
+    }
+
+    // Start drag handler (WASM only - does nothing in SSR)
+    #[cfg(target_arch = "wasm32")]
+    let start_drag = move |e: leptos::ev::MouseEvent| {
+        e.prevent_default();
+        set_dragging.set(true);
+        set_drag_start_x.set(e.client_x() as f64);
+        set_drag_start_y.set(e.client_y() as f64);
+        set_dialog_start_x.set(x.get_untracked());
+        set_dialog_start_y.set(y.get_untracked());
+    };
+    #[cfg(not(target_arch = "wasm32"))]
+    let start_drag = move |_: leptos::ev::MouseEvent| {};
+
+    // Close handler (stop propagation to prevent titlebar drag)
+    let close_handler = move |e: leptos::ev::MouseEvent| {
+        e.stop_propagation();
+        system_state.close_modal();
+    };
+
+    // Style for positioning
+    let style = move || format!("left: {}px; top: {}px;", x.get(), y.get());
+
     view! {
         <div class="about-virtualmac-overlay">
-            <div class="about-virtualmac-dialog" style="left: 50%; top: 33%; transform: translateX(-50%);">
-                <div class="about-virtualmac-titlebar">
-                    <button class="about-close-btn" on:click=move |_| system_state.close_modal()>"X"</button>
+            <div class="about-virtualmac-dialog" style=style>
+                <div class="about-virtualmac-titlebar" on:mousedown=start_drag>
+                    <button
+                        class="about-close-btn"
+                        on:mousedown=|e: leptos::ev::MouseEvent| e.stop_propagation()
+                        on:click=close_handler
+                    ></button>
                 </div>
                 <div class="about-virtualmac-content">
+                    // Icon
+                    <div class="about-virtualmac-icon">"🖥️"</div>
+                    // Title
                     <div class="about-virtualmac-title">"VirtualMac"</div>
-                    <div class="about-virtualmac-version">"Version 2.0"</div>
+                    // Version
+                    <div class="about-virtualmac-version">"Version 2.0 (Build 2026.01.20)"</div>
+                    // Tagline
+                    <div class="about-virtualmac-tagline">"A macOS experience in the browser"</div>
+                    // Primary links
+                    <div class="about-virtualmac-links">
+                        <a href="https://github.com/pRizz/virtual-mac" target="_blank" rel="noopener">"GitHub"</a>
+                        <a href="https://prizz.github.io/virtual-mac/" target="_blank" rel="noopener">"Live Demo"</a>
+                    </div>
+                    // Credits section
+                    <div class="about-virtualmac-credits">
+                        <div class="about-credits-heading">"Built with"</div>
+                        <a href="https://claude.ai/download" target="_blank" rel="noopener">"Claude Code"</a>" · "
+                        <a href="https://github.com/anthropics/claude-code/tree/main/.claude/docs/gsd" target="_blank" rel="noopener">"GSD"</a>" · "
+                        <a href="https://cursor.com" target="_blank" rel="noopener">"Cursor"</a>" · "
+                        <a href="https://leptos.dev" target="_blank" rel="noopener">"Rust + Leptos"</a>
+                        <div class="about-vibe-coded">"vibe coded"</div>
+                    </div>
+                    // Creator section
+                    <div class="about-virtualmac-creator">
+                        "by Peter Ryszkiewicz "
+                        <a href="https://github.com/pRizz" target="_blank" rel="noopener">"GitHub"</a>" · "
+                        <a href="https://www.linkedin.com/in/peter-ryszkiewicz/" target="_blank" rel="noopener">"LinkedIn"</a>
+                    </div>
                 </div>
             </div>
         </div>
