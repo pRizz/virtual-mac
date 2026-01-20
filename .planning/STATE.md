@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 **Milestone:** v2.0 Persistence & Polish
-**Phase:** 4 of 5 (04-notification-polish)
-**Plan:** 2 of 2 complete
-**Status:** Phase complete
+**Phase:** 5 of 5 (05-about-virtualmac)
+**Plan:** 1 of 1 complete
+**Status:** Phase complete - v2.0 milestone complete
 **Started:** 2026-01-19
-**Last activity:** 2026-01-20 - Completed Phase 04
+**Last activity:** 2026-01-20 - Completed Phase 05
 
-Progress: [########--] 80% (4 of 5 phases complete)
+Progress: [##########] 100% (5 of 5 phases complete)
 
 ## Milestones
 
@@ -24,26 +24,29 @@ Progress: [########--] 80% (4 of 5 phases complete)
 |---------|------|--------|---------|
 | v1.0 | App Polish | Shipped | 2026-01-17 |
 | v1.1 | System Polish | Shipped | 2026-01-18 |
-| v2.0 | Persistence & Polish | Active | - |
+| v2.0 | Persistence & Polish | Complete | 2026-01-20 |
 
 ## Session Continuity
 
 **Last Session:** 2026-01-20
-- Completed Phase 04 (notification polish)
-- Added entrance/exit animations with smooth collapse
-- Hover pauses timer, click dismisses
-- Max 3 visible notifications
-- Added `notify` Terminal command for testing
+- Completed Phase 05 (About VirtualMac)
+- Added draggable About VirtualMac dialog
+- Dialog shows version, tagline, GitHub/Live Demo links
+- Credits include Claude Code, GSD, Cursor, Rust+Leptos
+- Creator section with GitHub/LinkedIn links
 
 **Context for Next Session:**
-- Phase 4 complete (notification polish)
-- Continue with Phase 5 (About VirtualMac dialog)
-- Only 1 phase remaining in v2.0 milestone
+- v2.0 milestone complete
+- All REQ-1 through REQ-6 delivered
+- Ready to ship v2.0 or define next milestone
 
 ## Key Decisions
 
 | Date | Decision | Context |
 |------|----------|---------|
+| 2026-01-20 | Separate overlay for AboutVirtualMac | X button only, no click-outside-to-close |
+| 2026-01-20 | Dialog at 1/3 viewport height | Matches macOS About dialog positioning |
+| 2026-01-20 | Y constraint >= 25px | Keep titlebar accessible above menu bar |
 | 2026-01-20 | 400ms animation timing | Entrance ease-out, exit ease-in-out for smooth feel |
 | 2026-01-20 | translateX(100%) for slide | Full off-screen slide instead of fixed 100px |
 | 2026-01-20 | brightness(1.05) hover | Subtle feedback without dimming notification content |
@@ -74,9 +77,9 @@ None.
 
 ## Todos
 
-**In v2.0 scope:** (now tracked in REQUIREMENTS.md)
+**v2.0 scope complete:**
 
-- REQ-1: About VirtualMac menu item with credits
+- ~~REQ-1: About VirtualMac menu item with credits~~ (DONE)
 - ~~REQ-2: Calculator state persistence~~ (DONE)
 - ~~REQ-3: Terminal state persistence~~ (DONE)
 - ~~REQ-4: TextEdit state persistence~~ (DONE)
@@ -89,6 +92,7 @@ None.
 - TextEdit persistence (document content + toolbar settings with localStorage)
 - Dock persistence (pinned apps with localStorage)
 - Notification polish (macOS Big Sur animations, hover pause, click dismiss)
+- About VirtualMac dialog (draggable, credits, links)
 - Show active app name in menu bar
 - Minimized windows in dock
 - Allow windows to drag off left edge
@@ -97,4 +101,5 @@ None.
 ---
 
 *State updated: 2026-01-20*
-*Phase 04-notification-polish complete: 2026-01-20*
+*Phase 05-about-virtualmac complete: 2026-01-20*
+*v2.0 milestone complete: 2026-01-20*
