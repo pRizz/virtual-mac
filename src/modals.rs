@@ -7,8 +7,22 @@ use crate::system_state::{ModalType, PowerState, SystemState};
 pub fn ModalOverlay() -> impl IntoView {
     let system_state = expect_context::<SystemState>();
 
+    // Check if showing AboutVirtualMac (needs special handling - no click-outside-to-close)
+    let is_about_virtualmac =
+        move || system_state.active_modal.get() == Some(ModalType::AboutVirtualMac);
+    let is_other_modal = move || {
+        let modal = system_state.active_modal.get();
+        modal.is_some() && modal != Some(ModalType::AboutVirtualMac)
+    };
+
     view! {
-        <Show when=move || system_state.active_modal.get().is_some()>
+        // About VirtualMac dialog - rendered separately without click-to-close overlay
+        <Show when=is_about_virtualmac>
+            <AboutVirtualMacDialog />
+        </Show>
+
+        // Other modals - rendered with click-to-close overlay
+        <Show when=is_other_modal>
             <div class="modal-overlay" on:click=move |_| system_state.close_modal()>
                 <div class="modal-container" on:click=|e| e.stop_propagation()>
                     {move || match system_state.active_modal.get() {
@@ -18,11 +32,32 @@ pub fn ModalOverlay() -> impl IntoView {
                         Some(ModalType::LogOutConfirm) => view! { <LogOutModal /> }.into_any(),
                         Some(ModalType::ForceQuit) => view! { <ForceQuitModal /> }.into_any(),
                         Some(ModalType::ResetDesktopConfirm) => view! { <ResetDesktopModal /> }.into_any(),
-                        None => ().into_any(),
+                        _ => ().into_any(),
                     }}
                 </div>
             </div>
         </Show>
+    }
+}
+
+/// About VirtualMac dialog - draggable window with credits
+/// Placeholder - full implementation in Task 2
+#[component]
+fn AboutVirtualMacDialog() -> impl IntoView {
+    let system_state = expect_context::<SystemState>();
+
+    view! {
+        <div class="about-virtualmac-overlay">
+            <div class="about-virtualmac-dialog" style="left: 50%; top: 33%; transform: translateX(-50%);">
+                <div class="about-virtualmac-titlebar">
+                    <button class="about-close-btn" on:click=move |_| system_state.close_modal()>"X"</button>
+                </div>
+                <div class="about-virtualmac-content">
+                    <div class="about-virtualmac-title">"VirtualMac"</div>
+                    <div class="about-virtualmac-version">"Version 2.0"</div>
+                </div>
+            </div>
+        </div>
     }
 }
 

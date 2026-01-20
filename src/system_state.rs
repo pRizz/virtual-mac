@@ -48,6 +48,7 @@ pub enum PowerState {
 #[derive(Clone, Debug, PartialEq)]
 pub enum ModalType {
     AboutThisMac,
+    AboutVirtualMac,
     ShutDownConfirm,
     RestartConfirm,
     LogOutConfirm,

@@ -39,6 +39,10 @@ pub fn MenuBar() -> impl IntoView {
         set_active_menu.set(None);
         system_state.show_modal(ModalType::AboutThisMac);
     });
+    let on_about_virtualmac = Callback::new(move |_| {
+        set_active_menu.set(None);
+        system_state.show_modal(ModalType::AboutVirtualMac);
+    });
     let on_system_settings = Callback::new(move |_| {
         set_active_menu.set(None);
         system_state.open_system_settings.set(true);
@@ -108,7 +112,7 @@ pub fn MenuBar() -> impl IntoView {
                     active_menu=active_menu
                     set_active_menu=set_active_menu
                 >
-                    <DropdownItem label="About VirtualMac" />
+                    <DropdownItem label="About VirtualMac" on_click=on_about_virtualmac />
                     <DropdownSeparator />
                     <DropdownItem label="Settings..." shortcut="⌘," />
                     <DropdownSeparator />
