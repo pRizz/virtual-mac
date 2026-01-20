@@ -99,22 +99,30 @@ Plans:
 
 ### Phase 4: Notification Polish
 
-**Goal:** Polish notification animations to match macOS style.
+**Goal:** Polish notification animations to match macOS Big Sur style with smooth entrance/exit animations, hover-to-pause, and click-to-dismiss.
 
 **Delivers:**
-- Smooth entrance animation with ease-out
-- Slide-out exit animation on dismiss
+- Smooth entrance animation (400ms ease-out, slide from right)
+- Slide-out exit animation on dismiss (400ms ease-in)
+- Hover pauses auto-dismiss timer
+- Click anywhere to dismiss
+- Max 3 visible notifications (queued beyond)
+- Soft diffuse macOS Big Sur shadow
 - App icon rendering (use existing icon field)
 
 **Requirements covered:** REQ-6 (Notification System Polish)
 
 **Key files:**
-- `src/notification.rs` - Add dismissing state for exit animation
-- `styles.css` - Notification animation keyframes
+- `styles.css` - Notification animation keyframes and styling
+- `src/notification.rs` - Exit state, hover pause, click dismiss
 
-**Dependencies:** None (can run parallel to persistence phases)
+**Dependencies:** None (independent of persistence phases)
 
-**Estimated scope:** Small - CSS focus, minimal Rust changes
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md - CSS animations and styling (entrance/exit, shadow, hover)
+- [ ] 04-02-PLAN.md - Rust state management (exit state, hover pause, click dismiss, max 3)
 
 ---
 
@@ -176,4 +184,5 @@ Milestone is complete when:
 *Roadmap created: 2026-01-19*
 *Phase 1 complete: 2026-01-19*
 *Phase 2 planned: 2026-01-19*
+*Phase 4 planned: 2026-01-20*
 *Based on research synthesis: .planning/research/SUMMARY.md*
