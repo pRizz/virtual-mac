@@ -8,22 +8,18 @@ A browser-based macOS desktop simulation built with Rust/WebAssembly and Leptos.
 
 The applications feel like real macOS apps — users familiar with macOS immediately recognize the UI and behavior, creating an authentic desktop experience in the browser.
 
-## Current Milestone: v2.0 Persistence & Polish
+## Current Milestone: Planning next milestone
 
-**Goal:** Add state persistence across page refresh and polish remaining UI elements.
+**Goal:** Define the next milestone scope after v2.0.
 
-**Target features:**
-- About VirtualMac menu item with project credits
-- Persist app state (Calculator, Terminal, TextEdit) across refresh
-- Persist dock state (pinned apps, running indicators)
-- Polish notification system to match macOS
+**Target features:** TBD
 
-## Current State (v1.1 Shipped)
+## Current State (v2.0 Shipped)
 
 **Tech stack:** Rust 2021 + Leptos 0.7 (CSR) + WebAssembly
-**Codebase:** ~11,500 lines (Rust + CSS)
+**Codebase:** ~13,200 lines (Rust + CSS)
 **Apps shipped:** Calculator, Terminal, Notes, TextEdit, Finder
-**Milestones shipped:** v1.0 App Polish, v1.1 System Polish
+**Milestones shipped:** v1.0 App Polish, v1.1 System Polish, v2.0 Persistence & Polish
 
 ## Requirements
 
@@ -50,13 +46,14 @@ These capabilities exist and are working:
 - ✓ Notes matches macOS Notes (three-column, formatting, localStorage) — v1.0
 - ✓ TextEdit matches macOS TextEdit (toolbar, document feel, colors) — v1.0
 - ✓ Finder matches macOS Finder (views, sidebar, search, context menu) — v1.0
+- ✓ About VirtualMac menu item with credits — v2.0
+- ✓ Persist app state (Calculator, Terminal, TextEdit) — v2.0
+- ✓ Persist dock state (pinned apps, running indicators) — v2.0
+- ✓ Polish notification system — v2.0
 
 ### Active
 
-- [ ] About VirtualMac menu item with credits — v2.0
-- [ ] Persist app state (Calculator, Terminal, TextEdit) — v2.0
-- [ ] Persist dock state (pinned apps, running indicators) — v2.0
-- [ ] Polish notification system — v2.0
+None yet — planning next milestone.
 
 ### Out of Scope
 
@@ -68,6 +65,8 @@ These capabilities exist and are working:
 ## Context
 
 **Reference:** `.planning/codebase/` contains detailed architecture, conventions, and structure docs.
+
+Shipped v2.0 with persistence across core apps and dock, notification polish, and the About VirtualMac dialog.
 
 ## Constraints
 
@@ -89,4 +88,4 @@ These capabilities exist and are working:
 | YOLO workflow mode | Faster iteration with fewer confirmations | ✓ Good |
 
 ---
-*Last updated: 2026-01-19 starting v2.0 milestone*
+*Last updated: 2026-01-20 after v2.0 milestone*

@@ -1,5 +1,32 @@
 # Project Milestones: VirtualMac
 
+## v2.0 Persistence & Polish (Shipped: 2026-01-20)
+
+**Delivered:** State now persists across Calculator, Terminal, TextEdit, and Dock, with polished notifications and a full About VirtualMac dialog.
+
+**Phases completed:** 1-5 (8 plans total)
+
+**Key accomplishments:**
+
+- Established localStorage persistence patterns and calculator memory support
+- Persisted Terminal history/cwd and TextEdit content/toolbar settings
+- Saved dock pinned apps while deriving running indicators from open windows
+- Polished notifications with macOS-style animations, hover pause, and queueing
+- Added About VirtualMac dialog with credits, links, and drag behavior
+
+**Stats:**
+
+- 42 files created/modified
+- 13,230 lines of Rust + CSS
+- 5 phases, 8 plans, 18 tasks
+- 2 days from v1.1 to ship
+
+**Git range:** `feat(01-01)` → `feat(05-01)`
+
+**What's next:** Planning next milestone requirements
+
+---
+
 ## v1.1 System Polish (Shipped: 2026-01-18)
 
 **Delivered:** Nine bug fixes across window system, UI polish, and clock display.

@@ -2,21 +2,21 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-19)
+See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** Authentic macOS desktop experience in the browser
-**Current focus:** v2.0 Persistence & Polish
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-**Milestone:** v2.0 Persistence & Polish
-**Phase:** 5 of 5 (05-about-virtualmac)
-**Plan:** 1 of 1 complete
-**Status:** Phase complete - v2.0 milestone complete
-**Started:** 2026-01-19
-**Last activity:** 2026-01-20 - Completed Phase 05
+**Milestone:** Planning next milestone
+**Phase:** Planning
+**Plan:** Not started
+**Status:** Ready to plan
+**Started:** 2026-01-20
+**Last activity:** 2026-01-20 - v2.0 milestone complete
 
-Progress: [##########] 100% (5 of 5 phases complete)
+Progress: [----------] 0% (planning)
 
 ## Milestones
 
@@ -24,21 +24,19 @@ Progress: [##########] 100% (5 of 5 phases complete)
 |---------|------|--------|---------|
 | v1.0 | App Polish | Shipped | 2026-01-17 |
 | v1.1 | System Polish | Shipped | 2026-01-18 |
-| v2.0 | Persistence & Polish | Complete | 2026-01-20 |
+| v2.0 | Persistence & Polish | Shipped | 2026-01-20 |
 
 ## Session Continuity
 
 **Last Session:** 2026-01-20
-- Completed Phase 05 (About VirtualMac)
-- Added draggable About VirtualMac dialog
-- Dialog shows version, tagline, GitHub/Live Demo links
-- Credits include Claude Code, GSD, Cursor, Rust+Leptos
-- Creator section with GitHub/LinkedIn links
-
-**Context for Next Session:**
 - v2.0 milestone complete
 - All REQ-1 through REQ-6 delivered
-- Ready to ship v2.0 or define next milestone
+- Planning state reset for next milestone
+
+**Context for Next Session:**
+- Define next milestone scope and requirements
+- Create new ROADMAP.md and REQUIREMENTS.md
+- Update PROJECT.md Active requirements
 
 ## Key Decisions
 
@@ -101,5 +99,4 @@ None.
 ---
 
 *State updated: 2026-01-20*
-*Phase 05-about-virtualmac complete: 2026-01-20*
 *v2.0 milestone complete: 2026-01-20*
