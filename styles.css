@@ -22,8 +22,8 @@
     --dock-bg: rgba(255, 255, 255, 0.2);
     --dock-border: rgba(255, 255, 255, 0.3);
     --dock-tooltip-bg: rgba(30, 30, 30, 0.95);
-    --dock-indicator-color: rgba(35, 35, 35, 0.7);
-    --dock-indicator-glow: rgba(0, 0, 0, 0.4);
+    --dock-indicator-color: rgba(190, 235, 255, 0.95);
+    --dock-indicator-glow: rgba(120, 200, 255, 0.8);
 
     /* Finder colors */
     --finder-bg: #ffffff;
@@ -67,8 +67,8 @@
     --dock-bg: rgba(50, 50, 50, 0.4);
     --dock-border: rgba(255, 255, 255, 0.1);
     --dock-tooltip-bg: rgba(50, 50, 50, 0.95);
-    --dock-indicator-color: rgba(255, 255, 255, 0.85);
-    --dock-indicator-glow: rgba(255, 255, 255, 0.7);
+    --dock-indicator-color: rgba(190, 235, 255, 0.98);
+    --dock-indicator-glow: rgba(140, 210, 255, 0.9);
 
     /* Finder colors */
     --finder-bg: #2d2d2d;
@@ -609,7 +609,7 @@ html, body {
     height: 5px;
     background: var(--dock-indicator-color);
     border-radius: 50%;
-    margin-top: 4px;
+    margin-top: 7px;
     opacity: 0;
     transition: opacity 0.2s ease, transform 0.2s ease;
     box-shadow: 0 0 4px var(--dock-indicator-glow);
