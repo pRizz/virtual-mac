@@ -1,0 +1,14 @@
+{
+  "id": "reminders-application",
+  "category": "Applications",
+  "title": "Reminders Application",
+  "description": "Task management app with lists, due dates, priorities, and integration with calendar. Supports recurring tasks and notifications.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [
+    "notification-enhancement"
+  ],
+  "createdAt": "2026-01-21T12:37:58.456Z",
+  "updatedAt": "2026-01-21T12:37:58.456Z"
+}

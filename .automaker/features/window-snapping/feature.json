@@ -1,0 +1,12 @@
+{
+  "id": "window-snapping",
+  "category": "Core",
+  "title": "Window Snapping/Tiling",
+  "description": "Drag windows to screen edges to snap to half/quarter screen sizes with visual preview overlay.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.468Z",
+  "updatedAt": "2026-01-21T12:37:58.468Z"
+}

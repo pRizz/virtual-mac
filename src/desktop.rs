@@ -1,4 +1,6 @@
 use crate::context_menu::{show_context_menu, ContextMenuState, ContextMenuType};
+use crate::drag_drop::use_drag_drop;
+use crate::file_system::use_file_system;
 use crate::wallpaper::{get_wallpaper_gradient, use_wallpaper_context};
 use leptos::prelude::*;
 
@@ -32,6 +34,8 @@ impl SelectionRect {
 #[component]
 pub fn Desktop(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView {
     let wallpaper_ctx = use_wallpaper_context();
+    let drag_drop = use_drag_drop();
+    let fs = use_file_system();
     let (selection, set_selection) = signal(SelectionRect::default());
 
     let background_style = move || {
@@ -79,14 +83,59 @@ pub fn Desktop(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoVi
         show_context_menu(context_menu_state, x, y, ContextMenuType::Desktop);
     };
 
+    let on_dragover = move |ev: web_sys::DragEvent| {
+        // Allow drops on the desktop
+        if drag_drop.is_dragging() {
+            ev.prevent_default();
+            drag_drop.set_drop_target(Some("/Desktop".to_string()));
+        }
+    };
+
+    let on_dragleave = move |ev: web_sys::DragEvent| {
+        // Only clear if truly leaving the desktop
+        if let Some(related) = ev.related_target() {
+            use wasm_bindgen::JsCast;
+            if let Some(el) = related.dyn_ref::<web_sys::Element>() {
+                if el.closest(".desktop").ok().flatten().is_some() {
+                    return;
+                }
+            }
+        }
+        drag_drop.set_drop_target(None);
+    };
+
+    let on_drop = move |ev: web_sys::DragEvent| {
+        ev.prevent_default();
+        if let Some(dragged) = drag_drop.dragged_item.get() {
+            // Move file to /Desktop
+            let target_dir = "/Desktop";
+            let source_parent = dragged
+                .path
+                .rsplit_once('/')
+                .map(|(p, _)| if p.is_empty() { "/" } else { p })
+                .unwrap_or("/");
+            if source_parent != target_dir {
+                let new_path = format!("{}/{}", target_dir, dragged.name);
+                fs.rename(&dragged.path, &new_path);
+            }
+        }
+        drag_drop.end_drag();
+    };
+
     view! {
         <div
-            class="desktop"
+            class=move || {
+                let is_target = drag_drop.drop_target.get().map(|t| t == "/Desktop").unwrap_or(false);
+                if is_target { "desktop drop-target" } else { "desktop" }
+            }
             style=background_style
             on:mousedown=on_mousedown
             on:mousemove=on_mousemove
             on:mouseup=on_mouseup
             on:contextmenu=on_contextmenu
+            on:dragover=on_dragover
+            on:dragleave=on_dragleave
+            on:drop=on_drop
         >
             <div class="feature-tour">
                 <h1 class="feature-tour-title">"Welcome to VirtualMac"</h1>

@@ -1,0 +1,12 @@
+{
+  "id": "facetime-application",
+  "category": "Applications",
+  "title": "FaceTime Application",
+  "description": "Video call simulator with contact list, simulated video feed, and call controls (mute, video toggle, end call).",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.456Z",
+  "updatedAt": "2026-01-21T12:37:58.456Z"
+}

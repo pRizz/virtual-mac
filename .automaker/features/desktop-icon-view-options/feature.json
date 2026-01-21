@@ -1,0 +1,14 @@
+{
+  "id": "desktop-icon-view-options",
+  "category": "UI",
+  "title": "Desktop Icon View Options",
+  "description": "Customize desktop icon size, grid spacing, label position, and sort order through right-click menu.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [
+    "desktop-icons"
+  ],
+  "createdAt": "2026-01-21T12:37:58.462Z",
+  "updatedAt": "2026-01-21T12:37:58.462Z"
+}

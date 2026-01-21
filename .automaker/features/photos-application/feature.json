@@ -1,0 +1,12 @@
+{
+  "id": "photos-application",
+  "category": "Applications",
+  "title": "Photos Application",
+  "description": "Photo library manager with albums, grid view, slideshow mode, and basic editing tools (crop, rotate, filters). Supports uploading images from the user's device.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.453Z",
+  "updatedAt": "2026-01-21T12:37:58.453Z"
+}

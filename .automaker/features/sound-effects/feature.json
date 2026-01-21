@@ -1,0 +1,12 @@
+{
+  "id": "sound-effects",
+  "category": "UI",
+  "title": "System Sound Effects",
+  "description": "Audio feedback for actions like emptying trash, error alerts, window minimize, and new mail with volume control.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.465Z",
+  "updatedAt": "2026-01-21T12:37:58.465Z"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "time-machine",
+  "category": "System Utilities",
+  "title": "Time Machine Backup",
+  "description": "Simulated backup interface with timeline visualization, file restoration browser, and backup status monitoring.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.467Z",
+  "updatedAt": "2026-01-21T12:37:58.467Z"
+}

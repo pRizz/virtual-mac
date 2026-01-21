@@ -1,0 +1,12 @@
+{
+  "id": "voice-memos",
+  "category": "Applications",
+  "title": "Voice Memos",
+  "description": "Audio recording application with record/pause/stop controls, playback, trimming, and saved recordings list.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.459Z",
+  "updatedAt": "2026-01-21T12:37:58.459Z"
+}

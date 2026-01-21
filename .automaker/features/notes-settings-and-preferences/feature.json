@@ -1,0 +1,20 @@
+{
+  "category": "feature",
+  "description": "Implement preferences for default account, sorting, font/display options, and other macOS Notes settings.",
+  "id": "notes-settings-and-preferences",
+  "title": "Notes Settings and Preferences",
+  "dependencies": [
+    "notes-list-and-sidebar-ui",
+    "note-editor-rich-text"
+  ],
+  "priority": 4,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Implement preferences for default account, sorting, font/display options, and other macOS Notes settings.",
+      "timestamp": "2026-01-21T12:38:59.718Z",
+      "source": "initial"
+    }
+  ]
+}

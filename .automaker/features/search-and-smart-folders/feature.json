@@ -1,0 +1,19 @@
+{
+  "category": "feature",
+  "description": "Implement full-text search, filters, and smart folders similar to macOS Notes saved searches.",
+  "id": "search-and-smart-folders",
+  "title": "Search and Smart Folders",
+  "dependencies": [
+    "notes-storage-sync"
+  ],
+  "priority": 3,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Implement full-text search, filters, and smart folders similar to macOS Notes saved searches.",
+      "timestamp": "2026-01-21T12:38:59.712Z",
+      "source": "initial"
+    }
+  ]
+}

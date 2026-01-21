@@ -1,0 +1,12 @@
+{
+  "id": "siri-interface",
+  "category": "Applications",
+  "title": "Siri Assistant Interface",
+  "description": "Voice assistant UI with waveform animation, simulated responses to common queries, and quick actions integration.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.467Z",
+  "updatedAt": "2026-01-21T12:37:58.467Z"
+}

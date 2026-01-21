@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "notifications": [
+    {
+      "id": "24c5e1ba-c194-40c0-b5fb-259d02f094fa",
+      "type": "spec_regeneration_complete",
+      "title": "Spec Generation Complete",
+      "message": "Created 51 features from the project specification.",
+      "createdAt": "2026-01-21T12:37:58.469Z",
+      "read": true,
+      "dismissed": false,
+      "projectPath": "/Users/peterryszkiewicz/Repos/virtual-mac"
+    },
+    {
+      "id": "a3c2c60a-9abf-4ca3-8cc1-02b9c9b401b5",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"drag-drop-files\" has been verified and is complete.",
+      "createdAt": "2026-01-21T12:50:57.551Z",
+      "read": true,
+      "dismissed": false,
+      "featureId": "drag-drop-files",
+      "projectPath": "/Users/peterryszkiewicz/Repos/virtual-mac"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "messages-application",
+  "category": "Applications",
+  "title": "Messages Application",
+  "description": "iMessage-style chat interface with conversation threads, emoji picker, and simulated message sending/receiving.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.456Z",
+  "updatedAt": "2026-01-21T12:37:58.456Z"
+}

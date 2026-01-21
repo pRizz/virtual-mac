@@ -1,0 +1,12 @@
+{
+  "id": "books-application",
+  "category": "Applications",
+  "title": "Books Application",
+  "description": "E-book reader with library management, page turning animations, bookmarks, and reading progress tracking.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.457Z",
+  "updatedAt": "2026-01-21T12:37:58.457Z"
+}

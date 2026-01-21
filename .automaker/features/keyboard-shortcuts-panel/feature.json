@@ -1,0 +1,12 @@
+{
+  "id": "keyboard-shortcuts-panel",
+  "category": "System Utilities",
+  "title": "Keyboard Shortcuts Panel",
+  "description": "System Settings pane for viewing and customizing all keyboard shortcuts with search and conflict detection.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.464Z",
+  "updatedAt": "2026-01-21T12:37:58.464Z"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "podcast-application",
+  "category": "Applications",
+  "title": "Podcasts Application",
+  "description": "Podcast player with episode library, playback controls, subscriptions, and download management.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.456Z",
+  "updatedAt": "2026-01-21T12:37:58.456Z"
+}

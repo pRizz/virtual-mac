@@ -1,0 +1,12 @@
+{
+  "id": "console-application",
+  "category": "System Utilities",
+  "title": "Console Application",
+  "description": "System log viewer showing simulated log messages with filtering, search, and severity levels.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.459Z",
+  "updatedAt": "2026-01-21T12:37:58.459Z"
+}

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project_specification>
+  <project_name>VirtualMac</project_name>
+
+  <overview>
+    VirtualMac is a pixel-perfect macOS clone running entirely in the browser, built with Rust, Leptos, and WebAssembly. It provides a complete desktop environment experience including a menu bar, window manager, dock, and multiple functional applications. The project aims to recreate the macOS user experience with authentic visual styling (macOS Sonoma-style), interactive features like window management with drag/resize capabilities, dock magnification effects, and working applications including Finder, Calculator, Terminal, TextEdit, Notes, and System Settings. All state is persisted to localStorage, allowing users to maintain their desktop configuration across sessions.
+  </overview>
+
+  <technology_stack>
+    <technology>Rust (2021 edition)</technology>
+    <technology>Leptos 0.7 (reactive web framework with CSR mode)</technology>
+    <technology>WebAssembly (wasm32-unknown-unknown target)</technology>
+    <technology>Trunk (build tool and dev server)</technology>
+    <technology>wasm-bindgen (JavaScript interop)</technology>
+    <technology>web-sys (Web API bindings)</technology>
+    <technology>js-sys (JavaScript runtime bindings)</technology>
+    <technology>serde + serde_json (serialization/deserialization)</technology>
+    <technology>console_error_panic_hook (error handling)</technology>
+    <technology>Playwright (E2E testing framework)</technology>
+    <technology>TypeScript (test code)</technology>
+    <technology>CSS (styling with CSS custom properties)</technology>
+    <technology>HTML5</technology>
+    <technology>localStorage (state persistence)</technology>
+  </technology_stack>
+
+  <core_capabilities>
+    <capability>Complete macOS-style desktop environment with wallpaper selection</capability>
+    <capability>Window management system with drag, resize, minimize, maximize, and z-index stacking</capability>
+    <capability>macOS-style menu bar with Apple menu, app menus, and live clock</capability>
+    <capability>Dock with magnification effect on hover and running app indicators</capability>
+    <capability>Virtual file system with directory structure and file operations</capability>
+    <capability>Multiple functional applications (Finder, Calculator, Terminal, TextEdit, Notes, System Settings)</capability>
+    <capability>Spotlight search overlay (Cmd+Space)</capability>
+    <capability>Control Center with toggles for Wi-Fi, Bluetooth, AirDrop, Do Not Disturb</capability>
+    <capability>Context menus for desktop, dock items, and Finder items</capability>
+    <capability>System state management (sleep, restart, shutdown, lock screen)</capability>
+    <capability>Dark mode toggle</capability>
+    <capability>Desktop selection box for multi-select</capability>
+    <capability>Notification system</capability>
+    <capability>App switcher functionality</capability>
+    <capability>State persistence across sessions using localStorage</capability>
+    <capability>Keyboard shortcuts support (Cmd+W, Cmd+Q, Cmd+H, etc.)</capability>
+  </core_capabilities>
+
+  <implemented_features>
+    <feature>
+      <name>Window Manager</name>
+      <description>Full-featured window management with draggable windows, edge/corner resizing in all 8 directions, traffic light buttons (close/minimize/maximize), z-index stacking, minimize animation (genie effect), and state persistence. Windows can be restored from dock.</description>
+      <file_locations>
+        <location>src/window_manager.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Menu Bar</name>
+      <description>macOS-style menu bar with Apple menu (About, System Settings, Sleep, Restart, Shut Down, Lock Screen, Log Out), app-specific menus (File, Edit, View, Window, Help), keyboard shortcut hints, and status area with live clock, battery, Wi-Fi, dark mode toggle, and Control Center.</description>
+      <file_locations>
+        <location>src/menu_bar.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Dock</name>
+      <description>macOS-style dock with app icons, smooth hover magnification effect using distance-based scaling, running app indicators (dots below icons), separator between apps and utilities, Downloads folder and Trash icons, context menus, and minimized windows section.</description>
+      <file_locations>
+        <location>src/dock.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Finder Application</name>
+      <description>File browser with sidebar (Favorites, iCloud, Locations, Tags sections), navigation history (back/forward), four view modes (Icons, List, Column, Gallery), search functionality, breadcrumb path bar, file/folder selection, context menus, rename functionality, and status bar showing item count.</description>
+      <file_locations>
+        <location>src/finder.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Calculator Application</name>
+      <description>macOS-style calculator with basic operations (add, subtract, multiply, divide), function buttons (AC, +/-, %), memory operations (MC, M+, M-, MR), decimal support, chained calculations, keyboard input support, thousands separator formatting, and memory persistence.</description>
+      <file_locations>
+        <location>src/calculator.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Terminal Application</name>
+      <description>Simulated shell with commands (ls, cd, pwd, echo, cat, mkdir, rm, touch, clear, whoami, hostname, date, notify, help), command history with up/down arrow navigation, tab completion for file paths, working directory tracking, Cmd+K to clear, and state persistence.</description>
+      <file_locations>
+        <location>src/terminal.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>TextEdit Application</name>
+      <description>Rich text editor with toolbar (bold, italic, underline), font family and size selection, text and highlight color pickers, text alignment options (left, center, right, justify), word and character count, contenteditable-based editing, and content persistence.</description>
+      <file_locations>
+        <location>src/textedit.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Notes Application</name>
+      <description>Note-taking app with folder organization (All Notes, Recently Deleted, custom folders), note creation/deletion/restore, rich text editing with formatting toolbar, checklist support, note pinning, search functionality, sort modes (date edited, date created, title), and full state persistence.</description>
+      <file_locations>
+        <location>src/notes.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>System Settings Application</name>
+      <description>Settings panel with sidebar navigation and multiple panes (General, Appearance, Desktop &amp; Dock, Displays, Wallpaper, Wi-Fi, Bluetooth, Network, Notifications, Sound). Functional wallpaper picker with gradient backgrounds.</description>
+      <file_locations>
+        <location>src/system_settings.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Virtual File System</name>
+      <description>In-memory file system with directory structure, file CRUD operations (create, read, update, delete, rename), recent files tracking, and localStorage persistence. Provides context for Finder and Terminal integration.</description>
+      <file_locations>
+        <location>src/file_system.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Spotlight Search</name>
+      <description>System-wide search overlay activated by Cmd+Space, searches applications and documents, keyboard navigation with arrow keys, click-outside-to-close behavior.</description>
+      <file_locations>
+        <location>src/spotlight.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>System State Management</name>
+      <description>Global state for lock screen, power states (sleep, shutdown, restart), modal dialogs, active app tracking, minimized windows, open windows list, and cross-component communication.</description>
+      <file_locations>
+        <location>src/system_state.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Modal Dialogs</name>
+      <description>System modals including About This Mac, About VirtualMac (draggable), Shut Down/Restart/Log Out confirmations, Force Quit dialog, and Reset Desktop confirmation.</description>
+      <file_locations>
+        <location>src/modals.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Context Menus</name>
+      <description>Right-click context menus for desktop, desktop icons, dock items, Finder items, and Trash with appropriate menu items and keyboard shortcut hints.</description>
+      <file_locations>
+        <location>src/context_menu.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Desktop Environment</name>
+      <description>Fullscreen desktop with macOS Sonoma-style gradient wallpaper (selectable), click-and-drag selection boxes, feature tour overlay, build info display, and context menu support.</description>
+      <file_locations>
+        <location>src/desktop.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Theme System</name>
+      <description>Dark mode toggle with CSS custom property-based theming, persistent preference storage.</description>
+      <file_locations>
+        <location>src/theme.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Wallpaper System</name>
+      <description>Multiple gradient wallpaper options with persistence, integrated with System Settings for selection.</description>
+      <file_locations>
+        <location>src/wallpaper.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Notification System</name>
+      <description>Toast-style notifications that can be triggered programmatically or via Terminal notify command.</description>
+      <file_locations>
+        <location>src/notification.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>App Switcher</name>
+      <description>Application switching functionality for navigating between open windows.</description>
+      <file_locations>
+        <location>src/app_switcher.rs</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Drag and Drop File Support</name>
+      <description>Enable dragging files from Finder to desktop, between folders, and into applications. Shows drag preview and drop zones.</description>
+    </feature>
+  </implemented_features>
+
+  <additional_requirements>
+    <requirement>Rust (latest stable version)</requirement>
+    <requirement>Trunk build tool (cargo install trunk)</requirement>
+    <requirement>WASM target (rustup target add wasm32-unknown-unknown)</requirement>
+    <requirement>Node.js and npm (for E2E tests)</requirement>
+    <requirement>Playwright browsers (npx playwright install)</requirement>
+    <requirement>Modern web browser with WebAssembly support</requirement>
+  </additional_requirements>
+
+  <development_guidelines>
+    <guideline>Run trunk serve for development with hot reload at localhost:8080</guideline>
+    <guideline>Run trunk build --release for optimized production build (output in dist/)</guideline>
+    <guideline>Use cargo fmt --all for code formatting before commits</guideline>
+    <guideline>Use cargo clippy --all-targets --all-features -- -D warnings for linting</guideline>
+    <guideline>Run cargo build --all-targets --all-features to verify build</guideline>
+    <guideline>Run cargo test --all-features for Rust tests</guideline>
+    <guideline>E2E tests currently under moratorium - do not add new E2E tests until cleanup complete</guideline>
+    <guideline>Prefer standard library when reasonable, minimize external dependencies</guideline>
+    <guideline>Code should be self-documenting; comment the &apos;why&apos; not the &apos;what&apos;</guideline>
+    <guideline>Test behavior, not implementation details</guideline>
+    <guideline>Never use unwrap(); prefer ? propagation or expect() when panic is impossible</guideline>
+    <guideline>Use let...else for early returns</guideline>
+    <guideline>Prefix Option types with maybe_</guideline>
+  </development_guidelines>
+
+  <implementation_roadmap>
+    <phase>
+      <name>Core Desktop Environment</name>
+      <status>completed</status>
+      <description>Desktop with wallpaper, menu bar with live clock, window manager with drag/resize/minimize/maximize, dock with magnification effect</description>
+    </phase>
+    <phase>
+      <name>Finder Application</name>
+      <status>completed</status>
+      <description>File browser with sidebar, navigation, multiple view modes (Icons, List, Column, Gallery), search, file operations, and breadcrumb path bar</description>
+    </phase>
+    <phase>
+      <name>Calculator Application</name>
+      <status>completed</status>
+      <description>Full calculator with basic operations, memory functions, keyboard support, and number formatting</description>
+    </phase>
+    <phase>
+      <name>Terminal Application</name>
+      <status>completed</status>
+      <description>Simulated shell with common Unix commands, command history, tab completion, and file system integration</description>
+    </phase>
+    <phase>
+      <name>TextEdit Application</name>
+      <status>completed</status>
+      <description>Rich text editor with formatting toolbar, font selection, alignment, and content persistence</description>
+    </phase>
+    <phase>
+      <name>Notes Application</name>
+      <status>completed</status>
+      <description>Note-taking with folders, rich text editing, checklists, pinning, search, and sorting</description>
+    </phase>
+    <phase>
+      <name>System Settings</name>
+      <status>completed</status>
+      <description>Settings panel with wallpaper picker, appearance options, and dock settings</description>
+    </phase>
+    <phase>
+      <name>Spotlight Search</name>
+      <status>completed</status>
+      <description>System-wide search overlay with keyboard navigation</description>
+    </phase>
+    <phase>
+      <name>Context Menus</name>
+      <status>completed</status>
+      <description>Right-click menus for desktop, dock, and Finder with appropriate options</description>
+    </phase>
+    <phase>
+      <name>System State &amp; Modals</name>
+      <status>completed</status>
+      <description>Sleep/restart/shutdown states, lock screen, About dialogs, Force Quit, and Reset Desktop</description>
+    </phase>
+    <phase>
+      <name>State Persistence</name>
+      <status>completed</status>
+      <description>localStorage persistence for window positions, file system, app state, and preferences</description>
+    </phase>
+    <phase>
+      <name>E2E Test Cleanup</name>
+      <status>in_progress</status>
+      <description>Auditing E2E test suite for redundant and low-value tests before adding new tests</description>
+    </phase>
+  </implementation_roadmap>
+</project_specification>

@@ -1,0 +1,17 @@
+{
+  "category": "feature",
+  "description": "Define Note, Folder, Account, Attachment, Tag, and metadata schemas aligned with macOS Notes, including timestamps, pin state, and lock state.",
+  "id": "notes-data-model",
+  "title": "Core Notes Data Model",
+  "dependencies": [],
+  "priority": 1,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Define Note, Folder, Account, Attachment, Tag, and metadata schemas aligned with macOS Notes, including timestamps, pin state, and lock state.",
+      "timestamp": "2026-01-21T12:38:59.708Z",
+      "source": "initial"
+    }
+  ]
+}

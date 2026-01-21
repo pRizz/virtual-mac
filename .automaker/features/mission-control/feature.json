@@ -1,0 +1,12 @@
+{
+  "id": "mission-control",
+  "category": "Core",
+  "title": "Mission Control",
+  "description": "View all open windows at once in overview mode with smooth animations. Triggered by gesture or F3 key.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.462Z",
+  "updatedAt": "2026-01-21T12:37:58.462Z"
+}

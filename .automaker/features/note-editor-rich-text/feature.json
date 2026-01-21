@@ -1,0 +1,19 @@
+{
+  "category": "feature",
+  "description": "Implement a rich text editor with formatting, checklists, tables, and inline attachments to match macOS Notes capabilities.",
+  "id": "note-editor-rich-text",
+  "title": "Rich Text Note Editor",
+  "dependencies": [
+    "notes-data-model"
+  ],
+  "priority": 2,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Implement a rich text editor with formatting, checklists, tables, and inline attachments to match macOS Notes capabilities.",
+      "timestamp": "2026-01-21T12:38:59.710Z",
+      "source": "initial"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "quick-look",
+  "category": "Core",
+  "title": "Quick Look Preview",
+  "description": "Space bar to preview files in Finder with floating preview window showing content without opening the application.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.461Z",
+  "updatedAt": "2026-01-21T12:37:58.461Z"
+}

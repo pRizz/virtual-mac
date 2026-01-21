@@ -1,0 +1,12 @@
+{
+  "id": "notification-center",
+  "category": "UI",
+  "title": "Notification Center Sidebar",
+  "description": "Slide-in sidebar showing notification history, widgets (calendar, weather, stocks), and Do Not Disturb controls.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.463Z",
+  "updatedAt": "2026-01-21T12:37:58.463Z"
+}

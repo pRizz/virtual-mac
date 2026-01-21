@@ -1,0 +1,20 @@
+{
+  "category": "feature",
+  "description": "Add note locking with authentication gating and locked content handling consistent with macOS Notes.",
+  "id": "note-locking",
+  "title": "Note Locking and Privacy",
+  "dependencies": [
+    "notes-data-model",
+    "note-editor-rich-text"
+  ],
+  "priority": 3,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Add note locking with authentication gating and locked content handling consistent with macOS Notes.",
+      "timestamp": "2026-01-21T12:38:59.713Z",
+      "source": "initial"
+    }
+  ]
+}

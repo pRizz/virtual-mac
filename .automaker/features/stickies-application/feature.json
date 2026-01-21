@@ -1,0 +1,12 @@
+{
+  "id": "stickies-application",
+  "category": "Applications",
+  "title": "Stickies Application",
+  "description": "Sticky notes that remain on desktop with color customization, font options, and always-on-top behavior.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.460Z",
+  "updatedAt": "2026-01-21T12:37:58.460Z"
+}

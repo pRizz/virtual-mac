@@ -1,0 +1,12 @@
+{
+  "id": "quicktime-player",
+  "category": "Applications",
+  "title": "QuickTime Player",
+  "description": "Video player with playback controls, timeline scrubbing, volume control, and fullscreen mode. Supports common video formats.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.458Z",
+  "updatedAt": "2026-01-21T12:37:58.458Z"
+}

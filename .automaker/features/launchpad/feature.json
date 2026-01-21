@@ -1,0 +1,12 @@
+{
+  "id": "launchpad",
+  "category": "Core",
+  "title": "Launchpad",
+  "description": "Full-screen application launcher with paginated grid of apps, search, and folder organization similar to iOS.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.463Z",
+  "updatedAt": "2026-01-21T12:37:58.463Z"
+}

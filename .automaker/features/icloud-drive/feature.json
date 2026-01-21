@@ -1,0 +1,12 @@
+{
+  "id": "icloud-drive",
+  "category": "Core",
+  "title": "iCloud Drive Integration",
+  "description": "Simulated cloud storage with sync status indicators, shared folders, and desktop/documents sync toggle in settings.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.466Z",
+  "updatedAt": "2026-01-21T12:37:58.466Z"
+}

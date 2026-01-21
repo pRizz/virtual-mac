@@ -1,0 +1,20 @@
+{
+  "category": "feature",
+  "description": "Support importing and exporting notes (e.g., PDF, plain text, rich text) comparable to macOS Notes.",
+  "id": "import-export-notes",
+  "title": "Import and Export",
+  "dependencies": [
+    "notes-storage-sync",
+    "note-editor-rich-text"
+  ],
+  "priority": 4,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Support importing and exporting notes (e.g., PDF, plain text, rich text) comparable to macOS Notes.",
+      "timestamp": "2026-01-21T12:38:59.718Z",
+      "source": "initial"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ use leptos::prelude::*;
 use wasm_bindgen::JsValue;
 
 use crate::context_menu::{show_context_menu, ContextMenu, ContextMenuState, ContextMenuType};
+use crate::drag_drop::use_drag_drop;
 use crate::file_system::{use_file_system, FileEntry};
 
 /// View mode for Finder content area
@@ -108,6 +109,7 @@ struct SidebarItem {
 #[component]
 pub fn Finder() -> impl IntoView {
     let fs = use_file_system();
+    let drag_drop = use_drag_drop();
     let (selected_sidebar, set_selected_sidebar) = signal("Recents");
     let (current_path, set_current_path) = signal("/".to_string());
     let (selected_items, set_selected_items) = signal(Vec::<String>::new());
@@ -604,55 +606,363 @@ pub fn Finder() -> impl IntoView {
                                     </div>
                                 }.into_any()
                             }
-                            ViewMode::List => view! {
-                                <div
-                                    class="finder-list"
-                                    on:contextmenu=move |ev: web_sys::MouseEvent| {
-                                        ev.prevent_default();
-                                        show_context_menu(
-                                            set_context_menu_state,
-                                            ev.client_x() as f64,
-                                            ev.client_y() as f64,
-                                            ContextMenuType::Desktop,
-                                        );
-                                    }
-                                >
-                                    <div class="finder-list-header">
-                                        <div class="list-col name">"Name"</div>
-                                        <div class="list-col date">"Date Modified"</div>
-                                        <div class="list-col size">"Size"</div>
-                                        <div class="list-col kind">"Kind"</div>
+                            ViewMode::List => {
+                                let fs_for_list_drop = fs_for_view.clone();
+                                let list_drop_target = current_path.get();
+                                view! {
+                                    <div
+                                        class=move || {
+                                            let is_target = drag_drop.drop_target.get().map(|t| t == current_path.get()).unwrap_or(false);
+                                            if is_target { "finder-list drop-target" } else { "finder-list" }
+                                        }
+                                        on:contextmenu=move |ev: web_sys::MouseEvent| {
+                                            ev.prevent_default();
+                                            show_context_menu(
+                                                set_context_menu_state,
+                                                ev.client_x() as f64,
+                                                ev.client_y() as f64,
+                                                ContextMenuType::Desktop,
+                                            );
+                                        }
+                                        on:dragover=move |ev: web_sys::DragEvent| {
+                                            ev.prevent_default();
+                                            if drag_drop.is_dragging() {
+                                                drag_drop.set_drop_target(Some(current_path.get()));
+                                            }
+                                        }
+                                        on:dragleave=move |ev: web_sys::DragEvent| {
+                                            if let Some(related) = ev.related_target() {
+                                                use wasm_bindgen::JsCast;
+                                                if let Some(el) = related.dyn_ref::<web_sys::Element>() {
+                                                    if el.closest(".finder-list").ok().flatten().is_some() {
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                            drag_drop.set_drop_target(None);
+                                        }
+                                        on:drop=move |ev: web_sys::DragEvent| {
+                                            ev.prevent_default();
+                                            if let Some(dragged) = drag_drop.dragged_item.get() {
+                                                let target_dir = list_drop_target.clone();
+                                                let source_parent = dragged.path.rsplit_once('/').map(|(p, _)| if p.is_empty() { "/" } else { p }).unwrap_or("/");
+                                                if source_parent != target_dir {
+                                                    let new_path = if target_dir == "/" {
+                                                        format!("/{}", dragged.name)
+                                                    } else {
+                                                        format!("{}/{}", target_dir, dragged.name)
+                                                    };
+                                                    fs_for_list_drop.rename(&dragged.path, &new_path);
+                                                }
+                                            }
+                                            drag_drop.end_drag();
+                                        }
+                                    >
+                                        <div class="finder-list-header">
+                                            <div class="list-col name">"Name"</div>
+                                            <div class="list-col date">"Date Modified"</div>
+                                            <div class="list-col size">"Size"</div>
+                                            <div class="list-col kind">"Kind"</div>
+                                        </div>
+                                        <div class="finder-list-body">
+                                            {current_files.into_iter().map(|item| {
+                                                let name = item.name.clone();
+                                                let name_for_display = name.clone();
+                                                let name_for_context = name.clone();
+                                                let path = item.path.clone();
+                                                let path_for_drag = path.clone();
+                                                let path_for_dblclick = path.clone();
+                                                let path_for_class = path.clone();
+                                                let path_for_dragover = path.clone();
+                                                let path_for_drop_handler = path.clone();
+                                                let name_for_click = name.clone();
+                                                let name_for_check = name.clone();
+                                                let name_for_kind = name.clone();
+                                                let name_for_rename_check = name.clone();
+                                                let name_for_rename = name.clone();
+                                                let name_for_drag = name.clone();
+                                                let is_folder = item.is_folder;
+                                                let icon = item.icon.clone();
+                                                let size = item.size;
+                                                let modified = item.modified;
+                                                let is_selected = move || selected_items.get().contains(&name_for_check);
+                                                let fs_for_rename = fs_for_view.clone();
+                                                let fs_for_row_drop = fs_for_view.clone();
+
+                                                let size_display = if is_folder {
+                                                    "--".to_string()
+                                                } else {
+                                                    format_size(size)
+                                                };
+                                                let kind = get_file_kind(&name_for_kind, is_folder);
+                                                let date_display = format_date(modified);
+
+                                                view! {
+                                                    <div
+                                                        class=move || {
+                                                            let mut cls = if is_selected() { "finder-list-row selected" } else { "finder-list-row" }.to_string();
+                                                            if is_folder {
+                                                                let is_target = drag_drop.drop_target.get().map(|t| t == path_for_class).unwrap_or(false);
+                                                                if is_target {
+                                                                    cls.push_str(" drop-target");
+                                                                }
+                                                            }
+                                                            cls
+                                                        }
+                                                        draggable="true"
+                                                        on:dragstart=move |ev: web_sys::DragEvent| {
+                                                            drag_drop.start_drag(
+                                                                path_for_drag.clone(),
+                                                                name_for_drag.clone(),
+                                                                is_folder,
+                                                            );
+                                                            if let Some(dt) = ev.data_transfer() {
+                                                                let _ = dt.set_data("text/plain", &path_for_drag);
+                                                                dt.set_effect_allowed("move");
+                                                            }
+                                                        }
+                                                        on:dragend=move |_| {
+                                                            drag_drop.end_drag();
+                                                        }
+                                                        on:dragover=move |ev: web_sys::DragEvent| {
+                                                            if is_folder && drag_drop.is_valid_drop_target(&path_for_dragover) {
+                                                                ev.prevent_default();
+                                                                ev.stop_propagation();
+                                                                drag_drop.set_drop_target(Some(path_for_dragover.clone()));
+                                                            }
+                                                        }
+                                                        on:dragleave=move |_| {
+                                                            drag_drop.set_drop_target(None);
+                                                        }
+                                                        on:drop=move |ev: web_sys::DragEvent| {
+                                                            ev.prevent_default();
+                                                            ev.stop_propagation();
+                                                            if is_folder {
+                                                                if let Some(dragged) = drag_drop.dragged_item.get() {
+                                                                    let target_folder = path_for_drop_handler.clone();
+                                                                    if drag_drop.is_valid_drop_target(&target_folder) {
+                                                                        let new_path = format!("{}/{}", target_folder, dragged.name);
+                                                                        fs_for_row_drop.rename(&dragged.path, &new_path);
+                                                                    }
+                                                                }
+                                                            }
+                                                            drag_drop.end_drag();
+                                                        }
+                                                        on:click=move |_| toggle_selection(name_for_click.clone())
+                                                        on:dblclick=move |_| {
+                                                            if is_folder {
+                                                                navigate_to(path_for_dblclick.clone());
+                                                            }
+                                                        }
+                                                        on:contextmenu=move |ev: web_sys::MouseEvent| {
+                                                            ev.prevent_default();
+                                                            ev.stop_propagation();
+                                                            if !selected_items.get().contains(&name_for_context) {
+                                                                set_selected_items.set(vec![name_for_context.clone()]);
+                                                            }
+                                                            show_context_menu(
+                                                                set_context_menu_state,
+                                                                ev.client_x() as f64,
+                                                                ev.client_y() as f64,
+                                                                ContextMenuType::FinderItem {
+                                                                    name: name_for_context.clone(),
+                                                                    is_folder,
+                                                                },
+                                                            );
+                                                        }
+                                                    >
+                                                        <div class="list-col name">
+                                                            <span class="list-item-icon">{icon}</span>
+                                                            {move || {
+                                                                let is_renaming = renaming_item.get().map(|r| r == name_for_rename_check).unwrap_or(false);
+                                                                if is_renaming {
+                                                                    let current_name = name_for_rename.clone();
+                                                                    let fs_clone = fs_for_rename.clone();
+                                                                    view! {
+                                                                        <input
+                                                                            type="text"
+                                                                            class="finder-rename-input"
+                                                                            prop:value=current_name.clone()
+                                                                            on:blur=move |ev| {
+                                                                                let new_name = event_target_value(&ev);
+                                                                                if !new_name.is_empty() && new_name != current_name {
+                                                                                    let path = current_path.get();
+                                                                                    let old_path = if path == "/" {
+                                                                                        format!("/{}", current_name)
+                                                                                    } else {
+                                                                                        format!("{}/{}", path, current_name)
+                                                                                    };
+                                                                                    let new_path = if path == "/" {
+                                                                                        format!("/{}", new_name)
+                                                                                    } else {
+                                                                                        format!("{}/{}", path, new_name)
+                                                                                    };
+                                                                                    fs_clone.rename(&old_path, &new_path);
+                                                                                }
+                                                                                set_renaming_item.set(None);
+                                                                            }
+                                                                            on:keydown=move |ev: web_sys::KeyboardEvent| {
+                                                                                if ev.key() == "Enter" {
+                                                                                    if let Some(target) = ev.target() {
+                                                                                        use wasm_bindgen::JsCast;
+                                                                                        if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
+                                                                                            let _ = input.blur();
+                                                                                        }
+                                                                                    }
+                                                                                } else if ev.key() == "Escape" {
+                                                                                    set_renaming_item.set(None);
+                                                                                }
+                                                                            }
+                                                                            on:click=move |ev: web_sys::MouseEvent| {
+                                                                                ev.stop_propagation();
+                                                                            }
+                                                                            autofocus=true
+                                                                        />
+                                                                    }.into_any()
+                                                                } else {
+                                                                    view! {
+                                                                        <span class="list-item-name">{name_for_display.clone()}</span>
+                                                                    }.into_any()
+                                                                }
+                                                            }}
+                                                        </div>
+                                                        <div class="list-col date">{date_display}</div>
+                                                        <div class="list-col size">{size_display}</div>
+                                                        <div class="list-col kind">{kind}</div>
+                                                    </div>
+                                                }
+                                            }).collect::<Vec<_>>()}
+                                        </div>
                                     </div>
-                                    <div class="finder-list-body">
+                                }.into_any()
+                            },
+                            _ => {
+                                let fs_for_drop = fs_for_view.clone();
+                                let grid_drop_target = current_path.get();
+                                view! {
+                                    <div
+                                        class=move || {
+                                            let is_target = drag_drop.drop_target.get().map(|t| t == current_path.get()).unwrap_or(false);
+                                            if is_target { "finder-grid drop-target" } else { "finder-grid" }
+                                        }
+                                        on:contextmenu=move |ev: web_sys::MouseEvent| {
+                                            ev.prevent_default();
+                                            show_context_menu(
+                                                set_context_menu_state,
+                                                ev.client_x() as f64,
+                                                ev.client_y() as f64,
+                                                ContextMenuType::Desktop,
+                                            );
+                                        }
+                                        on:dragover=move |ev: web_sys::DragEvent| {
+                                            ev.prevent_default();
+                                            if drag_drop.is_dragging() {
+                                                drag_drop.set_drop_target(Some(current_path.get()));
+                                            }
+                                        }
+                                        on:dragleave=move |ev: web_sys::DragEvent| {
+                                            // Only clear if leaving the grid itself
+                                            if let Some(related) = ev.related_target() {
+                                                use wasm_bindgen::JsCast;
+                                                if let Some(el) = related.dyn_ref::<web_sys::Element>() {
+                                                    if el.closest(".finder-grid").ok().flatten().is_some() {
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                            drag_drop.set_drop_target(None);
+                                        }
+                                        on:drop=move |ev: web_sys::DragEvent| {
+                                            ev.prevent_default();
+                                            if let Some(dragged) = drag_drop.dragged_item.get() {
+                                                let target_dir = grid_drop_target.clone();
+                                                // Don't drop onto the same directory
+                                                let source_parent = dragged.path.rsplit_once('/').map(|(p, _)| if p.is_empty() { "/" } else { p }).unwrap_or("/");
+                                                if source_parent != target_dir {
+                                                    let new_path = if target_dir == "/" {
+                                                        format!("/{}", dragged.name)
+                                                    } else {
+                                                        format!("{}/{}", target_dir, dragged.name)
+                                                    };
+                                                    fs_for_drop.rename(&dragged.path, &new_path);
+                                                }
+                                            }
+                                            drag_drop.end_drag();
+                                        }
+                                    >
                                         {current_files.into_iter().map(|item| {
                                             let name = item.name.clone();
                                             let name_for_display = name.clone();
                                             let name_for_context = name.clone();
                                             let path = item.path.clone();
+                                            let path_for_drag = path.clone();
                                             let path_for_dblclick = path.clone();
+                                            let path_for_class = path.clone();
+                                            let path_for_dragover = path.clone();
+                                            let path_for_drop_handler = path.clone();
                                             let name_for_click = name.clone();
                                             let name_for_check = name.clone();
-                                            let name_for_kind = name.clone();
                                             let name_for_rename_check = name.clone();
                                             let name_for_rename = name.clone();
+                                            let name_for_drag = name.clone();
                                             let is_folder = item.is_folder;
                                             let icon = item.icon.clone();
-                                            let size = item.size;
-                                            let modified = item.modified;
                                             let is_selected = move || selected_items.get().contains(&name_for_check);
                                             let fs_for_rename = fs_for_view.clone();
-
-                                            let size_display = if is_folder {
-                                                "--".to_string()
-                                            } else {
-                                                format_size(size)
-                                            };
-                                            let kind = get_file_kind(&name_for_kind, is_folder);
-                                            let date_display = format_date(modified);
+                                            let fs_for_item_drop = fs_for_view.clone();
 
                                             view! {
                                                 <div
-                                                    class=move || if is_selected() { "finder-list-row selected" } else { "finder-list-row" }
+                                                    class=move || {
+                                                        let mut cls = if is_selected() { "finder-item selected" } else { "finder-item" }.to_string();
+                                                        if is_folder {
+                                                            let is_target = drag_drop.drop_target.get().map(|t| t == path_for_class).unwrap_or(false);
+                                                            if is_target {
+                                                                cls.push_str(" drop-target");
+                                                            }
+                                                        }
+                                                        cls
+                                                    }
+                                                    draggable="true"
+                                                    on:dragstart=move |ev: web_sys::DragEvent| {
+                                                        drag_drop.start_drag(
+                                                            path_for_drag.clone(),
+                                                            name_for_drag.clone(),
+                                                            is_folder,
+                                                        );
+                                                        // Set drag data for compatibility
+                                                        if let Some(dt) = ev.data_transfer() {
+                                                            let _ = dt.set_data("text/plain", &path_for_drag);
+                                                            dt.set_effect_allowed("move");
+                                                        }
+                                                    }
+                                                    on:dragend=move |_| {
+                                                        drag_drop.end_drag();
+                                                    }
+                                                    on:dragover=move |ev: web_sys::DragEvent| {
+                                                        if is_folder && drag_drop.is_valid_drop_target(&path_for_dragover) {
+                                                            ev.prevent_default();
+                                                            ev.stop_propagation();
+                                                            drag_drop.set_drop_target(Some(path_for_dragover.clone()));
+                                                        }
+                                                    }
+                                                    on:dragleave=move |_| {
+                                                        drag_drop.set_drop_target(None);
+                                                    }
+                                                    on:drop=move |ev: web_sys::DragEvent| {
+                                                        ev.prevent_default();
+                                                        ev.stop_propagation();
+                                                        if is_folder {
+                                                            if let Some(dragged) = drag_drop.dragged_item.get() {
+                                                                let target_folder = path_for_drop_handler.clone();
+                                                                if drag_drop.is_valid_drop_target(&target_folder) {
+                                                                    let new_path = format!("{}/{}", target_folder, dragged.name);
+                                                                    fs_for_item_drop.rename(&dragged.path, &new_path);
+                                                                }
+                                                            }
+                                                        }
+                                                        drag_drop.end_drag();
+                                                    }
                                                     on:click=move |_| toggle_selection(name_for_click.clone())
                                                     on:dblclick=move |_| {
                                                         if is_folder {
@@ -662,6 +972,7 @@ pub fn Finder() -> impl IntoView {
                                                     on:contextmenu=move |ev: web_sys::MouseEvent| {
                                                         ev.prevent_default();
                                                         ev.stop_propagation();
+                                                        // Select the item if not already selected
                                                         if !selected_items.get().contains(&name_for_context) {
                                                             set_selected_items.set(vec![name_for_context.clone()]);
                                                         }
@@ -676,183 +987,65 @@ pub fn Finder() -> impl IntoView {
                                                         );
                                                     }
                                                 >
-                                                    <div class="list-col name">
-                                                        <span class="list-item-icon">{icon}</span>
-                                                        {move || {
-                                                            let is_renaming = renaming_item.get().map(|r| r == name_for_rename_check).unwrap_or(false);
-                                                            if is_renaming {
-                                                                let current_name = name_for_rename.clone();
-                                                                let fs_clone = fs_for_rename.clone();
-                                                                view! {
-                                                                    <input
-                                                                        type="text"
-                                                                        class="finder-rename-input"
-                                                                        prop:value=current_name.clone()
-                                                                        on:blur=move |ev| {
-                                                                            let new_name = event_target_value(&ev);
-                                                                            if !new_name.is_empty() && new_name != current_name {
-                                                                                let path = current_path.get();
-                                                                                let old_path = if path == "/" {
-                                                                                    format!("/{}", current_name)
-                                                                                } else {
-                                                                                    format!("{}/{}", path, current_name)
-                                                                                };
-                                                                                let new_path = if path == "/" {
-                                                                                    format!("/{}", new_name)
-                                                                                } else {
-                                                                                    format!("{}/{}", path, new_name)
-                                                                                };
-                                                                                fs_clone.rename(&old_path, &new_path);
+                                                    <div class="finder-item-icon">{icon}</div>
+                                                    {move || {
+                                                        let is_renaming = renaming_item.get().map(|r| r == name_for_rename_check).unwrap_or(false);
+                                                        if is_renaming {
+                                                            let current_name = name_for_rename.clone();
+                                                            let fs_clone = fs_for_rename.clone();
+                                                            view! {
+                                                                <input
+                                                                    type="text"
+                                                                    class="finder-rename-input"
+                                                                    prop:value=current_name.clone()
+                                                                    on:blur=move |ev| {
+                                                                        let new_name = event_target_value(&ev);
+                                                                        if !new_name.is_empty() && new_name != current_name {
+                                                                            let path = current_path.get();
+                                                                            let old_path = if path == "/" {
+                                                                                format!("/{}", current_name)
+                                                                            } else {
+                                                                                format!("{}/{}", path, current_name)
+                                                                            };
+                                                                            let new_path = if path == "/" {
+                                                                                format!("/{}", new_name)
+                                                                            } else {
+                                                                                format!("{}/{}", path, new_name)
+                                                                            };
+                                                                            fs_clone.rename(&old_path, &new_path);
+                                                                        }
+                                                                        set_renaming_item.set(None);
+                                                                    }
+                                                                    on:keydown=move |ev: web_sys::KeyboardEvent| {
+                                                                        if ev.key() == "Enter" {
+                                                                            if let Some(target) = ev.target() {
+                                                                                use wasm_bindgen::JsCast;
+                                                                                if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
+                                                                                    let _ = input.blur();
+                                                                                }
                                                                             }
+                                                                        } else if ev.key() == "Escape" {
                                                                             set_renaming_item.set(None);
                                                                         }
-                                                                        on:keydown=move |ev: web_sys::KeyboardEvent| {
-                                                                            if ev.key() == "Enter" {
-                                                                                if let Some(target) = ev.target() {
-                                                                                    use wasm_bindgen::JsCast;
-                                                                                    if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
-                                                                                        let _ = input.blur();
-                                                                                    }
-                                                                                }
-                                                                            } else if ev.key() == "Escape" {
-                                                                                set_renaming_item.set(None);
-                                                                            }
-                                                                        }
-                                                                        on:click=move |ev: web_sys::MouseEvent| {
-                                                                            ev.stop_propagation();
-                                                                        }
-                                                                        autofocus=true
-                                                                    />
-                                                                }.into_any()
-                                                            } else {
-                                                                view! {
-                                                                    <span class="list-item-name">{name_for_display.clone()}</span>
-                                                                }.into_any()
-                                                            }
-                                                        }}
-                                                    </div>
-                                                    <div class="list-col date">{date_display}</div>
-                                                    <div class="list-col size">{size_display}</div>
-                                                    <div class="list-col kind">{kind}</div>
+                                                                    }
+                                                                    on:click=move |ev: web_sys::MouseEvent| {
+                                                                        ev.stop_propagation();
+                                                                    }
+                                                                    autofocus=true
+                                                                />
+                                                            }.into_any()
+                                                        } else {
+                                                            view! {
+                                                                <div class="finder-item-name">{name_for_display.clone()}</div>
+                                                            }.into_any()
+                                                        }
+                                                    }}
                                                 </div>
                                             }
                                         }).collect::<Vec<_>>()}
                                     </div>
-                                </div>
-                            }.into_any(),
-                            _ => view! {
-                                <div
-                                    class="finder-grid"
-                                    on:contextmenu=move |ev: web_sys::MouseEvent| {
-                                        ev.prevent_default();
-                                        show_context_menu(
-                                            set_context_menu_state,
-                                            ev.client_x() as f64,
-                                            ev.client_y() as f64,
-                                            ContextMenuType::Desktop,
-                                        );
-                                    }
-                                >
-                                    {current_files.into_iter().map(|item| {
-                                        let name = item.name.clone();
-                                        let name_for_display = name.clone();
-                                        let name_for_context = name.clone();
-                                        let path = item.path.clone();
-                                        let path_for_dblclick = path.clone();
-                                        let name_for_click = name.clone();
-                                        let name_for_check = name.clone();
-                                        let name_for_rename_check = name.clone();
-                                        let name_for_rename = name.clone();
-                                        let is_folder = item.is_folder;
-                                        let icon = item.icon.clone();
-                                        let is_selected = move || selected_items.get().contains(&name_for_check);
-                                        let fs_for_rename = fs_for_view.clone();
-
-                                        view! {
-                                            <div
-                                                class=move || if is_selected() { "finder-item selected" } else { "finder-item" }
-                                                on:click=move |_| toggle_selection(name_for_click.clone())
-                                                on:dblclick=move |_| {
-                                                    if is_folder {
-                                                        navigate_to(path_for_dblclick.clone());
-                                                    }
-                                                }
-                                                on:contextmenu=move |ev: web_sys::MouseEvent| {
-                                                    ev.prevent_default();
-                                                    ev.stop_propagation();
-                                                    // Select the item if not already selected
-                                                    if !selected_items.get().contains(&name_for_context) {
-                                                        set_selected_items.set(vec![name_for_context.clone()]);
-                                                    }
-                                                    show_context_menu(
-                                                        set_context_menu_state,
-                                                        ev.client_x() as f64,
-                                                        ev.client_y() as f64,
-                                                        ContextMenuType::FinderItem {
-                                                            name: name_for_context.clone(),
-                                                            is_folder,
-                                                        },
-                                                    );
-                                                }
-                                            >
-                                                <div class="finder-item-icon">{icon}</div>
-                                                {move || {
-                                                    let is_renaming = renaming_item.get().map(|r| r == name_for_rename_check).unwrap_or(false);
-                                                    if is_renaming {
-                                                        let current_name = name_for_rename.clone();
-                                                        let fs_clone = fs_for_rename.clone();
-                                                        view! {
-                                                            <input
-                                                                type="text"
-                                                                class="finder-rename-input"
-                                                                prop:value=current_name.clone()
-                                                                on:blur=move |ev| {
-                                                                    let new_name = event_target_value(&ev);
-                                                                    if !new_name.is_empty() && new_name != current_name {
-                                                                        let path = current_path.get();
-                                                                        let old_path = if path == "/" {
-                                                                            format!("/{}", current_name)
-                                                                        } else {
-                                                                            format!("{}/{}", path, current_name)
-                                                                        };
-                                                                        let new_path = if path == "/" {
-                                                                            format!("/{}", new_name)
-                                                                        } else {
-                                                                            format!("{}/{}", path, new_name)
-                                                                        };
-                                                                        fs_clone.rename(&old_path, &new_path);
-                                                                    }
-                                                                    set_renaming_item.set(None);
-                                                                }
-                                                                on:keydown=move |ev: web_sys::KeyboardEvent| {
-                                                                    if ev.key() == "Enter" {
-                                                                        if let Some(target) = ev.target() {
-                                                                            use wasm_bindgen::JsCast;
-                                                                            if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
-                                                                                let _ = input.blur();
-                                                                            }
-                                                                        }
-                                                                    } else if ev.key() == "Escape" {
-                                                                        set_renaming_item.set(None);
-                                                                    }
-                                                                }
-                                                                on:click=move |ev: web_sys::MouseEvent| {
-                                                                    ev.stop_propagation();
-                                                                }
-                                                                autofocus=true
-                                                            />
-                                                        }.into_any()
-                                                    } else {
-                                                        view! {
-                                                            <div class="finder-item-name">{name_for_display.clone()}</div>
-                                                        }.into_any()
-                                                    }
-                                                }}
-                                            </div>
-                                        }
-                                    }).collect::<Vec<_>>()}
-                                </div>
-                            }.into_any(),
+                                }.into_any()
+                            },
                         }
                     }}
 

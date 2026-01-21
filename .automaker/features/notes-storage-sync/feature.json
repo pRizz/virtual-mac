@@ -1,0 +1,19 @@
+{
+  "category": "feature",
+  "description": "Implement persistence, indexing, and sync orchestration to mirror macOS Notes behaviors for local and iCloud-style accounts.",
+  "id": "notes-storage-sync",
+  "title": "Local Storage and Sync Layer",
+  "dependencies": [
+    "notes-data-model"
+  ],
+  "priority": 1,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Implement persistence, indexing, and sync orchestration to mirror macOS Notes behaviors for local and iCloud-style accounts.",
+      "timestamp": "2026-01-21T12:38:59.709Z",
+      "source": "initial"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "hot-corners",
+  "category": "Core",
+  "title": "Hot Corners",
+  "description": "Configure screen corners to trigger actions (Mission Control, desktop, sleep, Launchpad) when cursor moves to corner.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.464Z",
+  "updatedAt": "2026-01-21T12:37:58.464Z"
+}

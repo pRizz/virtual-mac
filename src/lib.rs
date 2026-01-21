@@ -6,6 +6,7 @@ mod calculator;
 mod context_menu;
 mod desktop;
 mod dock;
+mod drag_drop;
 pub mod file_system;
 mod finder;
 mod menu_bar;
@@ -25,6 +26,7 @@ use app_switcher::AppSwitcher;
 use context_menu::{ContextMenu, ContextMenuState};
 use desktop::Desktop;
 use dock::Dock;
+use drag_drop::DragDropProvider;
 use file_system::FileSystemProvider;
 use menu_bar::MenuBar;
 use modals::{LockScreen, ModalOverlay, PowerOverlay};
@@ -54,17 +56,19 @@ fn App() -> impl IntoView {
     view! {
         <ThemeProvider>
             <FileSystemProvider>
-                <MenuBar />
-                <Desktop context_menu_state=set_context_menu_state />
-                <WindowManager />
-                <Dock context_menu_state=set_context_menu_state />
-                <Spotlight />
-                <AppSwitcher />
-                <ContextMenu state=context_menu_state set_state=set_context_menu_state />
-                <ModalOverlay />
-                <LockScreen />
-                <PowerOverlay />
-                <NotificationContainer />
+                <DragDropProvider>
+                    <MenuBar />
+                    <Desktop context_menu_state=set_context_menu_state />
+                    <WindowManager />
+                    <Dock context_menu_state=set_context_menu_state />
+                    <Spotlight />
+                    <AppSwitcher />
+                    <ContextMenu state=context_menu_state set_state=set_context_menu_state />
+                    <ModalOverlay />
+                    <LockScreen />
+                    <PowerOverlay />
+                    <NotificationContainer />
+                </DragDropProvider>
             </FileSystemProvider>
         </ThemeProvider>
     }

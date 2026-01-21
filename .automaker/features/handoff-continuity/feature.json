@@ -1,0 +1,12 @@
+{
+  "id": "handoff-continuity",
+  "category": "Core",
+  "title": "Handoff/Continuity Features",
+  "description": "Visual indicators for continuing work from other simulated devices, shown in dock and app switcher.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.466Z",
+  "updatedAt": "2026-01-21T12:37:58.466Z"
+}

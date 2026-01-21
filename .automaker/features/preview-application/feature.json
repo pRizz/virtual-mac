@@ -1,0 +1,12 @@
+{
+  "id": "preview-application",
+  "category": "Applications",
+  "title": "Preview Application",
+  "description": "Document and image viewer supporting PDFs, images, and basic annotation tools (highlight, text, shapes). Integrates with file system for opening files.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.455Z",
+  "updatedAt": "2026-01-21T12:37:58.455Z"
+}

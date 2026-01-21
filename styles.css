@@ -1292,6 +1292,53 @@ html, body {
     max-width: 200px;
 }
 
+/* ======================================
+   Drag and Drop Styles
+   ====================================== */
+
+/* Drop target highlighting */
+.drop-target {
+    outline: 2px dashed var(--finder-accent, #007aff);
+    outline-offset: -2px;
+    background-color: rgba(0, 122, 255, 0.1) !important;
+}
+
+/* Folder drop target in grid view */
+.finder-item.drop-target {
+    background-color: rgba(0, 122, 255, 0.2) !important;
+    border-radius: 8px;
+}
+
+/* Folder drop target in list view */
+.finder-list-row.drop-target {
+    background-color: rgba(0, 122, 255, 0.15) !important;
+}
+
+/* Desktop drop target */
+.desktop.drop-target {
+    outline: 3px dashed rgba(255, 255, 255, 0.5);
+    outline-offset: -10px;
+}
+
+/* Dragging state for items */
+.finder-item[draggable="true"],
+.finder-list-row[draggable="true"],
+.finder-column-item[draggable="true"] {
+    cursor: grab;
+}
+
+.finder-item[draggable="true"]:active,
+.finder-list-row[draggable="true"]:active,
+.finder-column-item[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+/* Reduce opacity when being dragged */
+.finder-item:has(:active[draggable="true"]),
+.finder-list-row:has(:active[draggable="true"]) {
+    opacity: 0.6;
+}
+
 /* Calculator App Styles - macOS Calculator clone */
 .calculator {
     width: 100%;

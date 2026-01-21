@@ -1,0 +1,20 @@
+{
+  "category": "feature",
+  "description": "Build sidebar with accounts/folders/tags and list view with sorting, pinning, previews, and filters similar to macOS Notes.",
+  "id": "notes-list-and-sidebar-ui",
+  "title": "Notes List and Sidebar Navigation",
+  "dependencies": [
+    "notes-data-model",
+    "notes-storage-sync"
+  ],
+  "priority": 2,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Build sidebar with accounts/folders/tags and list view with sorting, pinning, previews, and filters similar to macOS Notes.",
+      "timestamp": "2026-01-21T12:38:59.710Z",
+      "source": "initial"
+    }
+  ]
+}

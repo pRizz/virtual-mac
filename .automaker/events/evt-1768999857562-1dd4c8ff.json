@@ -1,0 +1,11 @@
+{
+  "id": "evt-1768999857562-1dd4c8ff",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-21T12:50:57.562Z",
+  "projectPath": "/Users/peterryszkiewicz/Repos/virtual-mac",
+  "projectName": "virtual-mac",
+  "featureId": "drag-drop-files",
+  "featureName": "Drag and Drop File Support",
+  "error": "Feature completed in 705s - auto-verified",
+  "passes": true
+}

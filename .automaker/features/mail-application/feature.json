@@ -1,0 +1,12 @@
+{
+  "id": "mail-application",
+  "category": "Applications",
+  "title": "Mail Application",
+  "description": "Email client with inbox, sent, drafts, and trash folders. Supports composing, reading, and organizing simulated emails with rich text formatting.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.453Z",
+  "updatedAt": "2026-01-21T12:37:58.453Z"
+}

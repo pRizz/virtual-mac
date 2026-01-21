@@ -1,0 +1,12 @@
+{
+  "id": "login-items",
+  "category": "System Utilities",
+  "title": "Login Items Management",
+  "description": "System Settings pane to configure which applications launch automatically at startup.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.466Z",
+  "updatedAt": "2026-01-21T12:37:58.466Z"
+}

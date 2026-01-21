@@ -1,0 +1,12 @@
+{
+  "id": "chess-game",
+  "category": "Applications",
+  "title": "Chess Game",
+  "description": "Chess application with AI opponent, move validation, game history, and difficulty levels.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.460Z",
+  "updatedAt": "2026-01-21T12:37:58.460Z"
+}

@@ -1,0 +1,20 @@
+{
+  "category": "feature",
+  "description": "Support images, files, sketches, and scanned documents with inline rendering and management.",
+  "id": "attachments-and-media",
+  "title": "Attachments and Media Handling",
+  "dependencies": [
+    "notes-data-model",
+    "note-editor-rich-text"
+  ],
+  "priority": 3,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Support images, files, sketches, and scanned documents with inline rendering and management.",
+      "timestamp": "2026-01-21T12:38:59.711Z",
+      "source": "initial"
+    }
+  ]
+}

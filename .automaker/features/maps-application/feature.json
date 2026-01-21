@@ -1,0 +1,12 @@
+{
+  "id": "maps-application",
+  "category": "Applications",
+  "title": "Maps Application",
+  "description": "Map viewer with search, directions, satellite/map view toggle, and location markers. Can use embedded map service or simulated interface.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.458Z",
+  "updatedAt": "2026-01-21T12:37:58.458Z"
+}

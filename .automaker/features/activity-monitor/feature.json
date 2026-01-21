@@ -1,0 +1,12 @@
+{
+  "id": "activity-monitor",
+  "category": "System Utilities",
+  "title": "Activity Monitor",
+  "description": "System monitoring tool showing simulated CPU, memory, disk, and network usage with real-time graphs and process list.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.454Z",
+  "updatedAt": "2026-01-21T12:37:58.454Z"
+}

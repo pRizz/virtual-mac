@@ -1,0 +1,12 @@
+{
+  "id": "screenshot-utility",
+  "category": "System Utilities",
+  "title": "Screenshot Utility",
+  "description": "Screenshot tool with capture modes (fullscreen, window, selection), timer option, and thumbnail preview with markup tools.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.460Z",
+  "updatedAt": "2026-01-21T12:37:58.460Z"
+}

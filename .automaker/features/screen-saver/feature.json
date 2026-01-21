@@ -1,0 +1,12 @@
+{
+  "id": "screen-saver",
+  "category": "UI",
+  "title": "Screen Saver",
+  "description": "Multiple screen saver animations (floating photos, colors, clock) with preview and idle timeout configuration.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.466Z",
+  "updatedAt": "2026-01-21T12:37:58.466Z"
+}

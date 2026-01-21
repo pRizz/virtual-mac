@@ -1,0 +1,12 @@
+{
+  "id": "file-compression",
+  "category": "Core",
+  "title": "File Compression/Archive",
+  "description": "Right-click option to compress files/folders into .zip archives in Finder. Support for viewing archive contents and extraction.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.461Z",
+  "updatedAt": "2026-01-21T12:37:58.461Z"
+}

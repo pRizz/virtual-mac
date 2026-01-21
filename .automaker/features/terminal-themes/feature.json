@@ -1,0 +1,12 @@
+{
+  "id": "terminal-themes",
+  "category": "UI",
+  "title": "Terminal Themes and Profiles",
+  "description": "Multiple color schemes, font customization, and profile switching for Terminal with import/export support.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.468Z",
+  "updatedAt": "2026-01-21T12:37:58.468Z"
+}

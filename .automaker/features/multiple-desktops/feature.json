@@ -1,0 +1,14 @@
+{
+  "id": "multiple-desktops",
+  "category": "Core",
+  "title": "Multiple Desktop Spaces",
+  "description": "Create and switch between multiple virtual desktops (Spaces) with swipe gestures or keyboard shortcuts.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "complex",
+  "dependencies": [
+    "mission-control"
+  ],
+  "createdAt": "2026-01-21T12:37:58.463Z",
+  "updatedAt": "2026-01-21T12:37:58.463Z"
+}

@@ -1,0 +1,20 @@
+{
+  "category": "feature",
+  "description": "Enable shared notes with permissions and real-time collaboration behaviors aligned with macOS Notes.",
+  "id": "sharing-and-collaboration",
+  "title": "Sharing and Collaboration",
+  "dependencies": [
+    "notes-storage-sync",
+    "note-editor-rich-text"
+  ],
+  "priority": 4,
+  "status": "backlog",
+  "branchName": "main",
+  "descriptionHistory": [
+    {
+      "description": "Enable shared notes with permissions and real-time collaboration behaviors aligned with macOS Notes.",
+      "timestamp": "2026-01-21T12:38:59.713Z",
+      "source": "initial"
+    }
+  ]
+}

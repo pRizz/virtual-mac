@@ -1,0 +1,14 @@
+{
+  "id": "drag-drop-files",
+  "category": "Core",
+  "title": "Drag and Drop File Support",
+  "description": "Enable dragging files from Finder to desktop, between folders, and into applications. Shows drag preview and drop zones.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.461Z",
+  "updatedAt": "2026-01-21T12:37:58.461Z",
+  "startedAt": "2026-01-21T12:39:12.290Z",
+  "descriptionHistory": []
+}

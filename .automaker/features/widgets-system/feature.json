@@ -1,0 +1,12 @@
+{
+  "id": "widgets-system",
+  "category": "UI",
+  "title": "Desktop Widgets",
+  "description": "Interactive widgets on desktop showing weather, calendar, stocks, clock, and other information at a glance.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.464Z",
+  "updatedAt": "2026-01-21T12:37:58.464Z"
+}

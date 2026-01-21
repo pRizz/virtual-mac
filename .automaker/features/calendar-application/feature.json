@@ -1,0 +1,14 @@
+{
+  "id": "calendar-application",
+  "category": "Applications",
+  "title": "Calendar Application",
+  "description": "Calendar app with month/week/day views, event creation, reminders, and color-coded categories. Integrates with notification system for event alerts.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [
+    "notification-enhancement"
+  ],
+  "createdAt": "2026-01-21T12:37:58.453Z",
+  "updatedAt": "2026-01-21T12:37:58.453Z"
+}

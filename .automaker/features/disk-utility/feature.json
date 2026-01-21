@@ -1,0 +1,12 @@
+{
+  "id": "disk-utility",
+  "category": "System Utilities",
+  "title": "Disk Utility",
+  "description": "Disk management tool showing storage usage visualization, simulated disk repair, and partition information.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.455Z",
+  "updatedAt": "2026-01-21T12:37:58.455Z"
+}

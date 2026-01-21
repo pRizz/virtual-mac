@@ -1,0 +1,12 @@
+{
+  "id": "dictionary-application",
+  "category": "Applications",
+  "title": "Dictionary Application",
+  "description": "Word lookup tool with definitions, thesaurus, Wikipedia integration, and pronunciation guides.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.467Z",
+  "updatedAt": "2026-01-21T12:37:58.467Z"
+}

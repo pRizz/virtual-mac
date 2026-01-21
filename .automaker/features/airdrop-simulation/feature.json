@@ -1,0 +1,12 @@
+{
+  "id": "airdrop-simulation",
+  "category": "Core",
+  "title": "AirDrop File Sharing",
+  "description": "Simulated nearby device detection and file transfer with acceptance dialog and progress indication.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.466Z",
+  "updatedAt": "2026-01-21T12:37:58.466Z"
+}

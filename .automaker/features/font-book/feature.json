@@ -1,0 +1,12 @@
+{
+  "id": "font-book",
+  "category": "System Utilities",
+  "title": "Font Book",
+  "description": "Font management utility displaying installed fonts with preview text, character map, and font information.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.459Z",
+  "updatedAt": "2026-01-21T12:37:58.459Z"
+}

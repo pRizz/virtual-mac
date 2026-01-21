@@ -1,0 +1,12 @@
+{
+  "id": "fullscreen-apps",
+  "category": "Core",
+  "title": "Native Fullscreen Mode",
+  "description": "Green traffic light button holds to show fullscreen option. Apps enter dedicated fullscreen space with swipe navigation.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.468Z",
+  "updatedAt": "2026-01-21T12:37:58.468Z"
+}

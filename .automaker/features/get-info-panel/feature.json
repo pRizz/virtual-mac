@@ -1,0 +1,12 @@
+{
+  "id": "get-info-panel",
+  "category": "Core",
+  "title": "Get Info Panel",
+  "description": "Cmd+I info panel showing file size, creation/modification dates, permissions, and custom icon support.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.462Z",
+  "updatedAt": "2026-01-21T12:37:58.462Z"
+}

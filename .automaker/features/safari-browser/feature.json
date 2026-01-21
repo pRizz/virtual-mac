@@ -1,0 +1,12 @@
+{
+  "id": "safari-browser",
+  "category": "Applications",
+  "title": "Safari Web Browser",
+  "description": "A functional web browser application with address bar, back/forward navigation, bookmarks, and tab support. Allows users to browse real web content within iframes or display simulated web pages.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.452Z",
+  "updatedAt": "2026-01-21T12:37:58.452Z"
+}

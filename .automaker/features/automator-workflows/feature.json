@@ -1,0 +1,12 @@
+{
+  "id": "automator-workflows",
+  "category": "System Utilities",
+  "title": "Automator Application",
+  "description": "Visual workflow builder for automating repetitive tasks with drag-and-drop actions and saved workflows.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-21T12:37:58.467Z",
+  "updatedAt": "2026-01-21T12:37:58.467Z"
+}

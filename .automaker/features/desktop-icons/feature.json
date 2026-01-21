@@ -1,0 +1,14 @@
+{
+  "id": "desktop-icons",
+  "category": "UI",
+  "title": "Desktop File Icons",
+  "description": "Display files and folders directly on desktop with drag-to-arrange, grid snapping, and quick access to recent files.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [
+    "drag-drop-files"
+  ],
+  "createdAt": "2026-01-21T12:37:58.462Z",
+  "updatedAt": "2026-01-21T12:37:58.462Z"
+}

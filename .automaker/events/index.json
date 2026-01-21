@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "evt-1768999857562-1dd4c8ff",
+      "trigger": "feature_success",
+      "timestamp": "2026-01-21T12:50:57.562Z",
+      "featureName": "Drag and Drop File Support",
+      "featureId": "drag-drop-files"
+    }
+  ]
+}
