@@ -11,12 +11,12 @@ See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Milestone:** v2.1 Polish
 **Phase:** 6 of 6 (Active App Indicator Pips)
-**Plan:** Not started
-**Status:** Ready to plan
+**Plan:** 1 of 1 in current phase
+**Status:** Phase complete
 **Started:** 2026-01-21
-**Last activity:** 2026-01-21 - v2.1 milestone created
+**Last activity:** 2026-01-21 - Completed 06-01-PLAN.md
 
-Progress: [----------] 0% (0 of 1 phases complete)
+Progress: ██████████ 100% (12 of 12 plans complete)
 
 ## Milestones
 
@@ -25,23 +25,23 @@ Progress: [----------] 0% (0 of 1 phases complete)
 | v1.0 | App Polish | Shipped | 2026-01-17 |
 | v1.1 | System Polish | Shipped | 2026-01-18 |
 | v2.0 | Persistence & Polish | Shipped | 2026-01-20 |
-| v2.1 | Polish | In progress | - |
+| v2.1 | Polish | Shipped | 2026-01-21 |
 
 ## Session Continuity
 
 **Last Session:** 2026-01-21
-- Created milestone v2.1 Polish
-- Added Phase 6 for active app indicator pips
-- ROADMAP.md reset for new milestone
+- Completed Phase 6 active app indicator pips
+- Verified dock pip behavior and styling
 
 **Context for Next Session:**
-- Plan Phase 06 (active app indicator pips)
-- Update REQUIREMENTS.md for v2.1
+- Phase 6 complete; ready for next milestone planning
 
 ## Key Decisions
 
 | Date | Decision | Context |
 |------|----------|---------|
+| 2026-01-21 | Active app names from AppType | Aligns dock and menu bar labels with app catalog |
+| 2026-01-21 | Dock indicators rerender from signals | Ensures running/active pips update immediately |
 | 2026-01-20 | Separate overlay for AboutVirtualMac | X button only, no click-outside-to-close |
 | 2026-01-20 | Dialog at 1/3 viewport height | Matches macOS About dialog positioning |
 | 2026-01-20 | Y constraint >= 25px | Keep titlebar accessible above menu bar |
@@ -100,3 +100,4 @@ None.
 
 *State updated: 2026-01-21*
 *v2.0 milestone complete: 2026-01-20*
+*v2.1 milestone complete: 2026-01-21*
