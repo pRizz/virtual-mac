@@ -1,6 +1,6 @@
 {
   "name": "virtualmac-e2e-tests",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "css:lint": "csstree-validator styles.css && csstree-validator src/styles.css",
