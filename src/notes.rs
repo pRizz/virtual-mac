@@ -1,6 +1,7 @@
 use leptos::html;
 use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -30,6 +31,8 @@ pub struct Note {
     pub content: String, // HTML content
     pub created_at: f64,
     pub updated_at: f64,
+    #[serde(default)]
+    pub is_pinned: bool,
     pub is_deleted: bool,
     pub deleted_at: Option<f64>,
 }
@@ -42,12 +45,22 @@ pub struct Folder {
     pub created_at: f64,
 }
 
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Default)]
+pub enum NotesSortMode {
+    #[default]
+    UpdatedAt,
+    CreatedAt,
+    Title,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct NotesState {
     pub folders: Vec<Folder>,
     pub notes: Vec<Note>,
     pub selected_folder_id: Option<String>,
     pub selected_note_id: Option<String>,
+    #[serde(default)]
+    pub notes_sort_mode: NotesSortMode,
 }
 
 impl NotesState {
@@ -71,8 +84,32 @@ impl NotesState {
             notes: vec![],
             selected_folder_id: Some("all-notes".to_string()),
             selected_note_id: None,
+            notes_sort_mode: NotesSortMode::UpdatedAt,
         }
     }
+}
+
+fn sort_notes(notes: &mut [Note], sort_mode: NotesSortMode) {
+    notes.sort_by(|a, b| {
+        if a.is_pinned != b.is_pinned {
+            return b.is_pinned.cmp(&a.is_pinned);
+        }
+
+        match sort_mode {
+            NotesSortMode::UpdatedAt => b
+                .updated_at
+                .partial_cmp(&a.updated_at)
+                .unwrap_or(Ordering::Equal),
+            NotesSortMode::CreatedAt => b
+                .created_at
+                .partial_cmp(&a.created_at)
+                .unwrap_or(Ordering::Equal),
+            NotesSortMode::Title => a
+                .title
+                .to_lowercase()
+                .cmp(&b.title.to_lowercase()),
+        }
+    });
 }
 
 fn save_to_storage(state: &NotesState) {
@@ -125,7 +162,8 @@ pub fn Notes() -> impl IntoView {
         let query = search_query.get().to_lowercase();
         let folder_id = st.selected_folder_id.clone();
 
-        st.notes
+        let mut filtered = st
+            .notes
             .iter()
             .filter(|n| {
                 // Filter by folder
@@ -142,7 +180,10 @@ pub fn Notes() -> impl IntoView {
                 folder_match && search_match
             })
             .cloned()
-            .collect::<Vec<_>>()
+            .collect::<Vec<_>>();
+
+        sort_notes(&mut filtered, st.notes_sort_mode);
+        filtered
     });
 
     // Create new note handler
@@ -168,6 +209,7 @@ pub fn Notes() -> impl IntoView {
             content: String::new(),
             created_at: now,
             updated_at: now,
+            is_pinned: false,
             is_deleted: false,
             deleted_at: None,
         };
@@ -212,6 +254,22 @@ pub fn Notes() -> impl IntoView {
                 note.is_deleted = false;
                 note.deleted_at = None;
             }
+        });
+    };
+
+    let toggle_pin = move |note_id: String| {
+        let now = js_sys::Date::now();
+        set_state.update(|s| {
+            if let Some(note) = s.notes.iter_mut().find(|n| n.id == note_id) {
+                note.is_pinned = !note.is_pinned;
+                note.updated_at = now;
+            }
+        });
+    };
+
+    let update_sort_mode = move |sort_mode: NotesSortMode| {
+        set_state.update(|s| {
+            s.notes_sort_mode = sort_mode;
         });
     };
 
@@ -286,10 +344,13 @@ pub fn Notes() -> impl IntoView {
                 set_state=set_state
                 search_query=search_query
                 set_search_query=set_search_query
+                notes_sort_mode=Memo::new(move |_| state.get().notes_sort_mode)
                 on_create=create_note
                 on_delete=delete_note
                 on_restore=restore_note
                 on_permanent_delete=permanent_delete_note
+                on_toggle_pin=toggle_pin
+                on_update_sort_mode=update_sort_mode
             />
             <NoteEditor state=state set_state=set_state />
         </div>
@@ -473,10 +534,13 @@ fn NotesList(
     set_state: WriteSignal<NotesState>,
     search_query: ReadSignal<String>,
     set_search_query: WriteSignal<String>,
+    notes_sort_mode: Memo<NotesSortMode>,
     on_create: impl Fn(leptos::ev::MouseEvent) + 'static + Clone + Send + Sync,
     on_delete: impl Fn(String) + 'static + Clone + Send + Sync,
     on_restore: impl Fn(String) + 'static + Clone + Send + Sync,
     on_permanent_delete: impl Fn(String) + 'static + Clone + Send + Sync,
+    on_toggle_pin: impl Fn(String) + 'static + Clone + Send + Sync,
+    on_update_sort_mode: impl Fn(NotesSortMode) + 'static + Clone + Send + Sync,
 ) -> impl IntoView {
     let selected_note_id = move || state.get().selected_note_id.clone();
 
@@ -529,6 +593,30 @@ fn NotesList(
             <div class="notes-list-header">
                 <span class="notes-list-count">{move || format!("{} Notes", notes.get().len())}</span>
                 <div class="notes-list-header-actions">
+                    <select
+                        class="notes-sort-select"
+                        prop:value=move || match notes_sort_mode.get() {
+                            NotesSortMode::UpdatedAt => "updated".to_string(),
+                            NotesSortMode::CreatedAt => "created".to_string(),
+                            NotesSortMode::Title => "title".to_string(),
+                        }
+                        on:change={
+                            let on_update_sort_mode = on_update_sort_mode.clone();
+                            move |e| {
+                                let value = event_target_value(&e);
+                                let sort_mode = match value.as_str() {
+                                    "created" => NotesSortMode::CreatedAt,
+                                    "title" => NotesSortMode::Title,
+                                    _ => NotesSortMode::UpdatedAt,
+                                };
+                                on_update_sort_mode(sort_mode);
+                            }
+                        }
+                    >
+                        <option value="updated">"Date Edited"</option>
+                        <option value="created">"Date Created"</option>
+                        <option value="title">"Title"</option>
+                    </select>
                     <button
                         class="notes-action-btn"
                         on:click=on_create.clone()
@@ -563,6 +651,7 @@ fn NotesList(
                             let note_id_for_click = note_id.clone();
                             let note_id_for_action = note_id.clone();
                             let is_deleted = note.is_deleted;
+                            let is_pinned = note.is_pinned;
                             let is_selected = {
                                 let note_id = note_id.clone();
                                 move || selected_note_id() == Some(note_id.clone())
@@ -571,6 +660,7 @@ fn NotesList(
                             let on_delete = on_delete.clone();
                             let on_restore = on_restore.clone();
                             let on_permanent_delete = on_permanent_delete.clone();
+                            let on_toggle_pin = on_toggle_pin.clone();
 
                             let title = note.title.clone();
                             let updated_at = note.updated_at;
@@ -623,7 +713,19 @@ fn NotesList(
                                         } else {
                                             let note_id_del = note_id_for_action.clone();
                                             let on_delete = on_delete.clone();
+                                            let note_id_pin = note_id_for_action.clone();
+                                            let on_toggle_pin = on_toggle_pin.clone();
                                             view! {
+                                                <button
+                                                    class="notes-action-btn secondary"
+                                                    on:click=move |e: leptos::ev::MouseEvent| {
+                                                        e.stop_propagation();
+                                                        on_toggle_pin(note_id_pin.clone());
+                                                    }
+                                                    title=move || if is_pinned { "Unpin" } else { "Pin" }
+                                                >
+                                                    {move || if is_pinned { "Unpin" } else { "Pin" }}
+                                                </button>
                                                 <button
                                                     class="notes-action-btn secondary"
                                                     on:click=move |e: leptos::ev::MouseEvent| {
