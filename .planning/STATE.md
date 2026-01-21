@@ -5,18 +5,18 @@
 See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** Authentic macOS desktop experience in the browser
-**Current focus:** Planning next milestone
+**Current focus:** v2.1 Polish
 
 ## Current Position
 
-**Milestone:** Planning next milestone
-**Phase:** Planning
+**Milestone:** v2.1 Polish
+**Phase:** 6 of 6 (Active App Indicator Pips)
 **Plan:** Not started
 **Status:** Ready to plan
-**Started:** 2026-01-20
-**Last activity:** 2026-01-20 - v2.0 milestone complete
+**Started:** 2026-01-21
+**Last activity:** 2026-01-21 - v2.1 milestone created
 
-Progress: [----------] 0% (planning)
+Progress: [----------] 0% (0 of 1 phases complete)
 
 ## Milestones
 
@@ -25,18 +25,18 @@ Progress: [----------] 0% (planning)
 | v1.0 | App Polish | Shipped | 2026-01-17 |
 | v1.1 | System Polish | Shipped | 2026-01-18 |
 | v2.0 | Persistence & Polish | Shipped | 2026-01-20 |
+| v2.1 | Polish | In progress | - |
 
 ## Session Continuity
 
-**Last Session:** 2026-01-20
-- v2.0 milestone complete
-- All REQ-1 through REQ-6 delivered
-- Planning state reset for next milestone
+**Last Session:** 2026-01-21
+- Created milestone v2.1 Polish
+- Added Phase 6 for active app indicator pips
+- ROADMAP.md reset for new milestone
 
 **Context for Next Session:**
-- Define next milestone scope and requirements
-- Create new ROADMAP.md and REQUIREMENTS.md
-- Update PROJECT.md Active requirements
+- Plan Phase 06 (active app indicator pips)
+- Update REQUIREMENTS.md for v2.1
 
 ## Key Decisions
 
@@ -98,5 +98,5 @@ None.
 
 ---
 
-*State updated: 2026-01-20*
+*State updated: 2026-01-21*
 *v2.0 milestone complete: 2026-01-20*
