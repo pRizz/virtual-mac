@@ -386,7 +386,7 @@ pub fn WindowManager() -> impl IntoView {
             .iter()
             .filter(|w| !w.is_minimized)
             .max_by_key(|w| w.z_index)
-            .map(|w| w.title.clone())
+            .map(|w| w.app_type.to_string())
             .unwrap_or_else(|| "Finder".to_string());
         system_state.set_active_app(&active_app);
     });
