@@ -84,13 +84,21 @@ Each task was committed atomically:
 - **Verification:** `cargo build --all-targets --all-features`
 - **Commit:** db2b503
 
+**2. [Rule 3 - Blocking] Applied rustfmt output after verification**
+- **Found during:** Plan verification (cargo fmt)
+- **Issue:** Formatting changes required after running the final quality gate
+- **Fix:** Accepted rustfmt output for the title sort comparison
+- **Files modified:** src/notes.rs
+- **Verification:** `cargo fmt --all`
+- **Commit:** c66b089
+
 ### Deferred Enhancements
 
 None.
 
 ---
 
-**Total deviations:** 1 auto-fixed (1 blocking), 0 deferred
+**Total deviations:** 2 auto-fixed (2 blocking), 0 deferred
 **Impact on plan:** Required to keep builds working with existing editor logic.
 
 ## Issues Encountered
