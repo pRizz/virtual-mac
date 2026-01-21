@@ -104,10 +104,7 @@ fn sort_notes(notes: &mut [Note], sort_mode: NotesSortMode) {
                 .created_at
                 .partial_cmp(&a.created_at)
                 .unwrap_or(Ordering::Equal),
-            NotesSortMode::Title => a
-                .title
-                .to_lowercase()
-                .cmp(&b.title.to_lowercase()),
+            NotesSortMode::Title => a.title.to_lowercase().cmp(&b.title.to_lowercase()),
         }
     });
 }
