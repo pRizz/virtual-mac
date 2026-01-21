@@ -5,18 +5,18 @@
 See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** Authentic macOS desktop experience in the browser
-**Current focus:** v2.1 Polish
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-**Milestone:** v2.1 Polish
-**Phase:** 6 of 6 (Active App Indicator Pips)
-**Plan:** 1 of 1 in current phase
-**Status:** Phase complete
+**Milestone:** Planning next milestone
+**Phase:** Planning
+**Plan:** Not started
+**Status:** Ready to plan
 **Started:** 2026-01-21
-**Last activity:** 2026-01-21 - Completed 06-01-PLAN.md
+**Last activity:** 2026-01-21 - v2.1 milestone complete
 
-Progress: ██████████ 100% (12 of 12 plans complete)
+Progress: [----------] 0% (planning)
 
 ## Milestones
 
@@ -34,7 +34,8 @@ Progress: ██████████ 100% (12 of 12 plans complete)
 - Verified dock pip behavior and styling
 
 **Context for Next Session:**
-- Phase 6 complete; ready for next milestone planning
+- Define next milestone scope and requirements
+- Create new ROADMAP.md and REQUIREMENTS.md if needed
 
 ## Key Decisions
 
