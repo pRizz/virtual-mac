@@ -379,17 +379,23 @@ pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView 
                     }
                 >
                     // App icons
-                    {dock_items().into_iter().enumerate().map(|(idx, item)| {
-                        view! {
-                            <DockIcon
-                                item=item
-                                mouse_x=mouse_x
-                                is_hovering=is_hovering
-                                index=idx
-                                context_menu_state=context_menu_state
-                            />
-                        }
-                    }).collect::<Vec<_>>()}
+                    {move || {
+                        dock_items()
+                            .into_iter()
+                            .enumerate()
+                            .map(|(idx, item)| {
+                                view! {
+                                    <DockIcon
+                                        item=item
+                                        mouse_x=mouse_x
+                                        is_hovering=is_hovering
+                                        index=idx
+                                        context_menu_state=context_menu_state
+                                    />
+                                }
+                            })
+                            .collect::<Vec<_>>()
+                    }}
 
                     // Separator
                     <div class="dock-separator"></div>
