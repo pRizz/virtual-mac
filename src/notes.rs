@@ -918,7 +918,7 @@ fn NoteEditor(state: ReadSignal<NotesState>, set_state: WriteSignal<NotesState>)
             return;
         }
 
-        if e.key() == "Enter" {
+        if e.key() == "Enter" && !e.shift_key() {
             #[cfg(target_arch = "wasm32")]
             {
                 use wasm_bindgen::JsCast;
