@@ -2789,6 +2789,20 @@ html, body {
     color: #f5f5f7;
 }
 
+.notes-editor-content > div:first-child,
+.notes-editor-content > p:first-child {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 6px;
+    color: #1c1c1e;
+}
+
+[data-theme="dark"] .notes-editor-content > div:first-child,
+[data-theme="dark"] .notes-editor-content > p:first-child {
+    color: #f5f5f7;
+}
+
 .notes-editor-content:focus {
     outline: none;
 }
@@ -2826,8 +2840,8 @@ html, body {
 .note-checklist-item {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    padding: 3px 0;
+    gap: 6px;
+    padding: 2px 0;
     line-height: 1.5;
 }
 
@@ -2852,8 +2866,8 @@ html, body {
 /* List styling inside editor */
 .notes-editor-content ul,
 .notes-editor-content ol {
-    padding-left: 22px;
-    margin: 6px 0 10px;
+    padding-left: 20px;
+    margin: 6px 0 8px;
 }
 
 .notes-editor-content li {
