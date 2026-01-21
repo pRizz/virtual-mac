@@ -5,18 +5,18 @@
 See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** Authentic macOS desktop experience in the browser
-**Current focus:** Planning next milestone
+**Current focus:** v2.2 Notes Parity
 
 ## Current Position
 
-**Milestone:** Planning next milestone
-**Phase:** Planning
-**Plan:** Not started
-**Status:** Ready to plan
+**Milestone:** v2.2 Notes Parity
+**Phase:** 2 of 2 (Notes App 1:1 Parity)
+**Plan:** 1 of 1 in current phase
+**Status:** Phase complete
 **Started:** 2026-01-21
-**Last activity:** 2026-01-21 - v2.1 milestone complete
+**Last activity:** 2026-01-21 - Completed 07-01-PLAN.md
 
-Progress: [----------] 0% (planning)
+Progress: [██████████] 100%
 
 ## Milestones
 
@@ -26,21 +26,25 @@ Progress: [----------] 0% (planning)
 | v1.1 | System Polish | Shipped | 2026-01-18 |
 | v2.0 | Persistence & Polish | Shipped | 2026-01-20 |
 | v2.1 | Polish | Shipped | 2026-01-21 |
+| v2.2 | Notes Parity | Shipped | 2026-01-21 |
 
 ## Session Continuity
 
 **Last Session:** 2026-01-21
-- Completed Phase 6 active app indicator pips
-- Verified dock pip behavior and styling
+
+- Completed Phase 7 Notes app 1:1 parity plan
+- Added pin/sort behavior with pinned grouping in Notes list
 
 **Context for Next Session:**
-- Define next milestone scope and requirements
-- Create new ROADMAP.md and REQUIREMENTS.md if needed
+- Plan next milestone scope after Notes parity updates
+- Verify any remaining Notes parity gaps before next phase
 
 ## Key Decisions
 
 | Date | Decision | Context |
 |------|----------|---------|
+| 2026-01-21 | Pinned notes sort ahead of selected mode | Mirrors macOS Notes pinned behavior |
+| 2026-01-21 | Pinned section uses list header entry | Keeps pinned label in scrollable list |
 | 2026-01-21 | Active app names from AppType | Aligns dock and menu bar labels with app catalog |
 | 2026-01-21 | Dock indicators rerender from signals | Ensures running/active pips update immediately |
 | 2026-01-20 | Separate overlay for AboutVirtualMac | X button only, no click-outside-to-close |
