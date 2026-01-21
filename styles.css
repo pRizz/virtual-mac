@@ -2419,10 +2419,10 @@ html, body {
 
 /* Folder Sidebar */
 .notes-folder-sidebar {
-    width: 200px;
-    min-width: 150px;
-    max-width: 250px;
-    background: rgba(245, 245, 247, 0.95);
+    width: 190px;
+    min-width: 170px;
+    max-width: 230px;
+    background: rgba(244, 244, 246, 0.95);
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -2435,10 +2435,10 @@ html, body {
 }
 
 .notes-sidebar-header {
-    padding: 12px 16px 8px;
-    font-size: 11px;
+    padding: 10px 16px 6px;
+    font-size: 10px;
     font-weight: 600;
-    color: #666;
+    color: #7a7a80;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -2450,7 +2450,7 @@ html, body {
 .notes-folder-item {
     display: flex;
     align-items: center;
-    padding: 8px 16px;
+    padding: 7px 12px;
     cursor: pointer;
     border-radius: 6px;
     margin: 2px 8px;
@@ -2465,13 +2465,22 @@ html, body {
     background: rgba(255, 255, 255, 0.05);
 }
 
+[data-theme="dark"] .notes-folder-item.selected {
+    background: rgba(255, 255, 255, 0.14);
+    color: #f2f2f4;
+}
+
+[data-theme="dark"] .notes-folder-item.selected:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 .notes-folder-item.selected {
-    background: #007aff;
-    color: white;
+    background: rgba(0, 0, 0, 0.08);
+    color: #1f1f22;
 }
 
 .notes-folder-item.selected:hover {
-    background: #0066d6;
+    background: rgba(0, 0, 0, 0.12);
 }
 
 .notes-folder-icon {
@@ -2491,20 +2500,24 @@ html, body {
 
 .notes-folder-count {
     font-size: 12px;
-    color: #999;
+    color: #9a9aa0;
     margin-left: 8px;
 }
 
 .notes-folder-item.selected .notes-folder-count {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(31, 31, 34, 0.7);
+}
+
+[data-theme="dark"] .notes-folder-item.selected .notes-folder-count {
+    color: rgba(242, 242, 244, 0.7);
 }
 
 /* Notes List (middle column) */
 .notes-list {
-    width: 280px;
-    min-width: 200px;
-    max-width: 350px;
-    background: #fff;
+    width: 310px;
+    min-width: 230px;
+    max-width: 360px;
+    background: #fbfbfc;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -2519,19 +2532,21 @@ html, body {
 .notes-search-bar {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(0, 0, 0, 0.02);
+    padding: 8px 12px;
+    margin: 8px 12px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 [data-theme="dark"] .notes-search-bar {
-    border-bottom-color: rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
 }
 
 .notes-search-icon {
-    font-size: 14px;
-    color: #999;
+    font-size: 12px;
+    color: #8e8e93;
     margin-right: 8px;
 }
 
@@ -2557,10 +2572,11 @@ html, body {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-bottom: 12px;
 }
 
 .notes-list-item {
-    padding: 12px 16px;
+    padding: 10px 14px;
     cursor: pointer;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: background-color 0.15s ease;
@@ -2579,18 +2595,27 @@ html, body {
 }
 
 .notes-list-item.selected {
-    background: #ffd52e;
-    color: #000;
+    background: #ffe28a;
+    color: #1f1f22;
 }
 
 .notes-list-item.selected:hover {
-    background: #eec427;
+    background: #ffd96d;
+}
+
+[data-theme="dark"] .notes-list-item.selected {
+    background: #8c6a16;
+    color: #f8f8fa;
+}
+
+[data-theme="dark"] .notes-list-item.selected:hover {
+    background: #9b741a;
 }
 
 .notes-list-item-title {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2599,8 +2624,8 @@ html, body {
 .notes-list-item-preview {
     display: flex;
     align-items: center;
-    font-size: 13px;
-    color: #666;
+    font-size: 12px;
+    color: #6f6f75;
 }
 
 [data-theme="dark"] .notes-list-item-preview {
@@ -2609,6 +2634,10 @@ html, body {
 
 .notes-list-item.selected .notes-list-item-preview {
     color: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .notes-list-item.selected .notes-list-item-preview {
+    color: rgba(248, 248, 250, 0.7);
 }
 
 .notes-list-item-date {
@@ -2639,17 +2668,18 @@ html, body {
 .notes-editor-toolbar {
     display: flex;
     align-items: center;
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(0, 0, 0, 0.02);
-    min-height: 40px;
-    gap: 4px;
+    padding: 6px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    background: linear-gradient(180deg, #f9f9f9 0%, #ededed 100%);
+    min-height: 36px;
+    gap: 6px;
     flex-wrap: wrap;
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
 }
 
 [data-theme="dark"] .notes-editor-toolbar {
     border-bottom-color: rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.02);
+    background: linear-gradient(180deg, #2c2c2e 0%, #262628 100%);
 }
 
 .notes-toolbar-placeholder {
@@ -2658,51 +2688,68 @@ html, body {
 }
 
 .notes-toolbar-btn {
-    width: 28px;
-    height: 28px;
-    border: none;
-    background: transparent;
-    border-radius: 4px;
+    width: 26px;
+    height: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    background: linear-gradient(180deg, #ffffff 0%, #f1f1f1 100%);
+    border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    color: #333;
-    transition: background-color 0.15s ease;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2f2f2f;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
 .notes-toolbar-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: linear-gradient(180deg, #ffffff 0%, #f6f6f6 100%);
+}
+
+.notes-toolbar-btn:active {
+    background: linear-gradient(180deg, #e4e4e4 0%, #d9d9d9 100%);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .notes-toolbar-btn.active {
-    background: rgba(0, 122, 255, 0.15);
-    color: #007aff;
+    background: linear-gradient(180deg, #e0e9ff 0%, #cfe0ff 100%);
+    border-color: rgba(0, 122, 255, 0.4);
+    color: #0066d6;
 }
 
 [data-theme="dark"] .notes-toolbar-btn {
-    color: #ddd;
+    color: #e5e5e7;
+    border-color: rgba(255, 255, 255, 0.12);
+    background: linear-gradient(180deg, #3b3b3e 0%, #2f2f32 100%);
 }
 
 [data-theme="dark"] .notes-toolbar-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg, #434348 0%, #35353a 100%);
 }
 
 [data-theme="dark"] .notes-toolbar-btn.active {
-    background: rgba(10, 132, 255, 0.2);
-    color: #0a84ff;
+    background: linear-gradient(180deg, #19345f 0%, #132b54 100%);
+    border-color: rgba(10, 132, 255, 0.5);
+    color: #6db2ff;
 }
 
 .notes-toolbar-separator {
     width: 1px;
-    height: 20px;
-    background: rgba(0, 0, 0, 0.1);
-    margin: 0 6px;
+    height: 18px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 20%, rgba(0, 0, 0, 0.2) 80%, transparent 100%);
+    margin: 0 8px;
 }
 
 [data-theme="dark"] .notes-toolbar-separator {
-    background: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.2) 80%,
+        transparent 100%
+    );
 }
 
 .notes-toolbar-group {
@@ -2713,12 +2760,33 @@ html, body {
 
 .notes-editor-content {
     flex: 1;
-    padding: 16px 20px;
+    padding: 18px 24px;
     overflow-y: auto;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.55;
     outline: none;
-    color: inherit;
+    color: #1c1c1e;
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    letter-spacing: -0.1px;
+    caret-color: #1c1c1e;
+    background: #ffffff;
+}
+
+[data-theme="dark"] .notes-editor-content {
+    color: #f5f5f7;
+    caret-color: #f5f5f7;
+    background: #1c1c1e;
+}
+
+.notes-editor-content::first-line {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #1c1c1e;
+}
+
+[data-theme="dark"] .notes-editor-content::first-line {
+    color: #f5f5f7;
 }
 
 .notes-editor-content:focus {
@@ -2758,16 +2826,22 @@ html, body {
 .note-checklist-item {
     display: flex;
     align-items: flex-start;
-    padding: 4px 0;
+    gap: 8px;
+    padding: 3px 0;
+    line-height: 1.5;
 }
 
 .note-checkbox {
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    margin-top: 2px;
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
     cursor: pointer;
-    accent-color: #ffd52e;
+    accent-color: #f7d154;
+    flex-shrink: 0;
+}
+
+.note-checklist-item span {
+    flex: 1;
 }
 
 .note-checkbox:checked + span {
@@ -2778,12 +2852,12 @@ html, body {
 /* List styling inside editor */
 .notes-editor-content ul,
 .notes-editor-content ol {
-    padding-left: 24px;
-    margin: 8px 0;
+    padding-left: 22px;
+    margin: 6px 0 10px;
 }
 
 .notes-editor-content li {
-    padding: 2px 0;
+    padding: 3px 0;
 }
 
 /* Scrollbar styling for Notes */
@@ -2814,18 +2888,61 @@ html, body {
 
 /* Action buttons (for CRUD in Plan 04) */
 .notes-action-btn {
-    padding: 4px 12px;
-    border: none;
-    background: #007aff;
-    color: white;
-    border-radius: 4px;
-    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #ffffff;
+    color: #1f1f22;
+    border-radius: 6px;
+    font-size: 11px;
     cursor: pointer;
     transition: background-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    line-height: 1;
 }
 
 .notes-action-btn:hover {
-    background: #0066d6;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.notes-action-btn.icon {
+    width: 24px;
+    padding: 0;
+    font-size: 14px;
+}
+
+.notes-action-btn.ghost {
+    background: transparent;
+    border-color: transparent;
+    color: #5a5a60;
+    height: 20px;
+    padding: 2px 6px;
+}
+
+.notes-action-btn.ghost:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .notes-action-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #f2f2f4;
+}
+
+[data-theme="dark"] .notes-action-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+[data-theme="dark"] .notes-action-btn.ghost {
+    background: transparent;
+    border-color: transparent;
+    color: #c7c7cc;
+}
+
+[data-theme="dark"] .notes-action-btn.ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .notes-action-btn.secondary {
@@ -2848,6 +2965,8 @@ html, body {
 
 .notes-action-btn.danger {
     background: #ff3b30;
+    border-color: rgba(255, 59, 48, 0.8);
+    color: #fff;
 }
 
 .notes-action-btn.danger:hover {
@@ -2859,17 +2978,41 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 10px 12px 6px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 [data-theme="dark"] .notes-list-header {
     border-bottom-color: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .notes-list-header-actions {
     display: flex;
-    gap: 4px;
+    gap: 6px;
+    align-items: center;
+}
+
+.notes-sort-select {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #ffffff;
+    border-radius: 6px;
+    height: 22px;
+    font-size: 11px;
+    color: #333;
+    padding: 0 20px 0 8px;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath fill='%23666' d='M0 0l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+}
+
+[data-theme="dark"] .notes-sort-select {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: #f2f2f4;
 }
 
 /* Context menu styling for notes (inline editing) */
@@ -2899,8 +3042,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 10px 12px 6px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     background: rgba(0, 0, 0, 0.02);
 }
 
@@ -2910,9 +3053,9 @@ html, body {
 }
 
 .notes-list-count {
-    font-size: 12px;
-    color: #666;
-    font-weight: 500;
+    font-size: 11px;
+    color: #7b7b82;
+    font-weight: 600;
 }
 
 [data-theme="dark"] .notes-list-count {
@@ -2924,7 +3067,7 @@ html, body {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 10px 14px;
     cursor: pointer;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: background-color 0.15s ease;
@@ -2938,11 +3081,12 @@ html, body {
 
 .notes-list-item-actions {
     display: flex;
-    gap: 4px;
+    gap: 6px;
     opacity: 0;
     transition: opacity 0.15s ease;
-    margin-left: 8px;
+    margin-left: 10px;
     flex-shrink: 0;
+    align-items: center;
 }
 
 .notes-list-item:hover .notes-list-item-actions {
@@ -2953,12 +3097,25 @@ html, body {
     opacity: 1;
 }
 
+.notes-list-section-label {
+    padding: 10px 14px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8e8e93;
+}
+
+[data-theme="dark"] .notes-list-section-label {
+    color: #a1a1a6;
+}
+
 /* Folder sidebar header row */
 .notes-sidebar-header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px 8px;
+    padding: 10px 16px 6px;
 }
 
 .notes-sidebar-header-row .notes-sidebar-header {
@@ -2998,16 +3155,23 @@ html, body {
 }
 
 .notes-folder-item.selected .notes-folder-delete-btn {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(31, 31, 34, 0.6);
 }
 
 .notes-folder-item.selected .notes-folder-delete-btn:hover {
-    color: #fff;
+    color: #1f1f22;
+}
+
+[data-theme="dark"] .notes-folder-item.selected .notes-folder-delete-btn {
+    color: rgba(242, 242, 244, 0.6);
+}
+
+[data-theme="dark"] .notes-folder-item.selected .notes-folder-delete-btn:hover {
+    color: #f8f8fa;
 }
 
 /* Smaller action buttons for list items */
 .notes-list-item-actions .notes-action-btn {
-    padding: 2px 8px;
     font-size: 11px;
 }
 

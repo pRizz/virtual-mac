@@ -388,7 +388,7 @@ fn FolderSidebar(
             <div class="notes-sidebar-header-row">
                 <span class="notes-sidebar-header">"Folders"</span>
                 <button
-                    class="notes-action-btn secondary"
+                    class="notes-action-btn secondary icon"
                     on:click=on_create_folder.clone()
                     title="New Folder"
                 >
@@ -542,7 +542,35 @@ fn NotesList(
     on_toggle_pin: impl Fn(String) + 'static + Clone + Send + Sync,
     on_update_sort_mode: impl Fn(NotesSortMode) + 'static + Clone + Send + Sync,
 ) -> impl IntoView {
+    #[derive(Clone, PartialEq)]
+    enum NotesListEntry {
+        Header(String),
+        Note(Note),
+    }
+
     let selected_note_id = move || state.get().selected_note_id.clone();
+    let list_entries = Memo::new(move |_| {
+        let current_notes = notes.get();
+        let mut entries = Vec::new();
+        let mut pinned = Vec::new();
+        let mut unpinned = Vec::new();
+
+        for note in current_notes {
+            if note.is_pinned {
+                pinned.push(note);
+            } else {
+                unpinned.push(note);
+            }
+        }
+
+        if !pinned.is_empty() {
+            entries.push(NotesListEntry::Header("Pinned".to_string()));
+            entries.extend(pinned.into_iter().map(NotesListEntry::Note));
+        }
+
+        entries.extend(unpinned.into_iter().map(NotesListEntry::Note));
+        entries
+    });
 
     // Format date for display
     fn format_date(timestamp: f64) -> String {
@@ -618,7 +646,7 @@ fn NotesList(
                         <option value="title">"Title"</option>
                     </select>
                     <button
-                        class="notes-action-btn"
+                        class="notes-action-btn icon"
                         on:click=on_create.clone()
                         title="New Note"
                     >
@@ -640,106 +668,116 @@ fn NotesList(
             </div>
             <div class="notes-list-items">
                 <For
-                    each=move || notes.get()
-                    key=|note| note.id.clone()
+                    each=move || list_entries.get()
+                    key=|entry| match entry {
+                        NotesListEntry::Header(label) => format!("header-{}", label),
+                        NotesListEntry::Note(note) => note.id.clone(),
+                    }
                     children={
                         let on_delete = on_delete.clone();
                         let on_restore = on_restore.clone();
                         let on_permanent_delete = on_permanent_delete.clone();
-                        move |note| {
-                            let note_id = note.id.clone();
-                            let note_id_for_click = note_id.clone();
-                            let note_id_for_action = note_id.clone();
-                            let is_deleted = note.is_deleted;
-                            let is_pinned = note.is_pinned;
-                            let is_selected = {
-                                let note_id = note_id.clone();
-                                move || selected_note_id() == Some(note_id.clone())
-                            };
+                        let on_toggle_pin = on_toggle_pin.clone();
+                        move |entry| match entry {
+                            NotesListEntry::Header(label) => {
+                                view! { <div class="notes-list-section-label">{label}</div> }.into_any()
+                            }
+                            NotesListEntry::Note(note) => {
+                                let note_id = note.id.clone();
+                                let note_id_for_click = note_id.clone();
+                                let note_id_for_action = note_id.clone();
+                                let is_deleted = note.is_deleted;
+                                let is_pinned = note.is_pinned;
+                                let is_selected = {
+                                    let note_id = note_id.clone();
+                                    move || selected_note_id() == Some(note_id.clone())
+                                };
 
-                            let on_delete = on_delete.clone();
-                            let on_restore = on_restore.clone();
-                            let on_permanent_delete = on_permanent_delete.clone();
-                            let on_toggle_pin = on_toggle_pin.clone();
+                                let on_delete = on_delete.clone();
+                                let on_restore = on_restore.clone();
+                                let on_permanent_delete = on_permanent_delete.clone();
+                                let on_toggle_pin = on_toggle_pin.clone();
 
-                            let title = note.title.clone();
-                            let updated_at = note.updated_at;
-                            let content = note.content.clone();
+                                let title = note.title.clone();
+                                let updated_at = note.updated_at;
+                                let content = note.content.clone();
 
-                            view! {
-                                <div
-                                    class=move || if is_selected() { "notes-list-item selected" } else { "notes-list-item" }
-                                    on:click=move |_| {
-                                        set_state.update(|s| {
-                                            s.selected_note_id = Some(note_id_for_click.clone());
-                                        });
-                                    }
-                                >
-                                    <div class="notes-list-item-content">
-                                        <div class="notes-list-item-title">{title}</div>
-                                        <div class="notes-list-item-preview">
-                                            <span class="notes-list-item-date">{format_date(updated_at)}</span>
-                                            <span class="notes-list-item-text">{get_preview(&content)}</span>
+                                view! {
+                                    <div
+                                        class=move || if is_selected() { "notes-list-item selected" } else { "notes-list-item" }
+                                        on:click=move |_| {
+                                            set_state.update(|s| {
+                                                s.selected_note_id = Some(note_id_for_click.clone());
+                                            });
+                                        }
+                                    >
+                                        <div class="notes-list-item-content">
+                                            <div class="notes-list-item-title">{title}</div>
+                                            <div class="notes-list-item-preview">
+                                                <span class="notes-list-item-date">{format_date(updated_at)}</span>
+                                                <span class="notes-list-item-text">{get_preview(&content)}</span>
+                                            </div>
+                                        </div>
+                                        <div class="notes-list-item-actions">
+                                            {if is_deleted {
+                                                let note_id_restore = note_id_for_action.clone();
+                                                let note_id_perm = note_id_for_action.clone();
+                                                let on_restore = on_restore.clone();
+                                                let on_permanent_delete = on_permanent_delete.clone();
+                                                view! {
+                                                    <button
+                                                        class="notes-action-btn ghost"
+                                                        on:click=move |e: leptos::ev::MouseEvent| {
+                                                            e.stop_propagation();
+                                                            on_restore(note_id_restore.clone());
+                                                        }
+                                                        title="Restore"
+                                                    >
+                                                        "Restore"
+                                                    </button>
+                                                    <button
+                                                        class="notes-action-btn danger"
+                                                        on:click=move |e: leptos::ev::MouseEvent| {
+                                                            e.stop_propagation();
+                                                            on_permanent_delete(note_id_perm.clone());
+                                                        }
+                                                        title="Delete Permanently"
+                                                    >
+                                                        "Delete"
+                                                    </button>
+                                                }.into_any()
+                                            } else {
+                                                let note_id_del = note_id_for_action.clone();
+                                                let on_delete = on_delete.clone();
+                                                let note_id_pin = note_id_for_action.clone();
+                                                let on_toggle_pin = on_toggle_pin.clone();
+                                                view! {
+                                                    <button
+                                                        class="notes-action-btn ghost"
+                                                        on:click=move |e: leptos::ev::MouseEvent| {
+                                                            e.stop_propagation();
+                                                            on_toggle_pin(note_id_pin.clone());
+                                                        }
+                                                        title=move || if is_pinned { "Unpin" } else { "Pin" }
+                                                    >
+                                                        {move || if is_pinned { "Unpin" } else { "Pin" }}
+                                                    </button>
+                                                    <button
+                                                        class="notes-action-btn ghost"
+                                                        on:click=move |e: leptos::ev::MouseEvent| {
+                                                            e.stop_propagation();
+                                                            on_delete(note_id_del.clone());
+                                                        }
+                                                        title="Delete"
+                                                    >
+                                                        "Delete"
+                                                    </button>
+                                                }.into_any()
+                                            }}
                                         </div>
                                     </div>
-                                    <div class="notes-list-item-actions">
-                                        {if is_deleted {
-                                            let note_id_restore = note_id_for_action.clone();
-                                            let note_id_perm = note_id_for_action.clone();
-                                            let on_restore = on_restore.clone();
-                                            let on_permanent_delete = on_permanent_delete.clone();
-                                            view! {
-                                                <button
-                                                    class="notes-action-btn secondary"
-                                                    on:click=move |e: leptos::ev::MouseEvent| {
-                                                        e.stop_propagation();
-                                                        on_restore(note_id_restore.clone());
-                                                    }
-                                                    title="Restore"
-                                                >
-                                                    "R"
-                                                </button>
-                                                <button
-                                                    class="notes-action-btn danger"
-                                                    on:click=move |e: leptos::ev::MouseEvent| {
-                                                        e.stop_propagation();
-                                                        on_permanent_delete(note_id_perm.clone());
-                                                    }
-                                                    title="Delete Permanently"
-                                                >
-                                                    "x"
-                                                </button>
-                                            }.into_any()
-                                        } else {
-                                            let note_id_del = note_id_for_action.clone();
-                                            let on_delete = on_delete.clone();
-                                            let note_id_pin = note_id_for_action.clone();
-                                            let on_toggle_pin = on_toggle_pin.clone();
-                                            view! {
-                                                <button
-                                                    class="notes-action-btn secondary"
-                                                    on:click=move |e: leptos::ev::MouseEvent| {
-                                                        e.stop_propagation();
-                                                        on_toggle_pin(note_id_pin.clone());
-                                                    }
-                                                    title=move || if is_pinned { "Unpin" } else { "Pin" }
-                                                >
-                                                    {move || if is_pinned { "Unpin" } else { "Pin" }}
-                                                </button>
-                                                <button
-                                                    class="notes-action-btn secondary"
-                                                    on:click=move |e: leptos::ev::MouseEvent| {
-                                                        e.stop_propagation();
-                                                        on_delete(note_id_del.clone());
-                                                    }
-                                                    title="Delete"
-                                                >
-                                                    "D"
-                                                </button>
-                                            }.into_any()
-                                        }}
-                                    </div>
-                                </div>
+                                }
+                                .into_any()
                             }
                         }
                     }
@@ -863,6 +901,57 @@ fn NoteEditor(state: ReadSignal<NotesState>, set_state: WriteSignal<NotesState>)
         save_content();
     };
 
+    let on_input = move |_| {
+        save_content();
+    };
+
+    let checklist_html = r#"<div class=\"note-checklist-item\"><input type=\"checkbox\" class=\"note-checkbox\" /><span>&nbsp;</span></div>"#;
+
+    let on_keydown = move |e: leptos::ev::KeyboardEvent| {
+        if e.key() == "Tab" {
+            e.prevent_default();
+            if e.shift_key() {
+                execCommand("outdent", false, "");
+            } else {
+                execCommand("indent", false, "");
+            }
+            if let Some(el) = editor_ref.get() {
+                let _ = el.focus();
+            }
+            return;
+        }
+
+        if e.key() == "Enter" {
+            #[cfg(target_arch = "wasm32")]
+            {
+                use wasm_bindgen::JsCast;
+
+                if let Some(window) = web_sys::window() {
+                    if let Ok(Some(selection)) = window.get_selection() {
+                        if let Some(anchor_node) = selection.anchor_node() {
+                            let mut maybe_element = anchor_node
+                                .dyn_ref::<web_sys::Element>()
+                                .cloned()
+                                .or_else(|| anchor_node.parent_element());
+
+                            while let Some(element) = maybe_element {
+                                if element.class_list().contains("note-checklist-item") {
+                                    e.prevent_default();
+                                    execCommand("insertHTML", false, checklist_html);
+                                    if let Some(el) = editor_ref.get() {
+                                        let _ = el.focus();
+                                    }
+                                    break;
+                                }
+                                maybe_element = element.parent_element();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
     // Formatting handlers - refocus editor after each operation
     let format_bold = move |_: leptos::ev::MouseEvent| {
         execCommand("bold", false, "");
@@ -908,8 +997,7 @@ fn NoteEditor(state: ReadSignal<NotesState>, set_state: WriteSignal<NotesState>)
 
     // Insert checklist item using insertHTML
     let insert_checklist = move |_: leptos::ev::MouseEvent| {
-        let checkbox_html = r#"<div class="note-checklist-item"><input type="checkbox" class="note-checkbox" /><span>&nbsp;</span></div>"#;
-        execCommand("insertHTML", false, checkbox_html);
+        execCommand("insertHTML", false, checklist_html);
         if let Some(el) = editor_ref.get() {
             let _ = el.focus();
         }
@@ -989,6 +1077,8 @@ fn NoteEditor(state: ReadSignal<NotesState>, set_state: WriteSignal<NotesState>)
                     contenteditable="true"
                     node_ref=editor_ref
                     on:blur=on_blur
+                    on:input=on_input
+                    on:keydown=on_keydown
                 />
             </Show>
         </div>
