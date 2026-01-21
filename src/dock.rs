@@ -89,15 +89,23 @@ struct DockItem {
     icon: &'static str,
     icon_class: &'static str,
     is_running: bool,
+    is_active: bool,
 }
 
 impl DockItem {
-    fn new(name: String, icon: &'static str, icon_class: &'static str, is_running: bool) -> Self {
+    fn new(
+        name: String,
+        icon: &'static str,
+        icon_class: &'static str,
+        is_running: bool,
+        is_active: bool,
+    ) -> Self {
         Self {
             name,
             icon,
             icon_class,
             is_running,
+            is_active,
         }
     }
 }
@@ -127,6 +135,7 @@ fn DockIcon(
     let item_icon = item.icon;
     let item_icon_class = item.icon_class;
     let item_is_running = item.is_running;
+    let item_is_active = item.is_active;
 
     // Capture system_state at component creation time, not in event handler
     let system_state = expect_context::<SystemState>();
@@ -186,7 +195,11 @@ fn DockIcon(
             </div>
             <div class=move || {
                 if item_is_running {
-                    "dock-indicator active"
+                    if item_is_active {
+                        "dock-indicator running active"
+                    } else {
+                        "dock-indicator running"
+                    }
                 } else {
                     "dock-indicator"
                 }
@@ -270,7 +283,7 @@ fn MinimizedDockItem(window: MinimizedWindow) -> impl IntoView {
                     {icon}
                 </div>
             </div>
-            <div class="dock-indicator active"></div>
+            <div class="dock-indicator running"></div>
         </div>
     }
 }
@@ -306,6 +319,7 @@ pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView 
 
     let dock_items = move || {
         let running_apps = system_state.open_windows.get();
+        let active_app = system_state.active_app.get();
         dock_state
             .get()
             .pinned_apps
@@ -313,11 +327,14 @@ pub fn Dock(context_menu_state: WriteSignal<ContextMenuState>) -> impl IntoView 
             .filter_map(|app_name| {
                 let app_name_str = app_name.as_str();
                 let (icon, icon_class) = app_catalog.get(app_name_str)?;
+                let is_running = running_apps.contains(&app_name);
+                let is_active = is_running && active_app == app_name;
                 Some(DockItem::new(
                     app_name.clone(),
                     icon,
                     icon_class,
-                    running_apps.contains(&app_name),
+                    is_running,
+                    is_active,
                 ))
             })
             .collect::<Vec<_>>()
